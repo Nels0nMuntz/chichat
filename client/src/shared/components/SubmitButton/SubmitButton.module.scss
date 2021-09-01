@@ -1,0 +1,26 @@
+.modalButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    width: 100%;
+    padding: 5px 10px;
+    font: 500 16px Roboto;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: #4CA5FF;
+    border-radius: 4px;
+}
+.modalButtonLoading{
+    position: relative;
+    height: 56px;
+    padding: 0;
+    cursor: auto;
+    
+    & .buttonLoader{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -11px 0 0 -11px;
+    }
+}

@@ -1,11 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { Switch, BrowserRouter } from 'react-router-dom';
 
-import './index.css';
+import appRoutes from './app-routes';
+
+import 'assets/styles/index.css';
+
 
 render(
-    <div className="app">
-        <h1>React App</h1>
-    </div>,
+    <BrowserRouter>
+        <Switch>
+            {appRoutes}
+        </Switch>
+    </BrowserRouter>,
     document.getElementById("root")
 );

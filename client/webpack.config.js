@@ -71,19 +71,47 @@ module.exports = {
                 use: [styles(), "css-loader", "postcss-loader"],
             },
             {
+                test: /\.s(a|c)ss$/,
+                exclude: /\.module\.s(a|c)ss$/,
+                use: [styles(), "css-loader", "postcss-loader", "sass-loader"],
+            },
+            {
                 test: /\.module\.css$/,
                 use: [
                     styles(),
-                    {
-                        loader: "css-loader",
+                    'css-modules-typescript-loader',
+                    { 
+                        loader: "css-loader", 
                         options: {
                             importLoaders: 1,
+                            sourceMap: true,
                             modules: {
                                 localIdentName: "[name]__[local]--[hash:base64:8]",
-                            }
-                        }
-                    },
+                                mode: "local",
+                            },
+                        } 
+                    }, 
                     "postcss-loader",
+                ]
+            },
+            {
+                test: /\.module\.s(a|c)ss$/,
+                use: [
+                    styles(),
+                    'css-modules-typescript-loader',
+                    { 
+                        loader: "css-loader", 
+                        options: {
+                            importLoaders: 1,
+                            sourceMap: true,
+                            modules: {
+                                localIdentName: "[name]__[local]--[hash:base64:8]",
+                                mode: "local",
+                            },
+                        } 
+                    }, 
+                    "postcss-loader",
+                    "sass-loader",
                 ]
             },
             {
@@ -97,7 +125,7 @@ module.exports = {
                 test: /\.(png|svg|jpg|jpeg|gif)$/,
                 type: "asset/resource",
                 generator: {
-                    filename: isDev ? "assets/[name].ext" : "assets/[hash][ext][query]",
+                    filename: isDev ? "assets/[name].[ext]" : "assets/[hash][ext][query]",
                 },
             },
         ]
@@ -122,15 +150,18 @@ module.exports = {
                 }
             ]
         }),
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name].[contenthash].css",
+        }),
     ],
     devServer: {
         port: 9000,
-        open: true,
+        // open: true,
         hot: true,
-        progress: true,
+        // progress: true,
         contentBase: "./dist",
         historyApiFallback: true,
     },
+    target: isDev ? "web" : "browserslist",
     optimization: optimizations(),
 };

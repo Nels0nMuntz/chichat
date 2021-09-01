@@ -1,8 +1,7 @@
-const browserslist = require('./package.json').browserslist.production;
 const postcssPresetEnv = require('postcss-preset-env');
 const assets  = require('postcss-assets');
 const webpInCssPlugin = require('webp-in-css/plugin');
-const doiuse = require('doiuse');
+// const doiuse = require('doiuse');
 
 module.exports = {
     plugins: [
@@ -16,10 +15,8 @@ module.exports = {
                 "custom-properties": true,
                 "custom-selectors": true,
                 "gap-properties": true,
-                "matches-pseudo-class": true,
                 "media-query-ranges": true,
-                "nesting-rules": true,
-                "not-pseudo-class": true,                
+                "nesting-rules": true,                
             }
         }),
         assets({
@@ -28,8 +25,8 @@ module.exports = {
         webpInCssPlugin({
             modules: true,
         }),
-        doiuse({
-            browsers: browserslist,
-        }),
+        // doiuse({
+        //     browsers: browserslist,
+        // }),
     ]
 };

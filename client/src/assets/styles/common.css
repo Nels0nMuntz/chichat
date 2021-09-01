@@ -1,0 +1,18 @@
+body{
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.25;
+    color: #202002;
+}
+
+/*  auth  */
+.auth-form-field-wrapper{
+    margin-bottom: 6px;
+}
+.form-redirect-link{
+    font-size: 16px;
+    font-weight: 300;
+    opacity: 0.5;
+    display: inline-block;
+}

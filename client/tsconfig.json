@@ -39,12 +39,19 @@
       "app-state": [
         "app-state"
       ],
-      "layout": [
-        "layout"
+      "layouts": [
+        "layouts"
+      ],
+      "services": [
+        "services"
+      ],
+      "assets": [
+        "assets"
       ]
     },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
     "src"
