@@ -1,0 +1,47 @@
+.searchInputWrapper{
+    position: relative;
+    height: 100%;
+    
+    &:focus-within{
+        .startAdornment .adornmentIcon{
+            color: var(--color-primary);
+        }
+    }
+}
+.searchInput{
+    width: 100%;
+    height: 100%;
+    padding: 6px 40px;
+    border: 2px solid transparent;
+    border-radius: 28px;
+    color: var(--color-text);
+    background: var(--color-bg-200);
+    transition: all 0.1s linear;
+
+    &::placeholder{
+        color: var(--color-text-100);
+        opacity: 0.5;
+    }
+    &:focus{
+        border-color: var(--color-primary);
+        background-color: transparent;
+    }
+}
+.adornment{
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.startAdornment{
+    left: 12px;
+}
+.endAdornment{
+    right: 15px;
+}
+.adornmentIcon{
+    color: var(--color-text-100);
+}
+.circularProgress{
+    color: var(--color-primary);
+}

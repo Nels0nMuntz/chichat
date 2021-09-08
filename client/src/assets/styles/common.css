@@ -1,18 +1,33 @@
-body{
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-weight: 300;
+body {
+    /* font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 300; */
+    font: 500 16px Roboto, sans-serif;
     line-height: 1.25;
     color: #202002;
 }
 
+.container {
+    width: 100%;
+    max-width: 1680px;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+}
+
+
 /*  auth  */
-.auth-form-field-wrapper{
+.auth-form-field-wrapper {
     margin-bottom: 6px;
 }
-.form-redirect-link{
+.form-redirect-link {
     font-size: 16px;
     font-weight: 300;
     opacity: 0.5;
     display: inline-block;
+}
+
+/* emoji-mart */
+.emoji-mart{
+    border-radius: var(--border-radius) !important;
 }

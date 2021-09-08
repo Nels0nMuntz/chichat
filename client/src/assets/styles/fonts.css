@@ -40,3 +40,14 @@
     font-weight: 500;
     font-style: normal;
 }
+@font-face {
+    font-family: "fontello";
+    src: url("../fonts/Fontello/fontello.eot"), 
+        url("../fonts/Fontello/fontello.woff") format("woff"),
+        url("../fonts/Fontello/fontello.woff2") format("woff2"),
+        url("../fonts/Fontello/fontello.ttf") format("truetype"),
+        url("../fonts/Fontello/fontello.eot?#iefix") format("embedded-opentype"),
+        url("../fonts/Fontello/fontello.svg?#fontello") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}

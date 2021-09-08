@@ -1,0 +1,30 @@
+:root {
+    --border-radius: 12px;
+
+    /* colors */
+    --color-white: #ffffff;
+    --color-error: #e53935;
+
+    /* dialogs */
+    --dialogs-width: 25%;
+
+    /* searchbar */
+    --searchbar-width: 25vw;
+    --searchbar-animation-duration: 0.2s;
+
+    /* messages */
+    --messages-container-width: 800px;
+
+    /* box-shadow */
+    --color-default-shadow: rgba(114, 114, 114, 0.25);
+}
+
+@include media-lg {
+    :root {
+        /* dialogs */
+        --dialogs-width: 35%;
+
+        /* searchbar */
+        --searchbar-width: 35vw;
+    }
+}

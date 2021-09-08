@@ -1,0 +1,61 @@
+.wrapper {
+    display: flex;
+    align-items: flex-end;
+}
+
+.input_wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    flex-grow: 1;
+    border-radius: 12px;
+    border-bottom-right-radius: 0px;
+    background-color: var(--color-bg);
+    .input_wrapper_appendex {
+        position: absolute;
+        right: -9px;
+        bottom: -3px;
+        width: 9px;
+        height: 20px;
+        // background: url(../../../../assets/img/appendix.svg) no-repeat left bottom / cover;
+    }
+}
+.input_action_wrapper {
+    position: relative;
+    flex-shrink: 0;
+    padding: 16px;
+}
+
+.textarea {
+    width: 100%;
+    padding: 18px 0;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    border: none;
+    resize: none;
+    background: inherit;
+
+    &::placeholder {
+        color: var(--color-text-200);
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.popover_container {
+    & > div {
+        padding-bottom: 8px;
+    }
+}
+.emoji_container {
+    position: absolute;
+    left: -16px;
+    top: -16px;
+}
+.menu_container {
+    position: absolute;
+    top: -16px;
+}

@@ -1,0 +1,26 @@
+.input_action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.message_popover_container {
+    & > div {
+        padding-bottom: 8px;
+        z-index: 1;
+    }
+}
+.home_popover_container {
+    & > div {
+        padding-top: 16px;
+        z-index: 1;
+    }
+}
+.emoji_container {
+    position: absolute;
+    left: -16px;
+    top: -16px;
+}
+.menu_container {
+    position: absolute;
+    top: -16px;
+}

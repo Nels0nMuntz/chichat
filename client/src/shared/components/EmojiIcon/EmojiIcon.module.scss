@@ -1,0 +1,11 @@
+.emoji{
+    display: inline-block;
+    font-size: 18px;
+    padding: 4px;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.1s linear;
+    &:hover{
+        background-color: #edf2f5;
+    }
+}

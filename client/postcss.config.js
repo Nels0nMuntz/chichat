@@ -1,7 +1,7 @@
 const postcssPresetEnv = require('postcss-preset-env');
 const assets  = require('postcss-assets');
 const webpInCssPlugin = require('webp-in-css/plugin');
-// const doiuse = require('doiuse');
+const pxtorem = require('postcss-pxtorem');
 
 module.exports = {
     plugins: [
@@ -22,11 +22,21 @@ module.exports = {
         assets({
             relative: "public/assets"
         }),
-        webpInCssPlugin({
-            modules: true,
-        }),
-        // doiuse({
-        //     browsers: browserslist,
+        // webpInCssPlugin({
+        //     modules: true,
         // }),
+        pxtorem({
+            propList: [
+                'font', 
+                'font-size', 
+                'line-height', 
+                'letter-spacing',
+                'border-radius',
+                'width',
+                'height',
+                'padding',
+                'margin',
+            ],
+        })
     ]
 };

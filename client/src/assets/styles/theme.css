@@ -1,0 +1,28 @@
+.theme-dark{
+    --color-text: #ffffff;
+    --color-text-100: #AAAAAA;
+    --color-text-200: #B4B4B4;
+    --color-primary: #8378DB;
+    --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-bg: #212121;
+    --color-bg-100: #0F0F0F;
+    --color-bg-200: #2C2C2C;
+    --color-borders: #303030;
+    --color-borders-input: #5B5B5A;
+    --color-bg-badge-unread: var(--color-primary);
+    --messages-track-bg: #0F0F0F;
+}
+.theme-light{
+    --color-text: #000000;
+    --color-text-100: #5d5e5f;
+    --color-text-200: #B4B4B4;
+    --color-primary: #50A2E9;
+    --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-bg: #FFFFFF;
+    --color-bg-100: #FFFFFF;
+    --color-bg-200: #F4F4F5;
+    --color-borders: #DADCE0;
+    --color-borders-input: #DADCE0;
+    --color-bg-badge-unread: #4DCD5E;
+    --messages-track-bg: url(../img/chat-bg.jpg) no-repeat center center / cover;;
+}

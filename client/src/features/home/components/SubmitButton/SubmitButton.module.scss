@@ -1,0 +1,33 @@
+.submit_button {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+    font-size: 30px;
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    transition: background-color 0.1s linear;
+
+    &:hover {
+        background-color: var(--color-primary);
+        .adornment_icon {
+            color: var(--color-white);
+        }
+    }
+
+    .adornment_icon {
+        transition: color 0.1s linear;
+    }
+
+    .send_icon {
+        transform: translateX(8%);
+        color: var(--color-primary);
+    }
+
+    .micro_icon {
+        color: var(--color-text-200);
+    }
+}
