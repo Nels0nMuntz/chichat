@@ -16,6 +16,8 @@ const SignInContainer: React.FC = () => {
         validationSchema: signInFormValidationSchema,
         onSubmit: values => console.log(values),
     });
+
+    const isTouched = !!Object.keys(form.touched).length;
     
     const formData: FormData<ISignInFormValues> = {
         email: {
@@ -44,6 +46,8 @@ const SignInContainer: React.FC = () => {
         <SignInForm
             submittingStatus={Status.Initial}
             formData={formData}
+            isValid={form.isValid && isTouched}
+            handleSubmit={form.handleSubmit}
         />
     )
 };

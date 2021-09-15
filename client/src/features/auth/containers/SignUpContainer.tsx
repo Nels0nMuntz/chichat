@@ -20,6 +20,8 @@ const SignUpContainer : React.FC = () => {
         onSubmit: values => console.log(values),
     });
 
+    const isTouched = !!Object.keys(form.touched).length;
+
     const formData: FormData<ISignUpFormValues> = {
         email: {
             name: 'email',
@@ -87,6 +89,8 @@ const SignUpContainer : React.FC = () => {
         <SignUpForm
             submittingStatus={Status.Initial}
             formData={formData}
+            isValid={form.isValid && isTouched}
+            handleSubmit={form.handleSubmit}
         />
     )
 };

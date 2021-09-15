@@ -6,13 +6,12 @@ import { SubmitButton, Status } from 'shared';
 import FormTextField from '../TextField/FormTextField';
 
 
-const SignUpForm : React.FC<IAuthFormProps<ISignUpFormValues>> = ({ submittingStatus, formData }) => {
+const SignUpForm : React.FC<IAuthFormProps<ISignUpFormValues>> = ({ submittingStatus, formData, isValid, handleSubmit }) => {
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             {Object.values(formData).map(({ name, label, type, value, error, touched, onBlur, onChange }) => (
-                <div className="auth-form-field-wrapper">
-                    <FormTextField
-                        key={name}
+                <div key={name} className="auth-form-field-wrapper">
+                    <FormTextField                        
                         id={name as string}
                         name={name as string}
                         label={label}
@@ -29,6 +28,7 @@ const SignUpForm : React.FC<IAuthFormProps<ISignUpFormValues>> = ({ submittingSt
             <SubmitButton
                 text='Зарегистрироваться'
                 isSubmitting={submittingStatus === Status.Running}
+                isValid={isValid}
             />
             <Link
                 to="/signin"

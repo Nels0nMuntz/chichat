@@ -26,3 +26,6 @@ export * from './validators/signUpFormValidationSchema';
 
 //utils
 export* from './utils/generateAvatar';
+
+// hocs
+export { default as withNotification } from './HOC/withNotification';

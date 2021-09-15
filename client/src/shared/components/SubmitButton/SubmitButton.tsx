@@ -8,18 +8,18 @@ import style from './SubmitButton.module.scss';
 type SubmitButtonProps = {
     text: string
     isSubmitting: boolean
-    handleSubmit?: (event: React.MouseEvent<HTMLButtonElement>) => void
+    isValid: boolean
 }
 
-const SubmitButton : React.FC<SubmitButtonProps> = ({ text, isSubmitting, handleSubmit }) => {
+const SubmitButton : React.FC<SubmitButtonProps> = ({ text, isSubmitting, isValid }) => {
     return (
         <button 
-            type={isSubmitting ? "button" : "submit"}
+            type={isValid ? "submit" : "button"}
             className={classnames(
                 style.modalButton,
-                isSubmitting && style.modalButtonLoading
+                isSubmitting && style.loading,
+                !isValid && style.disabled,
             )}
-            onSubmit={handleSubmit}
         >
             {isSubmitting 
                 ? <CircularProgress size={22} color="inherit" className={style.buttonLoader} /> 

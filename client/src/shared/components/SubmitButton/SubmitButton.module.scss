@@ -11,7 +11,7 @@
     background-color: #4CA5FF;
     border-radius: 4px;
 }
-.modalButtonLoading{
+.loading{
     position: relative;
     height: 56px;
     padding: 0;
@@ -23,4 +23,8 @@
         left: 50%;
         margin: -11px 0 0 -11px;
     }
+}
+.disabled{
+    background-color: #98a0a9;
+    cursor: auto;
 }

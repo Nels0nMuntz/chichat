@@ -56,11 +56,11 @@ const MoreActionsPopup: React.FC = React.memo(() => {
                 onOpen={handleOpen}
                 onClose={handleClose}
             >
-                <button className={style.input_action}>
+                <div className={style.input_action}>
                     <StyledIconButton size="small">
                         <MoreVertRoundedIcon htmlColor="var(--color-text-100)" />
                     </StyledIconButton>
-                </button>
+                </div>
             </Popover>
             <div className={`${style.home_popover_container}`} ref={сontainer}></div>
         </React.Fragment>

@@ -1,2 +1,2 @@
 export * from './routes';
-export * from './store/reducer';
+export * from './urls';
