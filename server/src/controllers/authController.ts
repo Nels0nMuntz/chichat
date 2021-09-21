@@ -20,7 +20,6 @@ class AuthController {
                 const message = errors.array().map(({ msg, param }) => ({ msg, param }));
                 throw ErrorException.BadRequestError("Validation error", message);
             };
-
             const { refreshToken } = await this.service.signup(req.body);
             res.cookie("refreshToken", refreshToken, { 
                 maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -29,11 +28,16 @@ class AuthController {
             return res.json({});
         } catch (error) {
             next(error);
-        }
+        };
     }
 
     public signin = async (req: IRequest<IAuthSignInRequest>, res: Response<IAuthSignInResponse>, next: NextFunction) => {
-        try {
+        try {            
+            const errors = validationResult(req).formatWith(errorFormatter);
+            if(!errors.isEmpty()){
+                const message = errors.array().map(({ msg, param }) => ({ msg, param }));
+                throw ErrorException.BadRequestError("Validation error", message);
+            };
             const tokens = await this.service.signin(req.body);
             res.cookie("refreshToken", tokens.refreshToken, { 
                 maxAge: 30 * 24 * 60 * 60 * 1000,

@@ -1,11 +1,24 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ISignUpFormValues } from '../models';
 import SignUpForm from '../components/SignUpForm/SignUpForm';
-import { FormData, signUpFormValidationSchema, Status } from 'shared';
+import { FormData, signUpFormValidationSchema } from 'shared';
+import { SignUpUserDto } from '../dtos';
+import { signUpAction, selectSignupStatus, selectSignUpErrors } from '../store';
 
-const SignUpContainer : React.FC = () => {
+const SignUpContainer: React.FC = () => {
+
+    const dispatch = useDispatch();
+
+    const signUpStatus = useSelector(selectSignupStatus);
+    const serverValidationErrors = useSelector(selectSignUpErrors);
+
+    const handleSubmit = React.useCallback((data: ISignUpFormValues) => {
+        const user = new SignUpUserDto(data);
+        dispatch(signUpAction({ payload: { ...user } }));
+    }, []);
 
     const form = useFormik<ISignUpFormValues>({
         initialValues: {
@@ -17,8 +30,12 @@ const SignUpContainer : React.FC = () => {
             passwordRepeat: '',
         },
         validationSchema: signUpFormValidationSchema,
-        onSubmit: values => console.log(values),
+        onSubmit: handleSubmit,
     });
+
+    const onChangePhoneInput = (value: string) => {       
+        form.setFieldValue('phoneNumber',value);
+    };
 
     const isTouched = !!Object.keys(form.touched).length;
 
@@ -85,12 +102,19 @@ const SignUpContainer : React.FC = () => {
         }
     };
 
+    React.useEffect(() => {
+        if(serverValidationErrors){
+            form.setErrors(serverValidationErrors);
+        };  
+    }, [serverValidationErrors]);
+
     return (
         <SignUpForm
-            submitStatus={Status.Initial}
+            submitStatus={signUpStatus}
             formData={formData}
             isValid={form.isValid && isTouched}
             handleSubmit={form.handleSubmit}
+            handleChangePhoneInput={onChangePhoneInput}
         />
     )
 };

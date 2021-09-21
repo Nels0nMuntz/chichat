@@ -4,15 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SignInForm from '../components/SignInForm/SignInForm';
 import { ISignInFormValues } from '../models';
-import { FormData, signInFormValidationSchema } from 'shared';
-import { signInAction, selectSigninStatus } from '../store';
+import { FormData } from 'shared';
+import { signInAction, selectSigninStatus, selectSignInErrors } from '../store';
 
 
 const SignInContainer: React.FC = () => {
 
     const dispath = useDispatch();
 
-    const submitStatus = useSelector(selectSigninStatus);
+    const sugnInStatus = useSelector(selectSigninStatus);
+    const serverValidationErrors = useSelector(selectSignInErrors);
 
     const handleSubmit = React.useCallback((data: ISignInFormValues) => {
         dispath(signInAction({ payload: data }));
@@ -23,7 +24,7 @@ const SignInContainer: React.FC = () => {
             email: '',
             password: '',
         },
-        validationSchema: signInFormValidationSchema,
+        // validationSchema: signInFormValidationSchema,
         onSubmit: handleSubmit,
     });
 
@@ -51,10 +52,16 @@ const SignInContainer: React.FC = () => {
             onChange: form.handleChange,
         },
     };
+
+    React.useEffect(() => {
+        if(serverValidationErrors){
+            form.setErrors(serverValidationErrors);
+        };
+    }, [serverValidationErrors]);
     
     return (
         <SignInForm
-            submitStatus={submitStatus}
+            submitStatus={sugnInStatus}
             formData={formData}
             isValid={form.isValid && isTouched}
             handleSubmit={form.handleSubmit}

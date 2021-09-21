@@ -38,8 +38,11 @@ export const signUpValidationSchema = checkSchema({
     },
     lastName: {
         trim: true,
+        optional: {
+            options: { nullable: true },            
+        },
         notEmpty: {
-            errorMessage: "Last name is required",
+            errorMessage: "Incorrect last name format",
             bail: true,
         },
         matches: {

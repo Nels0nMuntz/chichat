@@ -13,8 +13,7 @@ export const signUpFormValidationSchema = Yup.object().shape({
         .required(msg.empty),
     lastName: Yup
         .string()
-        .matches(patterns.cyrillic, msg.lastName.error)
-        .required(msg.empty),
+        .matches(patterns.cyrillic, msg.lastName.error),
     phoneNumber: Yup
         .string()
         .min(18, msg.phoneNumber.error)
@@ -25,7 +24,7 @@ export const signUpFormValidationSchema = Yup.object().shape({
         .max(20, msg.password.error.maxLenght)
         .matches(patterns.password, msg.password.error.wrongChar)
         .required(msg.empty),
-    paswordRepeat: Yup
+    passwordRepeat: Yup
         .string()
         .oneOf([Yup.ref('password'), null], msg.password.notMatch)
         .required(msg.empty),

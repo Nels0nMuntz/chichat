@@ -1,3 +1,8 @@
-import { ISignUpFormValues } from "../default/signup/signUpFormValues.mode";
-
-export interface ISignUpRequest extends ISignUpFormValues { };
+export interface ISignUpRequest {
+    email: string;
+    firstName: string;
+    lastName?: string;
+    phoneNumber: string;
+    password: string;
+    passwordRepeat: string;
+};

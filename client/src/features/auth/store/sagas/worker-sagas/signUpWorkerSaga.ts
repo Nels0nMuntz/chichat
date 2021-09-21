@@ -1,10 +1,15 @@
 import { AxiosResponse } from "axios";
 import { put } from "@redux-saga/core/effects";
-import { signUpAction, setSignUpStatus } from "../../actions";
-import { Status } from "shared";
+import { ResponseError, Status } from "shared";
 import { authService } from "services";
 import { setNotification } from "features/notification/store";
 import { SIGNIN_PAGE_URL } from "features/auth/urls";
+import { SignUpFormErrors } from "features/auth/models";
+import { 
+    signUpAction, 
+    setSignUpStatus,
+    setSignUpErrors,
+} from "../../actions";
 
 
 export function* signUpWorkerSaga(action: typeof signUpAction.typeOf.action){
@@ -12,16 +17,22 @@ export function* signUpWorkerSaga(action: typeof signUpAction.typeOf.action){
         yield put(setSignUpStatus({ payload: Status.Running }));
         const { status }: AxiosResponse = yield authService.signup(action.payload);
         if(status === 200){
-            yield put(setSignUpStatus({ payload: Status.Success }));
             location.href = SIGNIN_PAGE_URL.urlTemplate;
+            yield put(setSignUpStatus({ payload: Status.Success }));
         }
     } catch (error: any) {
+        const Error: ResponseError<Array<{ param: string, msg: string }>> = error;
         yield put(setSignUpStatus({ payload: Status.Error }));
-        yield setNotification({
+        if(Error.status === 400){
+            const errors: SignUpFormErrors = {};
+            Error.metaData.forEach(({ param, msg }) => errors[param] = msg);
+            yield put(setSignUpErrors({ payload: errors }));
+        }
+        yield put(setNotification({
             payload: {
                 status: Status.Error,
                 message: error.message,
             }
-        });
+        }));       
     };
 };

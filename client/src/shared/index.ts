@@ -19,6 +19,8 @@ export * from './models/status.model';
 export * from './models/childrenProps.model';
 export * from './models/formFieldModels/formValues.model'; 
 export * from './models/formFieldModels/formData.model'; 
+export * from './models/formFieldModels/formErrors.model'; 
+export * from './models/responseError.model'; 
 
 // validation schemas
 export * from './validators/signInFormValidationSchema';
@@ -26,6 +28,7 @@ export * from './validators/signUpFormValidationSchema';
 
 //utils
 export* from './utils/generateAvatar';
+export* from './utils/isEmptyString';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

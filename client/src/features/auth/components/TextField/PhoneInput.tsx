@@ -4,8 +4,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import MuiPhoneNumber from "material-ui-phone-number";
 
 import style from "./FormTextField.module.scss";
-import errorImg from "../../assets/images/error.svg";
-import successImg from "../../assets/images/success.svg";
+import errorImg from "assets/img/error.svg"
+import successImg from "assets/img/success.svg"
 
 
 const useStyles = makeStyles({
@@ -48,7 +48,20 @@ const useStyles = makeStyles({
     }
 });
 
-const PhoneInput = ({ id, label, name, value, helperText, isTouched, isValid, onChange, onBlur }) => {
+type PhoneInputProps = {
+    id: string
+    label: string
+    type: 'text'
+    name: string
+    value: string
+    helperText: string
+    isTouched: boolean
+    isValid: boolean
+    onChange: (value: string) => void
+    onBlur: (e: React.ChangeEvent<any>) => void
+};
+
+const PhoneInput: React.FC<PhoneInputProps> = ({ id, label, type, name, value, helperText, isTouched, isValid, onChange, onBlur }) => {
 
     const classes = useStyles();
 
@@ -57,6 +70,7 @@ const PhoneInput = ({ id, label, name, value, helperText, isTouched, isValid, on
             id={id}
             name={name}
             label={label}
+            type={type}
             value={value}
             helperText={helperText}
             onChange={value => onChange(value)}
@@ -67,18 +81,29 @@ const PhoneInput = ({ id, label, name, value, helperText, isTouched, isValid, on
             className={classes.root}
             defaultCountry='ua'
             onlyCountries={['ua', 'ru']}
-            InputProps={
-                !isTouched ? null : ({
-                    endAdornment:
-                        <InputAdornment position="end" >
-                            {isValid ? (
-                                <img className={style.endImage} src={successImg} alt="success" />
-                            ) : (
-                                <img className={style.endImage} src={errorImg} alt="error" />
-                            )}
-                        </InputAdornment>
-                })
-            }
+            InputProps={{
+                endAdornment: !isTouched ? null : (
+                    <InputAdornment position="end" >
+                        {isValid ? (
+                            <img className={style.endImage} src={successImg} alt="success" />
+                        ) : (
+                            <img className={style.endImage} src={errorImg} alt="error" />
+                        )}
+                    </InputAdornment>
+                )
+            }}
+        // InputProps={
+        //     !isTouched ? null : ({
+        //         endAdornment:
+        //             <InputAdornment position="end" >
+        //                 {isValid ? (
+        //                     <img className={style.endImage} src={successImg} alt="success" />
+        //                 ) : (
+        //                     <img className={style.endImage} src={errorImg} alt="error" />
+        //                 )}
+        //             </InputAdornment>
+        //     })
+        // }
         />
     )
 }

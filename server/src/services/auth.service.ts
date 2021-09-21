@@ -52,10 +52,14 @@ export class AuthService {
     public signin = async (body: IAuthSignInRequest): Promise<{ accessToken: string, refreshToken: string }> => {
         const { email, password } = new SignInUserDto(body);
         const document = await this.repository.getOneByEmail(email);
-        if (!document) throw ErrorException.BadRequestError("User does not exists");
+        if (!document){
+            throw ErrorException.BadRequestError("User does not exists", [{ param: "email", msg: "User does not exists" }]);
+        }
 
-        const isPassEqual = compare(password, document.password);
-        if (!isPassEqual) throw ErrorException.BadRequestError("Paasword is incorrect");
+        const isPassEqual = await compare(password, document.password);
+        if (!isPassEqual) {
+            throw ErrorException.BadRequestError("Paasword is incorrect", [{ param: "password", msg: "Paasword is incorrect" }]);
+        }
 
         const tokenPayload = new TokenPayloadDto(document);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });

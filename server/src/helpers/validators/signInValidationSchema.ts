@@ -2,6 +2,7 @@ import { checkSchema } from "express-validator";
 
 export const signInValidationSchema = checkSchema({
     email: {
+        trim: true,
         notEmpty: {
             errorMessage: "E-mail is required",
             bail: true,
