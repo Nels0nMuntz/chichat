@@ -1,12 +1,22 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 
 import SignInForm from '../components/SignInForm/SignInForm';
 import { ISignInFormValues } from '../models';
-import { FormData, signInFormValidationSchema, Status } from 'shared';
+import { FormData, signInFormValidationSchema } from 'shared';
+import { signInAction, selectSigninStatus } from '../store';
 
 
 const SignInContainer: React.FC = () => {
+
+    const dispath = useDispatch();
+
+    const submitStatus = useSelector(selectSigninStatus);
+
+    const handleSubmit = React.useCallback((data: ISignInFormValues) => {
+        dispath(signInAction({ payload: data }));
+    }, []);
 
     const form = useFormik<ISignInFormValues>({
         initialValues: {
@@ -14,7 +24,7 @@ const SignInContainer: React.FC = () => {
             password: '',
         },
         validationSchema: signInFormValidationSchema,
-        onSubmit: values => console.log(values),
+        onSubmit: handleSubmit,
     });
 
     const isTouched = !!Object.keys(form.touched).length;
@@ -40,11 +50,11 @@ const SignInContainer: React.FC = () => {
             onBlur: form.handleBlur,
             onChange: form.handleChange,
         },
-    }
+    };
     
     return (
         <SignInForm
-            submittingStatus={Status.Initial}
+            submitStatus={submitStatus}
             formData={formData}
             isValid={form.isValid && isTouched}
             handleSubmit={form.handleSubmit}

@@ -82,9 +82,6 @@ export class AuthService {
         const receivedToken = this.tokenService.validateRefreshToken(refreshToken);
         const tokenFromDB = await this.tokenService.getRefreshToken(refreshToken);
 
-        // REMOVE
-        console.log({ receivedToken, tokenFromDB });
-
         if (!receivedToken || !tokenFromDB) {
             throw ErrorException.UnauthorizedError();
         }

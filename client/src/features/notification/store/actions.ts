@@ -1,6 +1,6 @@
 import { defineAction } from "rd-redux-utils";
-import { INotification } from "../models";
+import { Status } from "shared";
 
-export const setNotification = defineAction<{ payload: INotification }>("SET_NOTIFICATIO");
+export const setNotification = defineAction<{ payload: { status: Status, message: string | string[] } }>("SET_NOTIFICATION");
 
 export const dropNotification = defineAction<{}>("DROP_NOTIFICATION");

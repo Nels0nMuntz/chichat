@@ -47,6 +47,9 @@
       ],
       "assets": [
         "assets"
+      ],
+      "core": [
+        "core"
       ]
     },
     "esModuleInterop": true,

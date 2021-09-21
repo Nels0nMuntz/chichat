@@ -15,12 +15,14 @@ export const notificationReducer = (state: INotification = initialState, action:
     if(setNotification.is(action)){
         return {
             ...action.payload,
+            isOpen: true,
         };
     };
 
     if(dropNotification.is(action)){
         return {
-            ...initialState,
+            ...state,
+            isOpen: false,
         };
     };
 

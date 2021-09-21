@@ -21,7 +21,6 @@ export class MailService {
 
     public sendActivationMail = async (email: string, link: string) => {
         try {
-            console.log(this.transporter.options);
             const response = await this.transporter.sendMail({
                 from: process.env.SMTP_USER,
                 to: email,

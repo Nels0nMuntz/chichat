@@ -6,7 +6,7 @@ import { Status, SubmitButton } from 'shared';
 import FormTextField from '../TextField/FormTextField';
 
 
-const SignInForm: React.FC<IAuthFormProps<ISignInFormValues>> = ({ submittingStatus, formData, isValid, handleSubmit }) => {    
+const SignInForm: React.FC<IAuthFormProps<ISignInFormValues>> = ({ submitStatus, formData, isValid, handleSubmit }) => {    
 
     return (
         <form onSubmit={handleSubmit}>
@@ -28,7 +28,7 @@ const SignInForm: React.FC<IAuthFormProps<ISignInFormValues>> = ({ submittingSta
             ))}
             <SubmitButton
                 text='Войти в аккаунт'
-                isSubmitting={submittingStatus === Status.Running}
+                isSubmitting={submitStatus === Status.Running}
                 isValid={isValid}
             />
             <Link

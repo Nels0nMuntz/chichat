@@ -4,10 +4,11 @@ import { ErrorCode } from "./errorCode";
 export class ErrorException extends Error {
     public code: string;
     public status: number;
+    public message: string;
     public metaData: any;
 
     constructor(code: ErrorCode, message: string, metaData?: any){
-        super(message)
+        super()
         Object.setPrototypeOf(this, new.target.prototype);
         this.code = code;
         this.metaData = metaData;

@@ -7,7 +7,7 @@ import { ThemeContext } from 'shared';
 
 const App: React.FC = () => {
 
-    const { theme, switchTheme } = React.useContext(ThemeContext)
+    const { theme, switchTheme } = React.useContext(ThemeContext);
 
     return (
         <div className={`App ${theme}`} onDoubleClick={switchTheme}>

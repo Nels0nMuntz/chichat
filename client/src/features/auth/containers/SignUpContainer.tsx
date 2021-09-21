@@ -87,7 +87,7 @@ const SignUpContainer : React.FC = () => {
 
     return (
         <SignUpForm
-            submittingStatus={Status.Initial}
+            submitStatus={Status.Initial}
             formData={formData}
             isValid={form.isValid && isTouched}
             handleSubmit={form.handleSubmit}

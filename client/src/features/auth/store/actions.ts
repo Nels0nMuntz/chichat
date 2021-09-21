@@ -3,6 +3,10 @@ import { Status } from "shared";
 import { ISignInRequest, ISignUpRequest } from "../models";
 
 
+export const checkAuthAction = defineAction<{}>("CHECK_AUTH");
+
+export const setIsAuthAction = defineAction<{ payload: boolean }>("SET_IS_AUTH");
+
 // signin
 export const signInAction = defineAction<{ payload: ISignInRequest }>("AUTH_SIGNIN");
 

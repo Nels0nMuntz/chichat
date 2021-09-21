@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route, RouteComponentProps } from 'react-router';
 import { localStorageService } from 'services';
+import { HOME_PAGE_URL } from 'features/home/urls';
 
 
 type PublicRouteProps = {
@@ -16,7 +17,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ component: Component, ...rest
     return (
         <Route
             {...rest}
-            render={(props) => isAuth ? <Redirect to="/dashboard" /> : <Component {...props} />}
+            render={(props) => isAuth ? <Redirect to={HOME_PAGE_URL.urlTemplate} /> : <Component {...props} />}
         />
     );
 };

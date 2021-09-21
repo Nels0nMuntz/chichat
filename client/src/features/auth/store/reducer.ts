@@ -1,12 +1,14 @@
 import { Action } from "redux";
 import { Status } from "shared";
 import {
+    setIsAuthAction,
     setSignInStatus,
     setSignUpStatus,
 } from './actions';
 
 
 interface IAuthState {
+    isAuth: boolean,
     signin: {
         status: Status
     },
@@ -16,6 +18,7 @@ interface IAuthState {
 };
 
 const initialState: IAuthState = {
+    isAuth: false,
     signin: {
         status: Status.Initial,
     },
@@ -25,6 +28,13 @@ const initialState: IAuthState = {
 };
 
 export const authReducer = (state: IAuthState = initialState, action: Action): IAuthState => {
+
+    if(setIsAuthAction.is(action)){
+        return {
+            ...state,
+            isAuth: action.payload,
+        };
+    };
 
     if(setSignInStatus.is(action)){
         return {

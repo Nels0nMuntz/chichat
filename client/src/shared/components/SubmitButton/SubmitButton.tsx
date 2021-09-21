@@ -14,7 +14,7 @@ type SubmitButtonProps = {
 const SubmitButton : React.FC<SubmitButtonProps> = ({ text, isSubmitting, isValid }) => {
     return (
         <button 
-            type={isValid ? "submit" : "button"}
+            type="submit"
             className={classnames(
                 style.modalButton,
                 isSubmitting && style.loading,
