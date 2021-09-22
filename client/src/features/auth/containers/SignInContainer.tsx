@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SignInForm from '../components/SignInForm/SignInForm';
 import { ISignInFormValues } from '../models';
-import { FormData } from 'shared';
+import { FormData, signInFormValidationSchema } from 'shared';
 import { signInAction, selectSigninStatus, selectSignInErrors } from '../store';
 
 
@@ -24,7 +24,7 @@ const SignInContainer: React.FC = () => {
             email: '',
             password: '',
         },
-        // validationSchema: signInFormValidationSchema,
+        validationSchema: signInFormValidationSchema,
         onSubmit: handleSubmit,
     });
 

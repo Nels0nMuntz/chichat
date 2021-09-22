@@ -1,73 +1,83 @@
 import React from 'react';
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 // import MenuIcon from '@material-ui/icons/Menu';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import CloseIcon from '@material-ui/icons/Close';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import DialogsTrack from '../DialogsTrack/DialogsTrack';
 import Searchbar from '../Searchbar/Searchbar';
 import MessageInput from '../MessageInput/MessageInput';
 import MoreActionsPopup from '../Popups/MoreActionsPopup';
 import HomeMenuPopup from '../Popups/HomeMenuPopup';
-import { SearchField, CustomScroll, Avatar } from 'shared';
+import { SearchField, CustomScroll, Avatar, useMediaQuery } from 'shared';
 
 import style from './Home.module.scss';
 
 
-const useStyles = makeStyles({
-    label: {
-        '& .MuiSvgIcon-root path': {
-            fill: 'var(--color-text-100)',
+const StyledIconButton = withStyles({
+    root: {
+        '& .MuiSvgIcon-root': {
+            color: 'var(--color-text-100)',
         },
     },
     sizeSmall: {
         padding: '8px',
     },
-});
+})(IconButton);
 
 const Home: React.FC = () => {
 
-    const classes = useStyles();
+    const [searchBarVisility, setSearchBarVisility] = React.useState(false);
+    const [dialogsBarVisibility, setDialogsBarVisibility] = React.useState(true);
+    const [matches] = useMediaQuery("(max-width: 900px)");
 
-    const [searchbarVisility, setSearchbarVisility] = React.useState(false);
-
-    const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
-    const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
+    const closeSearchBar = React.useCallback(() => setSearchBarVisility(false), []);
+    const toggleSearchbarVisility = React.useCallback(() => setSearchBarVisility(!searchBarVisility), [searchBarVisility]);
+    const toggleDialogsBarVisibility = () => setDialogsBarVisibility((prev) => !prev);
 
     return (
         <div className={style.home_wrapper}>
             <div className="container">
                 <div className={style.home_grid}>
-                    <aside className={style.dialogs}>
-                        <header className={style.dialogs_header}>
-                            {/* <IconButton
-                                size="small"
-                                classes={{
-                                    label: classes.label,
-                                    sizeSmall: classes.sizeSmall,
-                                }}
-                            >
-                                <MenuIcon fontSize="medium" />
-                            </IconButton> */}
-                            <HomeMenuPopup/>
-                            <div className={style.search_wrapper}>
-                                <SearchField />
+                    <aside className={classNames(
+                        style.dialogs,
+                        !dialogsBarVisibility && matches && style.dialogs_close,
+                    )}>
+                        <div className={style.dialogs_anim}>
+                            <header className={style.dialogs_header}>
+                                <HomeMenuPopup />
+                                <div className={style.search_wrapper}>
+                                    <SearchField />
+                                </div>
+                            </header>
+                            <div className={style.dialogs_track}>
+                                <CustomScroll>
+                                    <DialogsTrack />
+                                </CustomScroll>
                             </div>
-                        </header>
-                        <div className={style.dialogs_track}>
-                            <CustomScroll>
-                                <DialogsTrack />
-                            </CustomScroll>
                         </div>
                     </aside>
                     <main className={classNames(
                         style.home_main,
-                        searchbarVisility && style.searchbar_open)}
+                        searchBarVisility && style.searchbar_open)}
                     >
                         <div className={style.middle_column}>
                             <header className={style.middle_header}>
                                 <div className="user-info middle_header_info">
+                                    {matches && (
+                                        <div className={style.mainHeaderActionsButton} onClick={toggleDialogsBarVisibility}>
+                                            <StyledIconButton size="small">
+                                                {dialogsBarVisibility ? (
+                                                    <CloseIcon />
+                                                ) : (
+                                                    <ArrowBackIcon />
+                                                )}
+                                            </StyledIconButton>
+                                        </div>
+                                    )}
                                     <div className="avatar-wrapper">
                                         <div className={`${style.avatar} avatar`}>
                                             <Avatar
@@ -81,24 +91,24 @@ const Home: React.FC = () => {
                                             <h3>Sonar</h3>
                                         </div>
                                         <div className={'subtitle'}>
-                                            <div className="last-seen">last seen 23.06.2021</div>
+                                            <span className="last-seen">last seen 23.06.2021</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={style.middle_header_actions}>
                                     <div className={style.actionsButtonWrapper} onClick={toggleSearchbarVisility}>
-                                        <IconButton size="small" classes={{ sizeSmall: classes.sizeSmall }}>
-                                            <SearchRoundedIcon htmlColor="var(--color-text-100)" />
-                                        </IconButton>
+                                        <StyledIconButton size="small">
+                                            <SearchRoundedIcon />
+                                        </StyledIconButton>
                                     </div>
                                     <div className={style.actionsButtonWrapper}>
-                                        <MoreActionsPopup/>
+                                        <MoreActionsPopup />
                                     </div>
                                 </div>
                             </header>
                             <div className={style.messages_wrapper}>
                                 <CustomScroll>
-                                    
+
                                 </CustomScroll>
                                 <div className={style.message_input}>
                                     <MessageInput />
@@ -106,9 +116,11 @@ const Home: React.FC = () => {
                             </div>
                         </div>
                         <div className={style.searchbar}>
-                            <Searchbar
-                                handleClose={closeSearchbar}
-                            />
+                            <div className={style.searchbar_anim}>
+                                <Searchbar
+                                    handleClose={closeSearchBar}
+                                />
+                            </div>
                         </div>
                     </main>
                 </div>

@@ -1,16 +1,18 @@
 :root {
     --border-radius: 12px;
+    --layout-border-width: 1px;
 
     /* colors */
     --color-white: #ffffff;
     --color-error: #e53935;
 
     /* dialogs */
-    --dialogs-width: 25%;
+    --dialogs-width: 25vw;
 
     /* searchbar */
     --searchbar-width: 25vw;
-    --searchbar-animation-duration: 0.2s;
+    --layout-animation-duration: 0.75s;
+    --layout-animation-timing-function: cubic-bezier(.69,0,.35,.98);
 
     /* messages */
     --messages-container-width: 800px;
@@ -22,9 +24,33 @@
 @include media-lg {
     :root {
         /* dialogs */
-        --dialogs-width: 35%;
+        --dialogs-width: 35vw;
 
         /* searchbar */
         --searchbar-width: 35vw;
+    }
+}
+@include media-md-x{
+    :root {
+        /* dialogs */
+        --dialogs-width: 48vw;
+
+        /* searchbar */
+        --searchbar-width: 48vw;
+    }
+}
+@include media-md{
+    :root {
+        /* dialogs */
+        --dialogs-width: 54vw;
+
+        /* searchbar */
+        --searchbar-width: 54vw;
+    }
+}
+@include media-sm{
+    :root {
+        /* dialogs */
+        --dialogs-width: 100vw;
     }
 }

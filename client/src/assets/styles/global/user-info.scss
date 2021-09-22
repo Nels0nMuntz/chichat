@@ -71,6 +71,9 @@
         }
         .last-seen{
             font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
 }

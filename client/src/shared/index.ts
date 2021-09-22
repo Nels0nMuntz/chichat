@@ -32,3 +32,6 @@ export* from './utils/isEmptyString';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';
+
+//hooks
+export { default as useMediaQuery } from './hooks/useMediaQuery';

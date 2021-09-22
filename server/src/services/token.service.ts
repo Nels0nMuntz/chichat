@@ -19,7 +19,7 @@ export class TokenService {
             JWT_ACCESS_MAX_AGE,
             JWT_REFRESH_MAX_AGE,
         } = process.env;
-        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: "20s" });
+        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: "5m" });
         // const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: JWT_ACCESS_MAX_AGE });
         const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_MAX_AGE });
         return {

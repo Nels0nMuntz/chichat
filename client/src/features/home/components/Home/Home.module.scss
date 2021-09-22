@@ -1,4 +1,4 @@
-@import '../../../../assets/styles/mixins/media.scss';
+@import "../../../../assets/styles/mixins/media.scss";
 
 .home_wrapper {
     background-color: var(--color-bg);
@@ -11,14 +11,24 @@
     border-left: 1px solid var(--color-borders);
     border-right: 1px solid var(--color-borders);
     overflow: hidden;
+    @media screen and (max-width: 1680px) {
+        border-left: none;
+        border-right: none;
+    }
 }
 
 /*  dialogs */
 .dialogs {
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
     width: var(--dialogs-width);
-    min-width: 320px;
+    min-width: 320px; 
+    transform-origin: 0% 50%;   
+    transition: width var(--layout-animation-duration) var(--layout-animation-timing-function),
+        transform var(--layout-animation-duration) ease-in-out;
+    @include media-md-x{
+        min-width: unset;
+    }
 
     .dialogs_header {
         display: flex;
@@ -37,17 +47,42 @@
         flex-grow: 1;
         margin-left: 12px;
     }
+    .dialogs_anim{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--dialogs-width);
+        display: flex;
+        flex-direction: column;
+        border-right: var(--layout-border-width) solid var(--color-borders);
+        background-color: var(--color-white);
+    }
+}
+.dialogs_close{
+    width: 0;
+    overflow: hidden;
+    transform: scale3d(0.93, 0.93, 0.93);
 }
 
 /* homa main */
 .home_main {
     display: flex;
     flex-grow: 1;
-    border-left: 1px solid var(--color-borders);
+    overflow: hidden;
+    @include media-md-x{
+        position: relative;
+        min-width: 600px;
+        z-index: 1;
+    }
+    @include media-sm{
+        min-width: unset;
+    }
 }
 
 /* middle column */
 .middle_column {
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -78,7 +113,11 @@
     line-height: 1.2rem;
 }
 
-.messages_wrapper{
+.mainHeaderActionsButton{
+    margin-right: 3px;
+}
+
+.messages_wrapper {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -87,23 +126,35 @@
 /* searchbar */
 .searchbar {
     width: 0;
-    border-left: 1px solid var(--color-borders);
+    position: relative;
     background-color: var(--color-white);
-    transition: width var(--searchbar-animation-duration) ease-out;
-
-    @include media-lg{
-        position: absolute;
+    transition: width var(--layout-animation-duration) var(--layout-animation-timing-function);
+    @include media-lg {
+        position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
+    }
+    @include media-sm{
+        display: none;
+    }
+}
+.searchbar_anim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--searchbar-width);
+    background-color: var(--color-white);
+    @include media-lg{
         box-shadow: 0 4px 8px 2px var(--color-default-shadow);
-        border-left: none;
     }
 }
 .home_main {
     &.searchbar_open {
         .searchbar {
             width: var(--searchbar-width);
+            border-left: var(--layout-border-width) solid var(--color-borders);
         }
     }
 }
@@ -116,13 +167,19 @@
     margin: 0 auto;
     padding: 8px 16px 24px;
 
-    &::before{
-        content: '';
+    &::before {
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 1px;
-        background: linear-gradient(90deg, rgba(#fff, 0.0) 0%, rgba(#fff, 0.5) 5%, rgba(#fff, 0.5) 95%, rgba(#fff, 0.0) 100%);
+        background: linear-gradient(
+            90deg,
+            rgba(#fff, 0) 0%,
+            rgba(#fff, 0.5) 5%,
+            rgba(#fff, 0.5) 95%,
+            rgba(#fff, 0) 100%
+        );
     }
 }
