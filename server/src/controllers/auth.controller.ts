@@ -5,7 +5,8 @@ import { IAuthSignUpRequest, IAuthSignInRequest, IAuthSignInResponse } from '../
 import { AuthService } from '../services';
 import { ErrorException, IRequest } from '../shared';
 
-class AuthController {
+
+export class AuthController {
 
     private service: AuthService;
 
@@ -88,5 +89,3 @@ class AuthController {
 
     public getUsers = async (req: Request, res: Response, next: NextFunction) => res.json({ users: [] })
 };
-
-export default AuthController;

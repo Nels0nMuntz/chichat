@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import { connectDB } from './core/db';
-import { rootRouter } from './routers/rootRouter';
+import { rootRouter } from './routers/root.router';
 import { errorHandlerMW } from './middlewares';
 
 dotenv.config();

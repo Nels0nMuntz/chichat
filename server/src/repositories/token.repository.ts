@@ -45,6 +45,4 @@ export class TokenRepository {
             throw ErrorException.ServerError("Can not delete refresh token in DB");
         }
     }
-}
-
-export const tokenRepository = new TokenRepository();
+};

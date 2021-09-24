@@ -15,7 +15,7 @@ export interface IUserDocument extends Document, IUserSchema { };
 
 export interface IUserModel extends Model<IUserDocument> { };
 
-const UserSchema = new Schema<IUserSchema>({
+const userSchema = new Schema<IUserSchema>({
     email: {
         type: String,
         unique: true,
@@ -50,7 +50,7 @@ const UserSchema = new Schema<IUserSchema>({
     activationId: {
         type: String,
         required: true,
-    },
+    }
 });
 
-export const userModel: IUserModel = model<IUserDocument>("User", UserSchema);
+export const userModel = model<IUserDocument>("User", userSchema);

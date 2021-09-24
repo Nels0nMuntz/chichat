@@ -20,7 +20,6 @@ class AuthRouter {
         this.router.get('/signout', this.controller.signout);
         this.router.get('/activate/:link', this.controller.activate);
         this.router.get('/refresh', this.controller.refresh);
-        this.router.get('/users', checkAuthMW, this.controller.getUsers);
     }
 };
 

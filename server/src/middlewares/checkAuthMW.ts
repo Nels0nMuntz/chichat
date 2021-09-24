@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorException } from "../shared";
-import { tokenService } from "../services";
+import { TokenService } from "../services";
 import { IDecodedToken } from '../shared';
 
-export const checkAuthMW = (req: Request, res: Response, next: NextFunction) => {
+
+const tokenService = new TokenService();
+
+export const checkAuthMW = (req: Request, res: Response, next: NextFunction) => {    
     try {
         const authorizationHeader = req.headers.authorization;
         if(!authorizationHeader) {

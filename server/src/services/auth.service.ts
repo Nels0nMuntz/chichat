@@ -1,7 +1,7 @@
 import { compare, hash } from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
-import { UserRepository, userRepository } from "../repositories";
-import { MailService, mailService, TokenService, tokenService } from ".";
+import { UserRepository } from "../repositories";
+import { MailService, TokenService } from ".";
 import { SignUpUserDto, SignInUserDto, TokenPayloadDto } from '../dtos'
 import { ErrorCode, ErrorException } from "../shared";
 import { IAuthSignUpRequest, IAuthSignInRequest } from "../models";
@@ -14,9 +14,9 @@ export class AuthService {
     private tokenService: TokenService;
 
     constructor() {
-        this.repository = userRepository;
-        this.mailService = mailService;
-        this.tokenService = tokenService;
+        this.repository = new UserRepository();
+        this.mailService = new MailService();
+        this.tokenService = new TokenService();
     };
 
     public signup = async (body: IAuthSignUpRequest): Promise<{ accessToken: string, refreshToken: string }> => {
@@ -98,5 +98,3 @@ export class AuthService {
         return { ...tokens };
     }
 };
-
-export const authService = new AuthService();

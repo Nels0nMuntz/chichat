@@ -1,6 +1,6 @@
 import jwt, { verify } from 'jsonwebtoken'
 import { TokenPayloadDto } from '../dtos';
-import { TokenRepository, tokenRepository } from '../repositories';
+import { TokenRepository } from '../repositories';
 import { ITokenDocument } from '../schemas';
 
 
@@ -9,7 +9,7 @@ export class TokenService {
     private repository: TokenRepository
 
     constructor() {
-        this.repository = tokenRepository;
+        this.repository = new TokenRepository();
     }
 
     public generateTokens = (payload: TokenPayloadDto) => {
@@ -62,5 +62,3 @@ export class TokenService {
         }
     }
 };
-
-export const tokenService = new TokenService();
