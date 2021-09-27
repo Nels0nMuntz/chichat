@@ -3,11 +3,6 @@
 interface CssExports {
   'actionsButtonWrapper': string;
   'avatar': string;
-  'dialogs': string;
-  'dialogs_anim': string;
-  'dialogs_close': string;
-  'dialogs_header': string;
-  'dialogs_track': string;
   'home_grid': string;
   'home_main': string;
   'home_wrapper': string;
@@ -21,6 +16,11 @@ interface CssExports {
   'searchbar': string;
   'searchbar_anim': string;
   'searchbar_open': string;
+  'sidebar': string;
+  'sidebar_anim': string;
+  'sidebar_close': string;
+  'sidebar_header': string;
+  'sidebar_track': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

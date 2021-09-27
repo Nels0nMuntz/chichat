@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 import CloseIcon from '@material-ui/icons/Close';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -12,7 +11,9 @@ import Searchbar from '../Searchbar/Searchbar';
 import MessageInput from '../MessageInput/MessageInput';
 import MoreActionsPopup from '../Popups/MoreActionsPopup';
 import HomeMenuPopup from '../Popups/HomeMenuPopup';
-import { SearchField, CustomScroll, Avatar, useMediaQuery } from 'shared';
+import SidebarSearchField from '../SidebarSearchField/SidebarSearchField';
+import GlobalSearch from '../GlobalSearch/GlobalSearch';
+import { CustomScroll, Avatar, useMediaQuery } from 'shared';
 
 import style from './Home.module.scss';
 
@@ -30,39 +31,62 @@ const StyledIconButton = withStyles({
 
 const Home: React.FC = () => {
 
-    const [searchBarVisility, setSearchBarVisility] = React.useState(false);
-    const [dialogsBarVisibility, setDialogsBarVisibility] = React.useState(true);
+    const [searchbarVisility, setSearchbarVisility] = React.useState(false);
+    const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
+    const [searchMode, setSearchMode] = React.useState(false);
     const [matches] = useMediaQuery("(max-width: 900px)");
 
-    const closeSearchBar = React.useCallback(() => setSearchBarVisility(false), []);
-    const toggleSearchbarVisility = React.useCallback(() => setSearchBarVisility(!searchBarVisility), [searchBarVisility]);
-    const toggleDialogsBarVisibility = () => setDialogsBarVisibility((prev) => !prev);
+    const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
+    const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
+    const toggleDialogsBarVisibility = () => setSidebarVisibility((prev) => !prev);
+    const enableSearchMode = React.useCallback(() => setSearchMode(true), []);
+    const disableSearchMode = React.useCallback(() => setSearchMode(false), []);
+    const handleKeydown = (e: KeyboardEvent) => {
+        if (e.code === "Escape") setSearchMode(false);
+    };
+
+    React.useEffect(() => {
+        if (searchMode) {
+            window.document.body.addEventListener("keydown", handleKeydown);
+        }
+        return () => {
+            window.document.body.removeEventListener("keydown", handleKeydown);
+        }
+    }, [searchMode]);
 
     return (
         <div className={style.home_wrapper}>
             <div className="container">
                 <div className={style.home_grid}>
                     <aside className={classNames(
-                        style.dialogs,
-                        !dialogsBarVisibility && matches && style.dialogs_close,
+                        style.sidebar,
+                        !sidebarVisibility && matches && style.sidebar_close,
                     )}>
-                        <div className={style.dialogs_anim}>
-                            <header className={style.dialogs_header}>
-                                <HomeMenuPopup />
+                        <div className={style.sidebar_anim}>
+                            <header className={style.sidebar_header}>
+                                <HomeMenuPopup
+                                    searchMode={searchMode}
+                                    handleDisableSearchMode={disableSearchMode}
+                                />
                                 <div className={style.search_wrapper}>
-                                    <SearchField />
+                                    <SidebarSearchField
+                                        searchMode={searchMode}
+                                        enableSearchMode={enableSearchMode}
+                                    />
                                 </div>
                             </header>
-                            <div className={style.dialogs_track}>
-                                <CustomScroll>
+                            <div className={style.sidebar_track}>
+                                {searchMode ? (
+                                    <GlobalSearch/>
+                                ) : (
                                     <DialogsTrack />
-                                </CustomScroll>
+                                )}
                             </div>
                         </div>
                     </aside>
                     <main className={classNames(
                         style.home_main,
-                        searchBarVisility && style.searchbar_open)}
+                        searchbarVisility && style.searchbar_open)}
                     >
                         <div className={style.middle_column}>
                             <header className={style.middle_header}>
@@ -70,7 +94,7 @@ const Home: React.FC = () => {
                                     {matches && (
                                         <div className={style.mainHeaderActionsButton} onClick={toggleDialogsBarVisibility}>
                                             <StyledIconButton size="small">
-                                                {dialogsBarVisibility ? (
+                                                {sidebarVisibility ? (
                                                     <CloseIcon />
                                                 ) : (
                                                     <ArrowBackIcon />
@@ -118,7 +142,7 @@ const Home: React.FC = () => {
                         <div className={style.searchbar}>
                             <div className={style.searchbar_anim}>
                                 <Searchbar
-                                    handleClose={closeSearchBar}
+                                    handleClose={closeSearchbar}
                                 />
                             </div>
                         </div>

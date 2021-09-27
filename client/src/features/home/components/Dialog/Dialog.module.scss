@@ -1,13 +1,3 @@
-.dialog {
-    padding: 8px;
-    border-radius: 14px;
-    cursor: pointer;
-    transition: background-color 0.1s linear;
-    &:hover {
-        background-color: var(--color-bg-200);
-    }
-}
-
 .avatar {
     width: 54px;
     height: 54px;

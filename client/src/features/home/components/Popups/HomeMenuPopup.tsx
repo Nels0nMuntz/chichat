@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import TurnedInNotIcon from '@material-ui/icons/TurnedInNot';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
@@ -20,8 +21,14 @@ import style from './Popups.module.scss';
 
 
 const StyledIconButton = withStyles({
-    sizeSmall: {
+    root: {
         padding: '8px',
+        '&:hover': {
+            backgroundColor: 'var(--touche-ripple-hover)',
+        },
+        '& .MuiSvgIcon-root': {
+            fill: "var(--color-text-100)",
+        },
     },
 })(IconButton);
 
@@ -43,7 +50,12 @@ const StyledListItem = withStyles({
     }
 })(ListItem);
 
-const HomeMenuPopup: React.FC = React.memo(() => {
+type HomeMenuPopupProps = {
+    searchMode: boolean;
+    handleDisableSearchMode: () => void
+};
+
+const HomeMenuPopup: React.FC<HomeMenuPopupProps> = React.memo(({ searchMode, handleDisableSearchMode }) => {
 
     const сontainer = React.useRef<HTMLDivElement>(null);
 
@@ -52,7 +64,13 @@ const HomeMenuPopup: React.FC = React.memo(() => {
 
     const { switchTheme } = React.useContext(ThemeContext);
 
-    const handleOpen = React.useCallback(() => setOpen(true), []);
+    const handleOpen = React.useCallback(() => { 
+        if(searchMode){
+            handleDisableSearchMode();
+            return;
+        };
+        setOpen(true);
+    }, [searchMode]);
     const handleClose = React.useCallback(() => setOpen(false), []);
 
     React.useEffect(() => setСontainerRef(сontainer.current), []);
@@ -68,12 +86,12 @@ const HomeMenuPopup: React.FC = React.memo(() => {
                             { icon: <ArchiveOutlinedIcon />, title: 'Archived Chats' },
                             { icon: <PersonOutlineOutlinedIcon />, title: 'Contacts' },
                             { icon: <SettingsOutlinedIcon />, title: 'Settings' },
-                            <StyledListItem button={true} onClick={switchTheme}>
+                            <StyledListItem button={true} onClick={switchTheme} key="Night Mode">
                                 <ListItemIcon>
                                     <NightsStayIcon />
                                 </ListItemIcon>
                                 <ListItemText>Night Mode</ListItemText>
-                                <ThemeSwitch/>
+                                <ThemeSwitch />
                             </StyledListItem>,
                             { icon: <HelpOutlineOutlinedIcon />, title: 'ChiChat Features' },
                             { icon: <BugReportOutlinedIcon />, title: 'Report Bug' },
@@ -90,7 +108,11 @@ const HomeMenuPopup: React.FC = React.memo(() => {
             >
                 <div className={style.input_action}>
                     <StyledIconButton size="small">
-                        <MenuIcon fontSize="medium" />
+                        {searchMode ? (
+                            <ArrowBackIcon fontSize="medium" />
+                        ) : (
+                            <MenuIcon fontSize="medium" />
+                        )}
                     </StyledIconButton>
                 </div>
             </Popover>

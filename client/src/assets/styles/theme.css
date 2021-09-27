@@ -11,6 +11,8 @@
     --color-borders-input: #5B5B5A;
     --color-bg-badge-unread: var(--color-primary);
     --messages-track-bg: #0F0F0F;
+    --touche-ripple-hover: rgba(0255,255,255,0.075);
+    --color-light-shadow: rgba(0,0,0,0.25);
 }
 .theme-light{
     --color-text: #000000;
@@ -24,5 +26,7 @@
     --color-borders: #DADCE0;
     --color-borders-input: #DADCE0;
     --color-bg-badge-unread: #4DCD5E;
-    --messages-track-bg: url(../img/chat-bg.jpg) no-repeat center center / cover;;
+    --messages-track-bg: url(../img/chat-bg.jpg) no-repeat center center / cover;
+    --touche-ripple-hover: rgba(0,0,0,0.05);
+    --color-light-shadow: rgba(114,114,114,0.16);
 }

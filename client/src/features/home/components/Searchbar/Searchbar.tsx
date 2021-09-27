@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
-import { SearchField, CustomScroll } from 'shared';
+import { CustomScroll } from 'shared';
 import SearchbarMessagesTrack from '../SearchbarMessagesTrack/SearchbarMessagesTrack';
 
 import style from './Searchbar.module.scss';
@@ -33,7 +33,7 @@ const Searchbar: React.FC<SearchbarProps> = ({ handleClose }) => {
                     </IconButton>
                 </div>
                 <div className={style.headerItem}>
-                    <SearchField />
+                    {/* <SearchField/> */}
                 </div>
                 <div className={style.headerItem}>
                     <IconButton className={classes.root}>

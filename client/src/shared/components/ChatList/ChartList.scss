@@ -1,0 +1,93 @@
+.chart-list-item{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 14px; 
+    position: relative;
+    overflow: hidden;
+    line-height: 1.5rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+    &:hover {
+        background-color: var(--color-bg-200);
+    }
+    &.selected{
+        background-color: var(--color-primary);
+    }
+
+    .chart-list-item__icon{
+        flex-shrink: 0;
+
+        .list-item-icon__inner{
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+    }
+
+    .chart-list-item__info {
+        flex-grow: 1;
+        overflow: hidden;
+    }
+
+    .chart-list-item__title,
+    .chart-list-item__subtitle {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .chart-list-item__title h3,
+    .chart-list-item__time,
+    .chart-list-item__last-message {
+        font-size: 1rem;
+        margin: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        user-select: none;
+    }
+
+    .chart-list-item__title {
+        h3 {
+            width: 100%;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+    }
+
+    .chart-list-item__meta {
+        max-width: 50%;
+        flex-shrink: 0;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+    
+    .chart-list-item__time {
+        font-size: 12px;
+        color: var(--color-text-100);
+        line-height: 1.15rem;
+    }
+
+    .chart-list-item__subtitle {
+        .list-item-subtitle__last-message,
+        .list-item-subtitle__last-seen {
+            flex-grow: 1;
+            color: var(--color-text-100);
+        }
+        .list-item-subtitle__last-seen{
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}

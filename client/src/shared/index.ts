@@ -12,6 +12,11 @@ export { default as Transition } from './components/Transition/Transition';
 export { default as Popover } from './components/Popover/Popover';
 export * from './components/ThemeContext/ThemeContext';
 export { default as PopupMenu } from './components/PopupMenu/PopupMenu';
+export { default as ListItem } from './components/ChatList/ListItem/ListItem';
+export { default as ListItemIcon } from './components/ChatList/ListItemIcon/ListItemIcon';
+export { default as ListItemInfo } from './components/ChatList/ListItemInfo/ListItemInfo';
+export { default as ListItemTitle } from './components/ChatList/ListItemTitle/ListItemTitle';
+export { default as ListItemSubtitle } from './components/ChatList/ListItemSubtitle/ListItemSubtitle';
 
 // models
 export * from './models/appTheme.model';

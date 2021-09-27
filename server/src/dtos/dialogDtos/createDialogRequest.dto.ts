@@ -1,10 +1,10 @@
 import { ICreateDialogRequest } from "../../models";
 
 
-export class CreateDialogRequestDto {
+export class CreateDialogRequestDto implements ICreateDialogRequest {
     
-    private member_1: string;
-    private member_2: string;
+    member_1: string;
+    member_2: string;
 
     constructor(dialog: ICreateDialogRequest){
         this.member_1 = dialog.member_1;
