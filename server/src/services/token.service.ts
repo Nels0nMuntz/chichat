@@ -1,4 +1,5 @@
 import jwt, { verify } from 'jsonwebtoken'
+import { IGeneratedTokens } from '../models';
 import { TokenPayloadDto } from '../dtos';
 import { TokenRepository } from '../repositories';
 import { ITokenDocument } from '../schemas';
@@ -12,7 +13,7 @@ export class TokenService {
         this.repository = new TokenRepository();
     }
 
-    public generateTokens = (payload: TokenPayloadDto) => {
+    public generateTokens = (payload: TokenPayloadDto): IGeneratedTokens => {
         const {
             JWT_ACCESS_SECRET,
             JWT_REFRESH_SECRET,
@@ -33,7 +34,7 @@ export class TokenService {
     }
 
     public saveRefreshToken = async (userId: string, refreshToken: string): Promise<ITokenDocument> => {
-        const documen = await this.repository.getOneById(userId);
+        const documen = await this.repository.getOneByUserId(userId);
         if (documen) {
             documen.refreshToken = refreshToken;
             return await documen.save();

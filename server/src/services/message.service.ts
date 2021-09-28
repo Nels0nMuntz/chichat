@@ -17,15 +17,18 @@ export class MessageService {
     }
 
     create = async (doc: CreateMessageRequestDto): Promise<IMessageDocument> => {
-        const dialog = await this.dialogRepository.findById(doc.dialogId);
+        const  { dialogId, createdBy } = doc;
+        const dialog = await this.dialogRepository.findById(dialogId);
         if(!dialog){
             throw ErrorException.BadRequestError("Invalid message data. Can not find dialog in DB");
         };
-        const user = await this.userRepository.getOneById(doc.createdBy);
+        const user = await this.userRepository.findById(createdBy);
         if(!user){
             throw ErrorException.BadRequestError("Invalid message data. Can not find user in DB");
         };
-        return await this.messageRepository.createOne({ ...doc });
+        const message = await this.messageRepository.createOne({ ...doc });
+        this.dialogRepository.updateOne(dialogId, { $push: { messages: message._id } });
+        return message;
     }
 
     update = async (doc: UpdateMessageRequestDto): Promise<IMessageDocument> => {

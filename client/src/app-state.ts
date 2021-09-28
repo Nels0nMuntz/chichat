@@ -5,7 +5,7 @@ import { connectRouter } from 'connected-react-router';
 import { routerMiddleware } from 'connected-react-router';
 import { all } from '@redux-saga/core/effects';
 
-import { homeReducer } from 'features/home/store';
+import { homeReducer, dialogsWatcherSaga } from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
 import { history } from './history-instance';
@@ -33,6 +33,7 @@ export const store = createStore(
 function* appSaga(){
     yield all([
         authWatcherSaga(),
+        dialogsWatcherSaga(),
     ]);
 };
 

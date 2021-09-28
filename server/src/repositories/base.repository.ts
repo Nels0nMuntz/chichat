@@ -6,7 +6,7 @@ import { ErrorException, IReadable, IWritable } from "../shared";
 
 export class BaseRepository<T extends Document> implements IReadable<T>, IWritable<T> {
 
-    private model: Model<T>;
+    protected model: Model<T>;
 
     constructor(model: Model<T>){
         this.model = model;

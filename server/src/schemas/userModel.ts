@@ -1,14 +1,15 @@
 import { Schema, model, Document, Model } from "mongoose";
 
 export interface IUserSchema {
-    email: string
-    firstName: string
-    lastName?: string
-    phoneNumber: string
-    password: string
-    passwordOrigin: string
-    isActivated: boolean
-    activationId: string
+    email: string;
+    firstName: string;
+    lastName?: string;
+    phoneNumber: string;
+    password: string;
+    passwordOrigin: string;
+    isActivated: boolean;
+    activationId: string;
+    avatar?: string;
 };
 
 export interface IUserDocument extends Document, IUserSchema { };
@@ -50,6 +51,10 @@ const userSchema = new Schema<IUserSchema>({
     activationId: {
         type: String,
         required: true,
+    },
+    avatar: {
+        type: String,
+        required: false,
     }
 });
 

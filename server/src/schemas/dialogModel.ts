@@ -1,4 +1,5 @@
 import { Schema, model, Document, Model } from "mongoose";
+import { Modify } from "../shared";
 import { IMessageDocument } from "./messageModel";
 import { IUserDocument } from "./userModel";
 
@@ -10,6 +11,12 @@ interface IDialogSchema {
 };
 
 export interface IDialogDocument extends IDialogSchema, Document { };
+
+export type IDialogPopulated = Modify<IDialogDocument, {
+    member_1: IUserDocument,
+    member_2: IUserDocument,
+    messages: Array<IMessageDocument>,
+}>;
 
 export interface IDialogModel extends Model<IDialogDocument> { };
 
@@ -25,7 +32,12 @@ const dialogSchema = new Schema<IDialogSchema>(
             ref: "User",
             required: true,
         },
-        messages: [Schema.Types.ObjectId]
+        messages: [
+            { 
+                type: Schema.Types.ObjectId,
+                ref: "Message",
+            }
+        ]
     },
     {
         timestamps: true,

@@ -4,7 +4,8 @@ import { UserRepository } from "../repositories";
 import { MailService, TokenService } from ".";
 import { SignUpUserDto, SignInUserDto, TokenPayloadDto } from '../dtos'
 import { ErrorCode, ErrorException } from "../shared";
-import { IAuthSignUpRequest, IAuthSignInRequest } from "../models";
+import { IAuthSignUpRequest, IAuthSignInRequest, IGeneratedTokens } from "../models";
+import { IUserDocument } from "../schemas";
 
 
 export class AuthService {
@@ -21,14 +22,14 @@ export class AuthService {
 
     public signup = async (body: IAuthSignUpRequest): Promise<{ accessToken: string, refreshToken: string }> => {
         const { email, firstName, lastName, phoneNumber, password } = new SignUpUserDto(body);
-        const candidate = await this.repository.getOneByEmail(email);
+        const candidate = await this.repository.findOneByEmail(email);
         if (candidate) {
             throw ErrorException.BadRequestError("This user is already exists");
         };
 
         const hashPassword = await hash(password, 3);
         const activationId: string = uuidv4();
-        const user = await this.repository.create({
+        const user = await this.repository.createOne({
             email,
             firstName,
             lastName,
@@ -49,9 +50,9 @@ export class AuthService {
         return { ...tokens };
     }
 
-    public signin = async (body: IAuthSignInRequest): Promise<{ accessToken: string, refreshToken: string }> => {
+    public signin = async (body: IAuthSignInRequest): Promise<{ user: IUserDocument, tokens: IGeneratedTokens }> => {
         const { email, password } = new SignInUserDto(body);
-        const document = await this.repository.getOneByEmail(email);
+        const document = await this.repository.findOneByEmail(email);
         if (!document){
             throw ErrorException.BadRequestError("User does not exists", [{ param: "email", msg: "User does not exists" }]);
         }
@@ -63,9 +64,12 @@ export class AuthService {
 
         const tokenPayload = new TokenPayloadDto(document);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });
-        await this.tokenService.saveRefreshToken(document._id, tokens.refreshToken);
+        await this.tokenService.saveRefreshToken(document.id, tokens.refreshToken);
 
-        return { ...tokens };
+        return {
+            user: document,
+            tokens,
+        };
     }
 
     public signout = async (refreshToken: string): Promise<void> => {
@@ -73,7 +77,7 @@ export class AuthService {
     }
 
     public activate = async (activationId: string): Promise<void> => {
-        const document = await this.repository.getOne({ activationId });
+        const document = await this.repository.findOne({ activationId });
         if (!document) throw new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, "Activation link is incorrect");
         document.isActivated = true;
         await document.save();
@@ -89,7 +93,7 @@ export class AuthService {
         if (!receivedToken || !tokenFromDB) {
             throw ErrorException.UnauthorizedError();
         }
-        const document = await this.repository.getOneById(tokenFromDB.userId);
+        const document = await this.repository.findById(tokenFromDB.userId);
 
         const tokenPayload = new TokenPayloadDto(document);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });

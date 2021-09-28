@@ -5,10 +5,12 @@ import { IUserDocument } from "./userModel";
 
 
 interface IMessageSchema {
-    dialogId: IDialogDocument["_id"]
-    createdBy: IUserDocument["_id"]
-    read: boolean
-    content: IMessageContent
+    dialogId: IDialogDocument["_id"];
+    createdBy: IUserDocument["_id"];
+    read: boolean;
+    content: IMessageContent;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export interface IMessageDocument extends IMessageSchema, Document { };

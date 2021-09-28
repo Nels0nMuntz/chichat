@@ -1,7 +1,7 @@
 import { ErrorException } from "../shared";
 import { CreateDialogRequestDto } from "../dtos";
 import { DialogRepository, UserRepository } from "../repositories";
-import { IDialogDocument, IMessageDocument } from "../schemas";
+import { IDialogDocument, IDialogPopulated, IMessageDocument } from "../schemas";
 
 
 export class DialogService {
@@ -15,11 +15,11 @@ export class DialogService {
     }
 
     create = async (doc: CreateDialogRequestDto): Promise<IDialogDocument> => {
-        const member1Doc = await this.userRepository.getOneById(doc.member_1);
+        const member1Doc = await this.userRepository.findById(doc.member_1);
         if(!member1Doc) {
             throw ErrorException.BadRequestError("Can not create new dialog. Member 1 is not exists");
         }
-        const member2Doc = await this.userRepository.getOneById(doc.member_2);
+        const member2Doc = await this.userRepository.findById(doc.member_2);
         if(!member2Doc) {
             throw ErrorException.BadRequestError("Can not create new dialog. Member 2 is not exists");
         }
@@ -37,7 +37,7 @@ export class DialogService {
         return await this.dialogRepository.createOne({ ...doc });
     }
 
-    getMessages = async (dialogId: string, part: number): Promise<Array<IMessageDocument>> => {
+    getAllMessages = async (dialogId: string, part: number): Promise<Array<IMessageDocument>> => {
         const dialog = await this.dialogRepository.findById(dialogId);
         if(!dialog) {
             throw ErrorException.BadRequestError("Can not get messages. Dialog is not exists");
@@ -55,5 +55,29 @@ export class DialogService {
         );
 
         return doc.messages;
+    }
+
+    getAllDialogs = async (userId: string): Promise<Array<IDialogPopulated>> => {
+        const isUserExists = await this.userRepository.exists({ id: userId });
+        if(!isUserExists) {
+            throw ErrorException.BadRequestError("Can not get dialogs. User does not exists");
+        };
+        return await this.dialogRepository.find(
+            {
+                $or: ([
+                    { member_1: userId },
+                    { member_2: userId },
+                ])
+            },
+            null,
+            {
+                populate: [
+                    "member_1",
+                    "member_2",
+                    "messages",
+                ],
+                
+            }
+        );
     }
 };

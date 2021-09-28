@@ -19,7 +19,7 @@ export const signUpValidationSchema = checkSchema({
         },
         custom: {
             options: (value) => {
-                return userRepository.getOneByEmail(value)
+                return userRepository.findOneByEmail(value)
                     .then(user => { if (user) return Promise.reject("Email already in use") })
                     .catch(err => { throw err })
             }
@@ -91,7 +91,7 @@ export const signUpValidationSchema = checkSchema({
         },
         custom: {
             options: value => {
-                return userRepository.getOneByPhoneNumber(value)
+                return userRepository.findOneByPhoneNumber(value)
                     .then(user => { if (user) return Promise.reject("This phone number is already in use") })
                     .catch(err => { throw err })
             }

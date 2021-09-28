@@ -9,6 +9,7 @@ import {
     signInAction,
     setSignInStatus,
     setSignInErrors,
+    setUserAction,
 } from '../../actions';
 
 
@@ -23,6 +24,7 @@ export function* signInWorkerSaga(action: typeof signInAction.typeOf.action){
             };
             localStorageService.setAccessToken(accessToken);
             location.href = HOME_PAGE_URL.urlTemplate;
+            yield put(setUserAction({ payload: response.data.user }));
             yield put(setSignInStatus({ payload: Status.Success }));
         }
     } catch (error: any) {      

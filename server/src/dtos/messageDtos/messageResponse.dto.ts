@@ -8,6 +8,8 @@ export class MessageResponseDto implements IMessageResponse {
     createdBy: string;
     read: boolean;
     content: IMessageContent;
+    createdAt: string;
+    updatedAt: string;
 
     constructor(doc: IMessageDocument){
         this.messageId = doc._id;
@@ -15,6 +17,8 @@ export class MessageResponseDto implements IMessageResponse {
         this.createdBy = doc.createdBy;
         this.read = doc.read;
         this.content = doc.content;
+        this.createdAt = doc.createdAt;
+        this.updatedAt = doc.updatedAt;
     }
 
 };

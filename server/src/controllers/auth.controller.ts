@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
+import { UserResponseDto } from '../dtos';
 import { errorFormatter } from '../helpers';
-import { IAuthSignUpRequest, IAuthSignInRequest, IAuthSignInResponse } from '../models';
+import { IAuthSignUpRequest, IAuthSignInRequest, IAuthSignInResponse, IGeneratedTokens } from '../models';
 import { AuthService } from '../services';
 import { ErrorException, IRequest } from '../shared';
 
@@ -39,13 +40,17 @@ export class AuthController {
                 const message = errors.array().map(({ msg, param }) => ({ msg, param }));
                 throw ErrorException.BadRequestError("Validation error", message);
             };
-            const tokens = await this.service.signin(req.body);
+            const { user, tokens } = await this.service.signin(req.body);
             res.cookie("refreshToken", tokens.refreshToken, { 
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             }); 
             res.setHeader("Authorization", "Bearer " + tokens.accessToken);
-            return res.status(200).json({ accessToken: tokens.accessToken });
+            const response: IAuthSignInResponse = {
+                user: new UserResponseDto(user),
+                accessToken: tokens.accessToken,
+            };
+            return res.status(200).json(response);
         } catch (error) {
             next(error);
         }
@@ -72,7 +77,7 @@ export class AuthController {
         }
     }
 
-    public refresh = async (req: Request, res: Response<IAuthSignInResponse>, next: NextFunction) => {
+    public refresh = async (req: Request, res: Response<Pick<IGeneratedTokens, "accessToken">>, next: NextFunction) => {
         try {
             const { refreshToken } = req.cookies;
             const { accessToken } = await this.service.refresh(refreshToken);            

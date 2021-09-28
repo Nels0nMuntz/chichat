@@ -26,6 +26,7 @@ export * from './models/formFieldModels/formValues.model';
 export * from './models/formFieldModels/formData.model'; 
 export * from './models/formFieldModels/formErrors.model'; 
 export * from './models/responseError.model'; 
+export * from './models/user.model';
 
 // validation schemas
 export * from './validators/signInFormValidationSchema';

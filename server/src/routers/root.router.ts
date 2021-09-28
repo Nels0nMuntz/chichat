@@ -20,8 +20,8 @@ class RootRouter {
 
     private initRoutes(){
         this.router.use('/auth', this.authRouter.router);
-        this.router.use('/dialog', this.dialogRouter.router);
-        this.router.use('/message', this.messageRouter.router);
+        this.router.use('/dialogs', this.dialogRouter.router);
+        this.router.use('/messages', this.messageRouter.router);
     }
 }
 

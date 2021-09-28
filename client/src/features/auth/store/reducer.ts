@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { Status } from "shared";
+import { IUser, Status } from "shared";
 import { SignInFormErrors, SignUpFormErrors } from "../models";
 import {
     setIsAuthAction,
@@ -7,19 +7,21 @@ import {
     setSignUpStatus,
     setSignInErrors,
     setSignUpErrors,
+    setUserAction,
 } from './actions';
 
 
 interface IAuthState {
-    isAuth: boolean
+    isAuth: boolean;
     signin: {
-        status: Status
-        errors?: SignInFormErrors
-    }
+        status: Status;
+        errors?: SignInFormErrors;
+    };
     signup: {
-        status: Status
-        errors?: SignUpFormErrors
-    }
+        status: Status;
+        errors?: SignUpFormErrors;
+    };
+    user: IUser | null;
 };
 
 const initialState: IAuthState = {
@@ -30,6 +32,7 @@ const initialState: IAuthState = {
     signup: {
         status: Status.Initial,
     },
+    user: null,
 };
 
 export const authReducer = (state: IAuthState = initialState, action: Action): IAuthState => {
@@ -80,6 +83,13 @@ export const authReducer = (state: IAuthState = initialState, action: Action): I
             },
         };
     };
+
+    if(setUserAction.is(action)){
+        return {
+            ...state,
+            user: action.payload,
+        }
+    }
 
     return state;
 

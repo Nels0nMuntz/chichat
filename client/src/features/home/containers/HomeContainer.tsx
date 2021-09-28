@@ -1,14 +1,16 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import Home from '../components/Home/Home';
-import { axiosInstance } from 'core';
+import { fetchDialogsAction } from '../store/actions';
 
 
 const HomeContainer : React.FC = () => {
 
+    const dispatch = useDispatch();
+
     React.useEffect(() => {
-        axiosInstance.get("http://localhost:3000/api/auth/users")
-            .then(res => console.log(res))
+        dispatch(fetchDialogsAction({}));
     }, []);
 
     return (

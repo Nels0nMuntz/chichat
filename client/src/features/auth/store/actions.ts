@@ -1,11 +1,13 @@
 import { defineAction } from "rd-redux-utils";
-import { Status } from "shared";
+import { IUser, Status } from "shared";
 import { ISignInRequest, ISignUpRequest, SignUpFormErrors, SignInFormErrors } from "../models";
 
 
 export const checkAuthAction = defineAction<{}>("CHECK_AUTH");
 
 export const setIsAuthAction = defineAction<{ payload: boolean }>("SET_IS_AUTH");
+
+export const setUserAction = defineAction<{ payload: IUser }>("SET_USER_DATA")
 
 // signin
 export const signInAction = defineAction<{ payload: ISignInRequest }>("AUTH_SIGNIN");

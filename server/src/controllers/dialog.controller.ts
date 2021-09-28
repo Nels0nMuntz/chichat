@@ -1,7 +1,11 @@
-import { NextFunction, Response } from "express";
-import { IDialogDocument } from "../schemas";
+import { NextFunction, Response, Request } from "express";
+import { DialogsReasponseDto } from "../dtos/dialogDtos/dialogsResponse.dto";
 import { CreateDialogRequestDto, CreateDialogResponseDto } from "../dtos";
-import { ICreateDialogRequest, ICreateDialogResponse } from "../models";
+import {
+    ICreateDialogRequest,
+    ICreateDialogResponse,
+    IGetAllDialogResponse,
+} from "../models";
 import { DialogService } from "../services/dialog.service";
 import { ErrorException, IRequest } from "../shared";
 
@@ -10,7 +14,7 @@ export class DialogController {
 
     private service: DialogService;
 
-    constructor(){
+    constructor() {
         this.service = new DialogService();
     }
 
@@ -18,7 +22,7 @@ export class DialogController {
         try {
             const dialogReqDto = new CreateDialogRequestDto(req.body);
             const doc = await this.service.create(dialogReqDto);
-            if(!doc){
+            if (!doc) {
                 throw ErrorException.BadRequestError("Invalid request data");
             };
             const dialogResDto = new CreateDialogResponseDto(doc);
@@ -26,5 +30,28 @@ export class DialogController {
         } catch (error) {
             next(error)
         }
+    }
+
+    getAll = async (req: Request, res: Response<IGetAllDialogResponse>, next: NextFunction) => {
+        try {
+            const userId = req.user.id;
+            if (!userId) {
+                throw ErrorException.BadRequestError("Invalid request data. There is no user ID");
+            };
+            const dialogs = await this.service.getAllDialogs(userId);
+            if (!Array.isArray(dialogs)) {
+                throw ErrorException.ServerError();
+            };
+            const dilogsDto = dialogs.map(dialog => {
+                const dialogDto = new DialogsReasponseDto(dialog, req.user.id);
+                return {
+                    ...dialogDto,
+                    messages: dialogDto.messages.length ? [dialogDto.messages[0]] : [],
+                }
+            });
+            return res.status(200).json({ dialogs: dilogsDto });
+        } catch (error) {
+            next(error);
+        };
     }
 }

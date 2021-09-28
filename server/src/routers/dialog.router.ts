@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { checkAuthMW } from "../middlewares";
 import { DialogController } from "../controllers/dialog.controller";
 
 
@@ -14,6 +15,7 @@ export class DialogRouter {
     }
 
     initRouts(){
+        this.router.get('/all', checkAuthMW, this.controller.getAll);
         this.router.post('/create', this.controller.create);
     }
 

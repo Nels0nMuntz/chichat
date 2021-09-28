@@ -1,4 +1,5 @@
 import axios from "axios";
+import { SIGNIN_PAGE_URL } from "features/auth/urls";
 import { ISignInResponse } from "features/auth/models";
 import { localStorageService } from "services";
 
@@ -32,7 +33,9 @@ axiosInstance.interceptors.response.use(
                 localStorageService.setAccessToken(data.accessToken);
                 return axiosInstance.request(originRequest);
             } catch (error: any) {
-                console.log(error.message);
+                console.log(error);
+                localStorageService.removeAccessToken();
+                location.href = SIGNIN_PAGE_URL.urlTemplate;
                 return Promise.reject(error);
             };
         };
