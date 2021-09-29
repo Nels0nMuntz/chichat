@@ -1,11 +1,15 @@
 import { Action } from 'redux';
 import { Status } from 'shared';
+import { IMessage } from '../models';
 import { IDialog } from '../models/common/dialog.model';
 
 import {
     changeMessageAction,
-    setDialogsStatus,
-    setDialogsList,
+    setDialogsStatusAction,
+    setDialogsListAction,
+    setSelectedDialogAction,
+    setMessagesStatusAction,
+    setMessagesListAction,
 } from './actions';
 
 
@@ -13,22 +17,34 @@ interface IHomeState {
     dialogs: {
         status: Status;
         list: Array<IDialog>;
+        selectedDialog: IDialog | null;
     };
-    selectedDialogId: string | null;
-    messageInput: {
-        value: string,
-    };
+    messages: {
+        status: Status;
+        offset: number;
+        limit: number;
+        list: Array<IMessage>
+        messageInput: {
+            value: string,
+        };
+    }
 };
 
 const initState: IHomeState = {
     dialogs: {
         status: Status.Initial,
         list: [],
+        selectedDialog: null,
     },
-    selectedDialogId: null,
-    messageInput: {
-        value: '',
-    },
+    messages: {
+        status: Status.Initial,
+        offset: 0,
+        limit: 10,
+        list: [],
+        messageInput: {
+            value: '',
+        },
+    }
 };
 
 export const homeReducer = (state: IHomeState = initState, action: Action): IHomeState => {
@@ -36,32 +52,65 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
     if(changeMessageAction.is(action)){
         return {
             ...state,
-            messageInput: {
-                ...state.messageInput,
-                value: action.payload.value,
+            messages: {
+                ...state.messages,
+                messageInput: {
+                    ...state.messages.messageInput,
+                    value: action.payload.value,
+                },
             }
-        }
+        };
     };
 
-    if(setDialogsStatus.is(action)){
+    if(setDialogsStatusAction.is(action)){
         return {
             ...state,
             dialogs: {
                 ...state.dialogs,
                 status: action.payload,
-            }
-        }
-    }
+            },
+        };
+    };
 
-    if(setDialogsList.is(action)){
+    if(setDialogsListAction.is(action)){
         return {
             ...state,
             dialogs: {
                 ...state.dialogs,
                 list: action.payload.dialogs,
+            },
+        };
+    };
+
+    if(setSelectedDialogAction.is(action)){
+        return {
+            ...state,
+            dialogs: {
+                ...state.dialogs,
+                selectedDialog: action.payload,
+            },
+        };
+    };
+
+    if(setMessagesStatusAction.is(action)){
+        return {
+            ...state,
+            messages: {
+                ...state.messages,
+                status: action.payload,
             }
-        }
-    }
+        };
+    };
+
+    if(setMessagesListAction.is(action)){
+        return {
+            ...state,
+            messages: {
+                ...state.messages,
+                list: action.payload,
+            }
+        };
+    };
 
     return state;
 

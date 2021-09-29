@@ -16,7 +16,7 @@ const ListItemTitle: React.FC<ListItemTitleProps> = ({ label, suffix, children }
                 : typeof suffix === "string"
                     ? (
                         <div className="chart-list-item__meta">
-                            <div className="chart-list-item__time">10:18</div>
+                            <div className="chart-list-item__time">{suffix}</div>
                         </div>
                     ) : (
                         suffix

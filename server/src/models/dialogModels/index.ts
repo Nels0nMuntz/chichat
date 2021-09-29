@@ -1,6 +1,7 @@
 // request
 export * from './request/createDialogRequest.model';
 export * from './request/removeDialogRequest.model';
+export * from './request/getAllMessagesRequest.model';
 
 // response
 export * from './response/createDialogResponse.model';

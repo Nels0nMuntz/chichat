@@ -82,44 +82,24 @@
 }
 
 /* middle column */
+
 .middle_column {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-.middle_header {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    background-color: var(--color-bg);
-
-    .avatar {
-        width: 40px;
-        height: 40px;
-    }
-
-    .middle_header_actions {
-        display: flex;
-        align-items: center;
-        .actionsButtonWrapper:not(:first-child) {
-            margin-left: 2px;
-        }
-    }
-}
-
-:global(.user-info.middle_header_info) {
-    line-height: 1.2rem;
-}
-
-.mainHeaderActionsButton{
-    margin-right: 3px;
-}
-
 .messages_wrapper {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+}
+
+.messages_track{
+    width: 100%;
+    max-width: var(--messages-container-width);
+    flex: 1;
+    margin: 0 auto;
 }
 
 /* searchbar */
@@ -160,6 +140,7 @@
 
 /* message_input */
 .message_input {
+    flex: 0;
     position: relative;
     width: 100%;
     max-width: var(--messages-container-width);

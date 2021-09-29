@@ -42,7 +42,7 @@ export class AuthService {
 
         const tokenPayload = new TokenPayloadDto(user);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });
-        await this.tokenService.saveRefreshToken(user._id, tokens.refreshToken);
+        await this.tokenService.saveRefreshToken(user.id, tokens.refreshToken);
         // const activationLink: string = `${process.env.API_URL}/api/auth/activate/${activationId}`;
         // this.mailService.initTransporter();
         // await this.mailService.sendActivationMail(email, activationLink);
@@ -87,17 +87,17 @@ export class AuthService {
         if (!refreshToken) {
             throw ErrorException.UnauthorizedError();
         }
-        const receivedToken = this.tokenService.validateRefreshToken(refreshToken);
+        const validatedToken = this.tokenService.validateRefreshToken(refreshToken);
         const tokenFromDB = await this.tokenService.getRefreshToken(refreshToken);
 
-        if (!receivedToken || !tokenFromDB) {
+        if (!validatedToken || !tokenFromDB) {
             throw ErrorException.UnauthorizedError();
         }
-        const document = await this.repository.findById(tokenFromDB.userId);
+        const document = await this.repository.findOne({ id: tokenFromDB.userId });
 
         const tokenPayload = new TokenPayloadDto(document);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });
-        await this.tokenService.saveRefreshToken(document._id, tokens.refreshToken);
+        await this.tokenService.saveRefreshToken(document.id, tokens.refreshToken);
 
         return { ...tokens };
     }

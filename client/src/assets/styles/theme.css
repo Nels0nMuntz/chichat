@@ -4,29 +4,35 @@
     --color-text-200: #B4B4B4;
     --color-primary: #8378DB;
     --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-attent: var(--color-primary);
     --color-bg: #212121;
     --color-bg-100: #0F0F0F;
     --color-bg-200: #2C2C2C;
+    --color-bg-own: var(--color-primary);
     --color-borders: #303030;
     --color-borders-input: #5B5B5A;
     --color-bg-badge-unread: var(--color-primary);
     --messages-track-bg: #0F0F0F;
     --touche-ripple-hover: rgba(0255,255,255,0.075);
     --color-light-shadow: rgba(0,0,0,0.25);
+    --color-default-shadow: rgba(16,16,16,0.6);
 }
 .theme-light{
-    --color-text: #000000;
+    --color-text: #2d2d2d;
     --color-text-100: #5d5e5f;
     --color-text-200: #B4B4B4;
     --color-primary: #50A2E9;
     --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-attent: var(--color-green);
     --color-bg: #FFFFFF;
     --color-bg-100: #FFFFFF;
     --color-bg-200: #F4F4F5;
+    --color-bg-own: #eeffde;
     --color-borders: #DADCE0;
     --color-borders-input: #DADCE0;
     --color-bg-badge-unread: #4DCD5E;
     --messages-track-bg: url(../img/chat-bg.jpg) no-repeat center center / cover;
     --touche-ripple-hover: rgba(0,0,0,0.05);
     --color-light-shadow: rgba(114,114,114,0.16);
+    --color-default-shadow: rgba(114,114,114,0.611765);
 }

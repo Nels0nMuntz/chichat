@@ -80,9 +80,9 @@ export class AuthController {
     public refresh = async (req: Request, res: Response<Pick<IGeneratedTokens, "accessToken">>, next: NextFunction) => {
         try {
             const { refreshToken } = req.cookies;
-            const { accessToken } = await this.service.refresh(refreshToken);            
+            const { accessToken, refreshToken: newRefreshToken } = await this.service.refresh(refreshToken);            
             res.header("Authorization", "Bearer " + accessToken);
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", newRefreshToken, {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             });

@@ -1,47 +1,61 @@
 import React from 'react';
+import uk from "date-fns/locale/uk"
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
-import { Avatar } from 'shared';
+import {
+    Avatar,
+    ListItem,
+    ListItemIcon,
+    ListItemInfo,
+    ListItemTitle,
+    ListItemSubtitle,
+    IUser,
+    getUserFullname,
+} from 'shared';
+import { IMessage } from '../../models';
 
-import style from "./Dialog.module.scss";
+// import style from "./Dialog.module.scss";
 import '../../../../assets/styles/global/user-info.scss';
 
 
 type DialogProps = {
-    firstName: string
-    lastName?: string
-    avatar?: string
-    lastMessage?: string
+    dialogId: string;
+    member: IUser;
+    lastMessage?: IMessage;
+    isSelected: boolean;
+    handleSelectDialog: (id: string) => void;
 };
 
-const Dialog: React.FC<DialogProps> = ({ firstName, lastName, lastMessage }) => {
+const Dialog: React.FC<DialogProps> = React.memo(({ dialogId, member, lastMessage, isSelected, handleSelectDialog }) => {
 
-    const fullname = firstName + (lastName ? ' ' + lastName : '');
+    const messageText = lastMessage?.content.text || '';
+    const suffix = lastMessage?.updatedAt
+        ? formatDistanceToNow(
+            new Date(lastMessage.updatedAt),
+            {
+                includeSeconds: true,
+                locale: uk
+            }
+        )
+        : undefined;
 
     return (
-        <div className="dialog user-info">
-            <div className="avatar-wrapper">
-                <div className={`${style.avatar} avatar`}>
-                    <Avatar 
-                        firstName="Александр"
-                        lastName="Блок"
-                        size="large"
-                    />
-                </div>
-            </div>
-            <div className="info">
-                <div className="title">
-                    <h3>{fullname}</h3>
-                    <div className="last-message-meta">
-                        <div className="time">10:18</div>
-                    </div>
-                </div>
-                <div className={'subtitle'}>
-                    <div className="last-message">{lastMessage}</div>
-                    <div className={`${style.badge} ${style.unread}`}>28</div>
-                </div>
-            </div>
-        </div>
+        <ListItem
+            selected={isSelected}
+            onClick={() => handleSelectDialog(dialogId)}
+        >
+            <ListItemIcon>
+                <Avatar
+                    user={member}
+                    size="large"
+                />
+            </ListItemIcon>
+            <ListItemInfo>
+                <ListItemTitle suffix={suffix}>{getUserFullname(member)}</ListItemTitle>
+                <ListItemSubtitle>{messageText}</ListItemSubtitle>
+            </ListItemInfo>
+        </ListItem>
     );
-};
+});
 
 export default Dialog;

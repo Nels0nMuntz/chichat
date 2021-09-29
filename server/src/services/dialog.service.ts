@@ -37,22 +37,25 @@ export class DialogService {
         return await this.dialogRepository.createOne({ ...doc });
     }
 
-    getAllMessages = async (dialogId: string, part: number): Promise<Array<IMessageDocument>> => {
+    getAllMessages = async (dialogId: string, offset: number, limit: number): Promise<Array<IMessageDocument>> => {
         const dialog = await this.dialogRepository.findById(dialogId);
         if(!dialog) {
             throw ErrorException.BadRequestError("Can not get messages. Dialog is not exists");
         };
-        const size = 10;
         const doc = await this.dialogRepository.findOne(
             { _id: dialogId },
             { messages: 1 },
             {
                 sort: { _createdAt: 'asc' },
-                skip: part * size,
-                limit: size,
+                skip: offset,
+                limit,
                 populate: 'messages',
             }
         );
+
+        if(!doc) {
+            throw ErrorException.ServerError("Can not find messages in DB")
+        }
 
         return doc.messages;
     }

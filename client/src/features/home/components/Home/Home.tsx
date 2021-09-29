@@ -1,35 +1,26 @@
 import React from 'react';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import DialogsTrack from '../DialogsTrack/DialogsTrack';
+import DialogsTrack from '../../containers/DialogsTrackContainer';
 import Searchbar from '../Searchbar/Searchbar';
 import MessageInput from '../MessageInput/MessageInput';
-import MoreActionsPopup from '../Popups/MoreActionsPopup';
 import HomeMenuPopup from '../Popups/HomeMenuPopup';
 import SidebarSearchField from '../SidebarSearchField/SidebarSearchField';
 import GlobalSearch from '../GlobalSearch/GlobalSearch';
-import { CustomScroll, Avatar, useMediaQuery } from 'shared';
+import MessagesTrack from '../../containers/MessagesTrackContainer';
+import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
+import { CustomScroll, useMediaQuery, IUser } from 'shared';
 
 import style from './Home.module.scss';
 
 
-const StyledIconButton = withStyles({
-    root: {
-        '& .MuiSvgIcon-root': {
-            color: 'var(--color-text-100)',
-        },
-    },
-    sizeSmall: {
-        padding: '8px',
-    },
-})(IconButton);
+type HomeProps = {
+    selectedDialogMember: IUser | null;
+};
 
-const Home: React.FC = () => {
+const Home: React.FC<HomeProps> = (props) => {
+
+    const { selectedDialogMember } = props;
 
     const [searchbarVisility, setSearchbarVisility] = React.useState(false);
     const [sidebarVisibility, setSidebarVisibility] = React.useState(true);
@@ -38,7 +29,7 @@ const Home: React.FC = () => {
 
     const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
     const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
-    const toggleDialogsBarVisibility = () => setSidebarVisibility((prev) => !prev);
+    const toggleDialogsbarVisibility = React.useCallback(() => setSidebarVisibility((prev) => !prev), []);
     const enableSearchMode = React.useCallback(() => setSearchMode(true), []);
     const disableSearchMode = React.useCallback(() => setSearchMode(false), []);
     const handleKeydown = (e: KeyboardEvent) => {
@@ -77,7 +68,7 @@ const Home: React.FC = () => {
                             </header>
                             <div className={style.sidebar_track}>
                                 {searchMode ? (
-                                    <GlobalSearch/>
+                                    <GlobalSearch />
                                 ) : (
                                     <DialogsTrack />
                                 )}
@@ -89,51 +80,19 @@ const Home: React.FC = () => {
                         searchbarVisility && style.searchbar_open)}
                     >
                         <div className={style.middle_column}>
-                            <header className={style.middle_header}>
-                                <div className="user-info middle_header_info">
-                                    {matches && (
-                                        <div className={style.mainHeaderActionsButton} onClick={toggleDialogsBarVisibility}>
-                                            <StyledIconButton size="small">
-                                                {sidebarVisibility ? (
-                                                    <CloseIcon />
-                                                ) : (
-                                                    <ArrowBackIcon />
-                                                )}
-                                            </StyledIconButton>
-                                        </div>
-                                    )}
-                                    <div className="avatar-wrapper">
-                                        <div className={`${style.avatar} avatar`}>
-                                            <Avatar
-                                                firstName="Александр"
-                                                lastName="Блок"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="info">
-                                        <div className="title">
-                                            <h3>Sonar</h3>
-                                        </div>
-                                        <div className={'subtitle'}>
-                                            <span className="last-seen">last seen 23.06.2021</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={style.middle_header_actions}>
-                                    <div className={style.actionsButtonWrapper} onClick={toggleSearchbarVisility}>
-                                        <StyledIconButton size="small">
-                                            <SearchRoundedIcon />
-                                        </StyledIconButton>
-                                    </div>
-                                    <div className={style.actionsButtonWrapper}>
-                                        <MoreActionsPopup />
-                                    </div>
-                                </div>
-                            </header>
+                            <MiddleColumnHeader
+                                member={selectedDialogMember}
+                                matches={matches}
+                                sidebarVisibility={sidebarVisibility}
+                                toggleSearchbarVisility={toggleSearchbarVisility}
+                                toggleDialogsbarVisibility={toggleDialogsbarVisibility}
+                            />
                             <div className={style.messages_wrapper}>
-                                <CustomScroll>
-
-                                </CustomScroll>
+                                <div className={style.messages_track}>
+                                    <CustomScroll>
+                                        <MessagesTrack />
+                                    </CustomScroll>
+                                </div>
                                 <div className={style.message_input}>
                                     <MessageInput />
                                 </div>

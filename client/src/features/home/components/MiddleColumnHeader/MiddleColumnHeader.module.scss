@@ -1,0 +1,27 @@
+.middle_header {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: var(--color-bg);
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .middle_header_actions {
+        display: flex;
+        align-items: center;
+        .actionsButtonWrapper:not(:first-child) {
+            margin-left: 2px;
+        }
+    }
+}
+
+:global(.user-info.middle_header_info) {
+    line-height: 1.2rem;
+}
+
+.mainHeaderActionsButton{
+    margin-right: 3px;
+}

@@ -1,25 +1,25 @@
 import { put } from "@redux-saga/core/effects";
 import { 
-    setDialogsStatus,
-    setDialogsList,
+    setDialogsStatusAction,
+    setDialogsListAction,
 } from "../../actions";
 import { Status } from "shared";
 import { AxiosResponse } from "axios";
-import { IFetchDialogsResponse } from "features/home/models";
+import { IFetchAllDialogsResponse } from "features/home/models";
 import { dialogsService } from "services";
 import { setNotification } from "features/notification/store";
 
 
 export function* fetchDialogsWorkerSaga(){
     try {
-        yield put(setDialogsStatus({ payload: Status.Running }));
-        const { status, data }: AxiosResponse<IFetchDialogsResponse> = yield dialogsService.fetchAll();
+        yield put(setDialogsStatusAction({ payload: Status.Running }));
+        const { status, data }: AxiosResponse<IFetchAllDialogsResponse> = yield dialogsService.fetchAllDialogs();
         if(status === 200){
-            yield put(setDialogsList({ payload: data }));
-            yield put(setDialogsStatus({ payload: Status.Success }));
+            yield put(setDialogsListAction({ payload: data }));
+            yield put(setDialogsStatusAction({ payload: Status.Success }));
         }
     } catch (error: any) {
-        yield put(setDialogsStatus({ payload: Status.Error }));
+        yield put(setDialogsStatusAction({ payload: Status.Error }));
         yield put(setNotification({ payload: {
             status: Status.Error,
             message: error.message,

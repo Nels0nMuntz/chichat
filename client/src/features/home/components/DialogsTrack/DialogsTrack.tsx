@@ -1,98 +1,35 @@
 import React from 'react';
 
 import Dialog from '../Dialog/Dialog';
-import { CustomScroll } from 'shared';
+import { IDialog } from '../../models';
+import { CustomScroll, withLoader } from 'shared';
 
 import style from './DialogsTrack.module.scss';
 
 
-const DialogsTrack: React.FC = () => {
+type DialogsTrackProps = {
+    list: Array<IDialog>;
+    selectedDialog: string | null;
+    handleSelectDialog: (id: string) => void;
+};
+
+const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, selectedDialog, handleSelectDialog }) => {
     return (
         <CustomScroll>
             <div className={style.dialogs}>
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
-                <Dialog
-                    firstName="Sonar"
-                    lastMessage="dddcv dvd edvfdv"
-                />
+                {list.map(({ dialogId, member, messages }) => (
+                    <Dialog
+                        key={dialogId}
+                        dialogId={dialogId}
+                        member={member}
+                        lastMessage={messages[0]}
+                        isSelected={Boolean(selectedDialog) && selectedDialog === dialogId}
+                        handleSelectDialog={handleSelectDialog}
+                    />
+                ))}
             </div>
         </CustomScroll>
-    )
-};
+    );
+});
 
-export default DialogsTrack;
+export default withLoader(DialogsTrack);

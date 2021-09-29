@@ -4,4 +4,8 @@ export * from './common/message.model';
 export * from './common/messageContent.model';
 
 // response
-export * from './response/fetchDialogsResponse.model';
+export * from './response/fetchAllDialogsResponse.model';
+export * from './response/fetchAllMessagesResponse.model';
+
+// request
+export * from './request/fetchAllMessagesRequest.model';

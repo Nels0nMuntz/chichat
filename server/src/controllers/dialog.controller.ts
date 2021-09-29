@@ -1,10 +1,12 @@
 import { NextFunction, Response, Request } from "express";
 import { DialogsReasponseDto } from "../dtos/dialogDtos/dialogsResponse.dto";
-import { CreateDialogRequestDto, CreateDialogResponseDto } from "../dtos";
+import { CreateDialogRequestDto, CreateDialogResponseDto, MessageResponseDto } from "../dtos";
 import {
     ICreateDialogRequest,
     ICreateDialogResponse,
     IGetAllDialogResponse,
+    IMessageResponse,
+    IGetAllMessagesRequest,
 } from "../models";
 import { DialogService } from "../services/dialog.service";
 import { ErrorException, IRequest } from "../shared";
@@ -53,5 +55,22 @@ export class DialogController {
         } catch (error) {
             next(error);
         };
+    }
+
+    getOne = async (req: IGetAllMessagesRequest, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
+        try {
+            const { id, offset, limit } = req.query;           
+            if(!id || !offset || !limit) {
+                throw ErrorException.BadRequestError("Wrong query parameters")
+            };
+            const messages = await this.service.getAllMessages(id, offset, limit);
+            if (!Array.isArray(messages)) {
+                throw ErrorException.ServerError();
+            };
+            const messagesDto = messages.map(message => new MessageResponseDto(message));
+            return res.status(200).json(messagesDto);
+        } catch (error) {
+           next(error) 
+        }
     }
 }

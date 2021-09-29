@@ -17,6 +17,9 @@ export { default as ListItemIcon } from './components/ChatList/ListItemIcon/List
 export { default as ListItemInfo } from './components/ChatList/ListItemInfo/ListItemInfo';
 export { default as ListItemTitle } from './components/ChatList/ListItemTitle/ListItemTitle';
 export { default as ListItemSubtitle } from './components/ChatList/ListItemSubtitle/ListItemSubtitle';
+export { default as Loader } from './components/Loader/Loader';
+export { default as MessageItem } from './components/MessageList/MessageItem/MessageItem';
+export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
 
 // models
 export * from './models/appTheme.model';
@@ -33,11 +36,13 @@ export * from './validators/signInFormValidationSchema';
 export * from './validators/signUpFormValidationSchema';
 
 //utils
-export* from './utils/generateAvatar';
-export* from './utils/isEmptyString';
+export * from './utils/generateAvatar';
+export * from './utils/isEmptyString';
+export * from './utils/getUserFullname';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';
+export { default as withLoader } from './HOC/withLoader';
 
 //hooks
 export { default as useMediaQuery } from './hooks/useMediaQuery';

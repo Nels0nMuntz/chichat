@@ -20,9 +20,10 @@ export class TokenService {
             JWT_ACCESS_MAX_AGE,
             JWT_REFRESH_MAX_AGE,
         } = process.env;
-        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: "5m" });
+        const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: "60s" });
+        const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: "7d" });
         // const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: JWT_ACCESS_MAX_AGE });
-        const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_MAX_AGE });
+        // const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_MAX_AGE });
         return {
             accessToken,
             refreshToken
@@ -49,7 +50,7 @@ export class TokenService {
     public validateAccessToken = (token: string) => {
         try {
             const res = verify(token, process.env.JWT_ACCESS_SECRET);
-            return res
+            return res;
         } catch (error) {
             return null;
         }
@@ -57,7 +58,8 @@ export class TokenService {
 
     public validateRefreshToken = (token: string) => {
         try {
-            return verify(token, process.env.JWT_REFRESH_SECRET);
+            const res =  verify(token, process.env.JWT_REFRESH_SECRET);          
+            return res;
         } catch (error) {
             return null;
         }

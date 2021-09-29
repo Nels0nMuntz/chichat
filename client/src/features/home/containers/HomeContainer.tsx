@@ -1,20 +1,25 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Home from '../components/Home/Home';
-import { fetchDialogsAction } from '../store/actions';
+import { fetchAllDialogsAction } from '../store/actions';
+import { selectActiveDialog } from '../store/selectors';
 
 
-const HomeContainer : React.FC = () => {
+const HomeContainer: React.FC = () => {
 
     const dispatch = useDispatch();
 
+    const selectedDialog = useSelector(selectActiveDialog);
+
     React.useEffect(() => {
-        dispatch(fetchDialogsAction({}));
+        dispatch(fetchAllDialogsAction({}));
     }, []);
 
     return (
-        <Home/>
+        <Home
+            selectedDialogMember={selectedDialog?.member || null}
+        />
     )
 };
 

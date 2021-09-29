@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { generateAvatar } from 'shared';
+import { generateAvatar, IUser } from 'shared';
 
 import style from './Avatar.module.scss';
 
@@ -8,13 +8,13 @@ import style from './Avatar.module.scss';
 type AvatarSize = "small" | "large";
 
 type AvatarProps = {
-    firstName: string
-    lastName: string
-    avatar?: string
+    user: IUser;
     size?: AvatarSize
 };
 
-const Avatar: React.FC<AvatarProps> = ({ firstName, lastName, avatar, size = "small" }) => {
+const Avatar: React.FC<AvatarProps> = ({ user, size = "small" }) => {
+
+    const { firstName, lastName, avatar } = user;
 
     const hasAvatar = !!avatar;
     const color = generateAvatar(firstName);

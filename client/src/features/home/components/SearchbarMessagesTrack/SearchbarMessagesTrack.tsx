@@ -1,17 +1,17 @@
 import React from 'react';
-import Dialog from '../Dialog/Dialog';
+// import Dialog from '../Dialog/Dialog';
 
 const SearchbarMessagesTrack : React.FC = () => {
     return (
         <div>
-            <Dialog
+            {/* <Dialog
                 firstName="Sonar"
                 lastMessage="dddcv dvd edvfdv"
             />
             <Dialog
                 firstName="Sonar"
                 lastMessage="dddcv dvd edvfdv"
-            />
+            /> */}
         </div>
     )
 };

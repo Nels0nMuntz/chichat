@@ -15,6 +15,7 @@ export class DialogRouter {
     }
 
     initRouts(){
+        this.router.get('/', this.controller.getOne);
         this.router.get('/all', checkAuthMW, this.controller.getAll);
         this.router.post('/create', this.controller.create);
     }

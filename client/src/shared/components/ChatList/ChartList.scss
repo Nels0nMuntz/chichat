@@ -1,7 +1,6 @@
 .chart-list-item{
     width: 100%;
     display: flex;
-    align-items: center;
     padding: 8px;
     border-radius: 14px; 
     position: relative;
@@ -12,9 +11,6 @@
     transition: background-color 0.1s linear;
     &:hover {
         background-color: var(--color-bg-200);
-    }
-    &.selected{
-        background-color: var(--color-primary);
     }
 
     .chart-list-item__icon{
@@ -32,6 +28,7 @@
 
     .chart-list-item__info {
         flex-grow: 1;
+        padding: 4px 0 0;
         overflow: hidden;
     }
 
@@ -55,10 +52,10 @@
     }
 
     .chart-list-item__title {
+        color: var(--color-text);
         h3 {
             width: 100%;
             font-weight: 500;
-            color: var(--color-text);
         }
     }
 
@@ -73,21 +70,34 @@
     
     .chart-list-item__time {
         font-size: 12px;
-        color: var(--color-text-100);
         line-height: 1.15rem;
+        color: var(--color-text-100);
     }
 
     .chart-list-item__subtitle {
+        color: var(--color-text-100);
+
         .list-item-subtitle__last-message,
         .list-item-subtitle__last-seen {
             flex-grow: 1;
-            color: var(--color-text-100);
         }
         .list-item-subtitle__last-seen{
             font-size: 14px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+        }
+    }
+}
+
+.chart-list-item{
+    &.chart-list-item--selected{
+        background-color: var(--color-primary);
+
+        .chart-list-item__title,
+        .chart-list-item__subtitle,
+        .chart-list-item__time{
+            color: var(--color-white);
         }
     }
 }
