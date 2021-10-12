@@ -8,7 +8,7 @@ type MessageItemProps = ChildrenProps;
 
 const MessageItem: React.FC<MessageItemProps> = ({ children }) => {
     return (
-        <div className="message-list-item message-item select-mode selected">
+        <div className="message-list-item message-item">
             <div className="message-item__select-control"></div>
             <div className="message-item__content-wrapper" onClick={() => console.log("wrapper")}>
                 {children}

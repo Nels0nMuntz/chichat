@@ -1,13 +1,13 @@
 import { takeEvery } from "@redux-saga/core/effects"
 import { 
-    fetchAllDialogsAction,
+    fetchInitDataAction,
     fetchAllMessagesAction,
 } from "../../actions"
-import { fetchDialogsWorkerSaga } from "../worker-sagas/fetchDialogsWorkerSaga";
+import { fetchInitDataWorkerSaga } from "../worker-sagas/fetchInitDataWorkerSaga";
 import { fetchAllMessagesWorkerSaga } from "../worker-sagas/fetchAllMessagesWorkerSaga";
 
 
 export function* dialogsWatcherSaga(){
-    yield takeEvery(fetchAllDialogsAction.TYPE, fetchDialogsWorkerSaga);
+    yield takeEvery(fetchInitDataAction.TYPE, fetchInitDataWorkerSaga);
     yield takeEvery(fetchAllMessagesAction.TYPE, fetchAllMessagesWorkerSaga);
 };

@@ -1,19 +1,21 @@
 import { Action } from 'redux';
 import { Status } from 'shared';
-import { IMessage } from '../models';
+import { IMessage, ITextMessageContent } from '../models';
 import { IDialog } from '../models/common/dialog.model';
 
 import {
-    changeMessageAction,
+    setHomeStateAction,
     setDialogsStatusAction,
     setDialogsListAction,
     setSelectedDialogAction,
     setMessagesStatusAction,
     setMessagesListAction,
+    setTextMessageAction,
 } from './actions';
 
 
 interface IHomeState {
+    status: Status,
     dialogs: {
         status: Status;
         list: Array<IDialog>;
@@ -24,13 +26,12 @@ interface IHomeState {
         offset: number;
         limit: number;
         list: Array<IMessage>
-        messageInput: {
-            value: string,
-        };
+        textMessage: ITextMessageContent;
     }
 };
 
 const initState: IHomeState = {
+    status: Status.Initial,
     dialogs: {
         status: Status.Initial,
         list: [],
@@ -41,26 +42,23 @@ const initState: IHomeState = {
         offset: 0,
         limit: 10,
         list: [],
-        messageInput: {
-            value: '',
+        textMessage: {
+            text: "",
+            type: "text",
         },
-    }
+    },
 };
 
 export const homeReducer = (state: IHomeState = initState, action: Action): IHomeState => {
 
-    if(changeMessageAction.is(action)){
+    if(setHomeStateAction.is(action)){
         return {
             ...state,
-            messages: {
-                ...state.messages,
-                messageInput: {
-                    ...state.messages.messageInput,
-                    value: action.payload.value,
-                },
-            }
+            status: action.payload,
         };
     };
+
+    // dialogs
 
     if(setDialogsStatusAction.is(action)){
         return {
@@ -92,6 +90,9 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
+
+    // messages
+
     if(setMessagesStatusAction.is(action)){
         return {
             ...state,
@@ -108,6 +109,19 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
             messages: {
                 ...state.messages,
                 list: action.payload,
+            }
+        };
+    };
+
+    if(setTextMessageAction.is(action)){
+        return {
+            ...state,
+            messages: {
+                ...state.messages,
+                textMessage: {
+                    ...state.messages.textMessage,
+                    text: action.payload,
+                }
             }
         };
     };

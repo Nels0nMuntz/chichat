@@ -7,7 +7,6 @@ interface CssExports {
   'input_wrapper_appendex': string;
   'menu_container': string;
   'popover_container': string;
-  'textarea': string;
   'wrapper': string;
 }
 export const cssExports: CssExports;

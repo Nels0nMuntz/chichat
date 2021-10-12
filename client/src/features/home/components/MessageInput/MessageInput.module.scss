@@ -26,25 +26,6 @@
     padding: 16px;
 }
 
-.textarea {
-    width: 100%;
-    padding: 18px 0;
-    font-family: inherit;
-    font-size: 1rem;
-    color: var(--color-text);
-    border: none;
-    resize: none;
-    background: inherit;
-
-    &::placeholder {
-        color: var(--color-text-200);
-    }
-
-    &:focus {
-        outline: none;
-    }
-}
-
 .popover_container {
     & > div {
         padding-bottom: 8px;

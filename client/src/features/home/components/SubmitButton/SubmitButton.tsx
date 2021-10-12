@@ -6,16 +6,16 @@ import style from './SubmitButton.module.scss';
 
 
 type SubmitButtonProps = {
-    value: string
+    mode: "text" | "voice"
 };
 
-const SubmitButton: React.FC<SubmitButtonProps> = React.memo(({ value }) => {
+const SubmitButton: React.FC<SubmitButtonProps> = React.memo(({ mode }) => {
     return (
         <button
             type="button"
             className={style.submit_button}
         >
-            {!!value ? (
+            {mode === "text" ? (
                 <SendIcon
                     fontSize="inherit"
                     className={`${style.adornment_icon} ${style.send_icon}`}
@@ -28,6 +28,6 @@ const SubmitButton: React.FC<SubmitButtonProps> = React.memo(({ value }) => {
             )}
         </button>
     )
-}, (prev, next) => !!prev.value === !!next.value);
+});
 
 export default SubmitButton;

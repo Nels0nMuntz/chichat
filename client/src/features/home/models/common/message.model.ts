@@ -1,10 +1,8 @@
-import { IMessageContent } from "./messageContent.model";
+import { IMessageBase } from "./messageBase.model";
 
-export interface IMessage {
+export interface IMessage extends IMessageBase {
     messageId: string;
-    dialogId: string;
     createdBy: string;
-    content: IMessageContent;
     read: boolean;
     createdAt: string;
     updatedAt: string;

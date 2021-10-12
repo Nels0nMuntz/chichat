@@ -1,45 +1,54 @@
 import React from 'react';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 import EmojiPickerPopup from '../Popups/EmojiPickerPopup';
 import AttachMenuPopup from '../Popups/AttachMenuPopup';
 import SubmitButton from '../SubmitButton/SubmitButton';
+import MessageTextarea from '../MessageTextarea/MessageInput';
 
 import style from './MessageInput.module.scss';
 
 
-const MessageInput: React.FC = React.memo(() => {
+type MessageInputProps = {
+    value: string;
+    menuPopup: boolean;
+    emojiPopup: boolean;
+    handleValueChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+    handleOpenEmojiPopup: () => void;
+    handleCloseEmojiPopup: () => void;
+    handleOpenMenuPopup: () => void;
+    handleCloseMenuPopup: () => void;
+}
 
-    const [value, setValue] = React.useState('');
-    const [popups, setPopups] = React.useState({
-        emoji: false,
-        menu: false,
-    });
+const MessageInput: React.FC<MessageInputProps> = (props) => {
 
-    const handleOpenEmojiPopup = React.useCallback(() => setPopups({ emoji: true, menu: false }), []);
-    const handleCloseEmojiPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
-    const handleOpenMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: true }), []);
-    const handleCloseMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
+    const {
+        value,
+        menuPopup,
+        emojiPopup,
+        handleValueChange,
+        handleOpenEmojiPopup,
+        handleCloseEmojiPopup,
+        handleOpenMenuPopup,
+        handleCloseMenuPopup,
+    } = props;
 
     return (
         <div className={style.wrapper}>
             <div className={style.input_wrapper}>
                 <div className={style.input_action_wrapper}>
                     <EmojiPickerPopup
-                        open={popups.emoji}
+                        open={emojiPopup}
                         handleOpen={handleOpenEmojiPopup}
                         handleClose={handleCloseEmojiPopup}
                     />
                 </div>
-                <TextareaAutosize
-                    className={style.textarea}
-                    placeholder="Message"
+                <MessageTextarea
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    handleChange={handleValueChange}
                 />
                 <div className={style.input_action_wrapper}>
                     <AttachMenuPopup
-                        open={popups.menu}
+                        open={menuPopup}
                         handleOpen={handleOpenMenuPopup}
                         handleClose={handleCloseMenuPopup}
                     />
@@ -52,9 +61,9 @@ const MessageInput: React.FC = React.memo(() => {
                     </svg>
                 </div>
             </div>
-            <SubmitButton value={value} />
+            <SubmitButton mode={Boolean(value) ? "text" : "voice"} />
         </div>
     )
-});
+};
 
 export default MessageInput;

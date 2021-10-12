@@ -3,13 +3,13 @@ import classNames from 'classnames';
 
 import DialogsTrack from '../../containers/DialogsTrackContainer';
 import Searchbar from '../Searchbar/Searchbar';
-import MessageInput from '../MessageInput/MessageInput';
+import MessageInput from '../../containers/MessageInputContainer';
 import HomeMenuPopup from '../Popups/HomeMenuPopup';
 import SidebarSearchField from '../SidebarSearchField/SidebarSearchField';
 import GlobalSearch from '../GlobalSearch/GlobalSearch';
 import MessagesTrack from '../../containers/MessagesTrackContainer';
 import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
-import { CustomScroll, useMediaQuery, IUser } from 'shared';
+import { CustomScroll, useMediaQuery, IUser, withLoader } from 'shared';
 
 import style from './Home.module.scss';
 
@@ -112,4 +112,4 @@ const Home: React.FC<HomeProps> = (props) => {
     )
 };
 
-export default Home;
+export default withLoader(Home);
