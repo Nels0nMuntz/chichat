@@ -6,6 +6,7 @@ interface CssExports {
   'input_wrapper': string;
   'input_wrapper_appendex': string;
   'menu_container': string;
+  'message_input': string;
   'popover_container': string;
   'wrapper': string;
 }

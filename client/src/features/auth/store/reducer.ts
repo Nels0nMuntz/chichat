@@ -21,7 +21,7 @@ interface IAuthState {
         status: Status;
         errors?: SignUpFormErrors;
     };
-    user: IUser | null;
+    user: IUser;
 };
 
 const initialState: IAuthState = {
@@ -32,7 +32,12 @@ const initialState: IAuthState = {
     signup: {
         status: Status.Initial,
     },
-    user: null,
+    user: {
+        email: "",
+        firstName: "",
+        userId: "",
+        phoneNumber: "",
+    },
 };
 
 export const authReducer = (state: IAuthState = initialState, action: Action): IAuthState => {

@@ -4,7 +4,6 @@ interface CssExports {
   'home_grid': string;
   'home_main': string;
   'home_wrapper': string;
-  'message_input': string;
   'messages_track': string;
   'messages_wrapper': string;
   'middle_column': string;

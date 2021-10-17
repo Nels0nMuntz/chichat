@@ -93,9 +93,7 @@ const Home: React.FC<HomeProps> = (props) => {
                                         <MessagesTrack />
                                     </CustomScroll>
                                 </div>
-                                <div className={style.message_input}>
-                                    <MessageInput />
-                                </div>
+                                <MessageInput />
                             </div>
                         </div>
                         <div className={style.searchbar}>

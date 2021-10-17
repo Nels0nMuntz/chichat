@@ -40,3 +40,29 @@
     position: absolute;
     top: -16px;
 }
+
+/* message_input */
+.message_input {
+    flex: 0;
+    position: relative;
+    width: 100%;
+    max-width: var(--messages-container-width);
+    margin: 0 auto;
+    padding: 8px 16px 24px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            rgba(#fff, 0) 0%,
+            rgba(#fff, 0.5) 5%,
+            rgba(#fff, 0.5) 95%,
+            rgba(#fff, 0) 100%
+        );
+    }
+}

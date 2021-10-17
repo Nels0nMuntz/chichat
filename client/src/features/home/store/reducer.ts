@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Status } from 'shared';
+import { IUser, Status } from 'shared';
 import { IMessage, ITextMessageContent } from '../models';
 import { IDialog } from '../models/common/dialog.model';
 
@@ -11,6 +11,9 @@ import {
     setMessagesStatusAction,
     setMessagesListAction,
     setTextMessageAction,
+    setHomeUserDataAction,
+    addMessageToListAction,
+    setWebSocketAction,
 } from './actions';
 
 
@@ -27,7 +30,11 @@ interface IHomeState {
         limit: number;
         list: Array<IMessage>
         textMessage: ITextMessageContent;
-    }
+    };
+    user: IUser;
+    webSocket: {
+        socket: WebSocket | null;
+    };
 };
 
 const initState: IHomeState = {
@@ -46,6 +53,15 @@ const initState: IHomeState = {
             text: "",
             type: "text",
         },
+    },
+    user: {
+        userId: "613f475871e72072d08b5998",
+        email: "",
+        firstName: "",
+        phoneNumber: "",
+    },
+    webSocket: {
+        socket: null,
     },
 };
 
@@ -122,6 +138,40 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
                     ...state.messages.textMessage,
                     text: action.payload,
                 }
+            }
+        };
+    };
+
+    if(addMessageToListAction.is(action)){
+        return {
+            ...state,
+            messages: {
+                ...state.messages,
+                list: [
+                    ...state.messages.list,
+                    action.payload,
+                ]
+            }
+        }
+    }
+
+    // user
+
+    if(setHomeUserDataAction.is(action)){
+        return {
+            ...state,
+            user: action.payload,
+        };
+    };
+
+    // WebSocket
+
+    if(setWebSocketAction.is(action)){
+        return {
+            ...state,
+            webSocket: {
+                ...state.webSocket,
+                socket: action.payload,
             }
         };
     };

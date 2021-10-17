@@ -1,8 +1,5 @@
 import { checkSchema } from "express-validator"
-import { UserRepository } from "../../repositories";
-
-
-const userRepository = new UserRepository();
+import { userRepository } from "../../repositories";
 
 export const signUpValidationSchema = checkSchema({
     email: {

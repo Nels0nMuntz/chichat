@@ -27,3 +27,5 @@ export class UserRepository extends BaseRepository<IUserDocument> {
         }
     };
 };
+
+export const userRepository = new UserRepository();

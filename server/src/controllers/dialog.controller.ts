@@ -7,6 +7,7 @@ import {
     IGetAllDialogResponse,
     IMessageResponse,
     IGetAllMessagesRequest,
+    IGetAllMessagesQueryString,
 } from "../models";
 import { DialogService } from "../services/dialog.service";
 import { ErrorException, IRequest } from "../shared";
@@ -40,7 +41,10 @@ export class DialogController {
             if (!userId) {
                 throw ErrorException.BadRequestError("Invalid request data. There is no user ID");
             };
+            
             const dialogs = await this.service.getAllDialogs(userId);
+            
+            
             if (!Array.isArray(dialogs)) {
                 throw ErrorException.ServerError();
             };
@@ -53,13 +57,16 @@ export class DialogController {
             });
             return res.status(200).json({ dialogs: dilogsDto });
         } catch (error) {
+            console.log(error);
+            
             next(error);
         };
     }
 
-    getOne = async (req: IGetAllMessagesRequest, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
+    getOne = async (req: Request, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
+        const _req = req as unknown as IGetAllMessagesRequest;
         try {
-            const { id, offset, limit } = req.query;           
+            const { id, offset, limit } = _req.query;           
             if(!id || !offset || !limit) {
                 throw ErrorException.BadRequestError("Wrong query parameters")
             };

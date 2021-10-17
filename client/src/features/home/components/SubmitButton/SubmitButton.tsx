@@ -7,13 +7,21 @@ import style from './SubmitButton.module.scss';
 
 type SubmitButtonProps = {
     mode: "text" | "voice"
+    handleSendTextMessage: () => void;
 };
 
-const SubmitButton: React.FC<SubmitButtonProps> = React.memo(({ mode }) => {
+const SubmitButton: React.FC<SubmitButtonProps> = React.memo(({ mode, handleSendTextMessage }) => {
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+        if(e.code === "Space" || e.code === "Enter") handleSendTextMessage()
+    };
+
     return (
         <button
             type="button"
             className={style.submit_button}
+            onClick={handleSendTextMessage}
+            onKeyDown={handleKeyDown}
         >
             {mode === "text" ? (
                 <SendIcon

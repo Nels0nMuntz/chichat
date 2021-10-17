@@ -14,10 +14,10 @@ export class DialogRouter {
         this.initRouts();
     }
 
-    initRouts(){
-        this.router.get('/', this.controller.getOne);
+    private initRouts(){
+        this.router.get('/', checkAuthMW, this.controller.getOne);
         this.router.get('/all', checkAuthMW, this.controller.getAll);
-        this.router.post('/create', this.controller.create);
+        this.router.post('/create', checkAuthMW, this.controller.create);
     }
 
 };

@@ -83,7 +83,7 @@ export class AuthController {
             const { accessToken, refreshToken: newRefreshToken } = await this.service.refresh(refreshToken);            
             res.header("Authorization", "Bearer " + accessToken);
             res.cookie("refreshToken", newRefreshToken, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             });
             return res.status(200).json({ accessToken });

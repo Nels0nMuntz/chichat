@@ -4,9 +4,9 @@ import { withNotification } from 'shared';
 import HomeContainer from '../containers/HomeContainer';
 
 
-const HomePage : React.FC = () => {
+const HomePage: React.FC = () => {
     return (
-        <HomeContainer/>
+        <HomeContainer />
     )
 };
 

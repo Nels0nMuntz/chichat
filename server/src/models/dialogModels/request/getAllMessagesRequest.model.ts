@@ -1,6 +1,6 @@
 import { IRequest } from "src/shared";
 
-interface IGetAllMessagesQueryString {
+export interface IGetAllMessagesQueryString {
     id: string;
     offset: number;
     limit: number;

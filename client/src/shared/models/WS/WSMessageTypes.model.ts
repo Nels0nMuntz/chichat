@@ -1,0 +1,4 @@
+export enum WSMessageTypes {
+    CREATE_MESSAGE = "CREATE_MESSAGE",
+    DELETE_MESSAGE = "DELETE_MESSAGE",
+};

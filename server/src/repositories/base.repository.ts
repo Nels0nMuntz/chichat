@@ -40,6 +40,8 @@ export class BaseRepository<T extends Document> implements IReadable<T>, IWritab
         try {
             return await this.model.find(filter, projection || null, options || null);
         } catch (error) {
+            console.log({error});
+            
             throw ErrorException.ServerError("Can not find document in DB");
         }
     }

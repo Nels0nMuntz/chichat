@@ -1,9 +1,10 @@
+import http from 'http';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import { connectDB } from './core/db';
+import { connectDB, WebSocketManager } from './core';
 import { rootRouter } from './routers/root.router';
 import { errorHandlerMW } from './middlewares';
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+app.set('port', PORT);
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -24,13 +26,17 @@ app.use('/api', rootRouter);
 
 app.use(errorHandlerMW);
 
-const start = async () => {
+const start = async (): Promise<http.Server> => {
   try {
     await connectDB();
-    app.listen(PORT, () => console.log('Server started on port: ' + PORT));
+    return app.listen(PORT, () => console.log('Server started on port: ' + PORT));
   } catch (error) {
     console.log(error);
   }
 };
 
-start();
+start()
+  .then(server => {
+    const wsManager = new WebSocketManager(server);
+    wsManager.init();
+  });

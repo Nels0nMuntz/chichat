@@ -14,6 +14,7 @@ export class MessageRouter {
     }
 
     initRoutes(){
+        // TODO add auth check MW
         this.router.post('/create', this.controller.create);
         this.router.put('/update', this.controller.update);
     }

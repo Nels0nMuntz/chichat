@@ -1,11 +1,13 @@
 import { defineAction } from "rd-redux-utils";
-import { Status } from "shared";
+import { IWSMessage, Status } from "shared";
 import { 
     IDialog, 
     IFetchAllDialogsResponse, 
     IFetchAllMessagesRequest,
     IFetchAllMessagesResponse,
     ISendTextMessageRequest,
+    IFetchUserDataResponse,
+    IMessage,
 } from "../models";
 
 export const setHomeStateAction = defineAction<{ payload: Status }>("SET_HOME_STATE");
@@ -30,3 +32,13 @@ export const setMessagesStatusAction = defineAction<{ payload: Status }>("SET_ME
 export const setMessagesListAction = defineAction<{ payload: IFetchAllMessagesResponse }>("SET_MESSAGES_LIST");
 
 export const setTextMessageAction = defineAction<{ payload: string }>("SET_TEXT_MESASGE");
+
+export const addMessageToListAction = defineAction<{ payload: IMessage }>("ADD_MESASGE_TO_LIST");
+
+// user
+export const setHomeUserDataAction = defineAction<{ payload: IFetchUserDataResponse }>("SET_HOME_USER_DATA");
+
+// websocket
+export const setWebSocketAction = defineAction<{ payload: WebSocket }>("SET_WEBSOCKET");
+
+export const sendWSMessageAction = defineAction<{ payload: IWSMessage }>("SEND_WS_MESSGE");
