@@ -1,31 +1,12 @@
-import { WebSocket } from "ws";
-import { IWSMessage } from "../models/WSMessageManager/WSMessageManager";
+import { IWSMessage } from "../../models/websocket/common/wsMessage.model";
+import { ErrorException } from "../errorHandling/errorException";
+import { WSClientsMap } from "../WSClientsMap/WSClientsMap";
+import { WSRoomMembersSet } from "../WSRoomMembersSet/WSRoomMembersSet";
 
-class RoomMembersMap {
-
-    private _members: Map<string, WebSocket>;
-
-    get members(){
-        return this._members;
-    }
-
-    constructor(){
-        this._members = new Map();
-    }
-
-    addMember = (memberId: string, socket: WebSocket): void => {
-        this._members.set(memberId, socket);
-    }
-
-    hasmMeber = (memberId: string): boolean => {
-        return this._members.has(memberId);
-    }
-
-};
 
 export class WSRoomsMap {
 
-    private _rooms: Map<string, RoomMembersMap>;
+    private _rooms: Map<string, WSRoomMembersSet>;
 
     get rooms(){
         return this._rooms;
@@ -35,13 +16,13 @@ export class WSRoomsMap {
         this._rooms = new Map();
     }
 
-    addRoom = (roomId: string, memberId: string, socket: WebSocket): void => {
-        const roomMembersMap = new RoomMembersMap();
-        roomMembersMap.addMember(memberId, socket)
-        this._rooms.set(roomId, roomMembersMap);
+    addRoom = (roomId: string, memberId: string): void => {
+        const roomMembersSet = new WSRoomMembersSet();
+        roomMembersSet.addMember(memberId)
+        this._rooms.set(roomId, roomMembersSet);
     }
 
-    getRoom = (roomId: string): RoomMembersMap => {
+    getRoom = (roomId: string): WSRoomMembersSet => {
         return this._rooms.get(roomId);
     }
 
@@ -49,20 +30,27 @@ export class WSRoomsMap {
         return this._rooms.has(roomId);
     }
 
-    addRoomMember = (roomId: string, memberId: string, socket: WebSocket): void => {
-        const roomMembersMap = this.getRoom(roomId);
-        roomMembersMap.addMember(memberId, socket);
-        this._rooms.set(roomId, roomMembersMap);
+    addRoomMember = (roomId: string, memberId: string): void => {
+        const roomMembersSet = this.getRoom(roomId);
+        roomMembersSet.addMember(memberId);
+        this._rooms.set(roomId, roomMembersSet);
     }
 
     hasRoomMember = (roomId: string, memberId: string): boolean => {
-        const roomMembersMap = this.getRoom(roomId);
-        return roomMembersMap.hasmMeber(memberId);
+        const roomMembersSet = this.getRoom(roomId);
+        return roomMembersSet.hasMember(memberId);
     }
 
-    broadcast = <T extends object>(roomId: string, message: IWSMessage<T>) => {
+    broadcast = <T extends object>(roomId: string, clients: WSClientsMap, message: IWSMessage<T>) => {
         const roomMembersMap = this.getRoom(roomId); 
-        roomMembersMap.members.forEach(socket => socket.send(JSON.stringify(message)));
+        
+        roomMembersMap.members.forEach(memberId => {
+            const socket = clients.getClient(memberId);
+            if(socket.readyState !== 1){
+                throw ErrorException.ServerError("Socket is down");
+            };
+            socket.send(JSON.stringify(message));
+        });
     }
 
 };

@@ -11,8 +11,9 @@ import {
     setMessagesStatusAction,
     setMessagesListAction,
     setTextMessageAction,
+    resetTextMessageAction,
     setHomeUserDataAction,
-    addMessageToListAction,
+    addLastMessageAction,
     setWebSocketAction,
 } from './actions';
 
@@ -67,7 +68,7 @@ const initState: IHomeState = {
 
 export const homeReducer = (state: IHomeState = initState, action: Action): IHomeState => {
 
-    if(setHomeStateAction.is(action)){
+    if (setHomeStateAction.is(action)) {
         return {
             ...state,
             status: action.payload,
@@ -76,7 +77,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
 
     // dialogs
 
-    if(setDialogsStatusAction.is(action)){
+    if (setDialogsStatusAction.is(action)) {
         return {
             ...state,
             dialogs: {
@@ -86,7 +87,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
-    if(setDialogsListAction.is(action)){
+    if (setDialogsListAction.is(action)) {
         return {
             ...state,
             dialogs: {
@@ -96,7 +97,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
-    if(setSelectedDialogAction.is(action)){
+    if (setSelectedDialogAction.is(action)) {
         return {
             ...state,
             dialogs: {
@@ -109,7 +110,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
 
     // messages
 
-    if(setMessagesStatusAction.is(action)){
+    if (setMessagesStatusAction.is(action)) {
         return {
             ...state,
             messages: {
@@ -119,7 +120,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
-    if(setMessagesListAction.is(action)){
+    if (setMessagesListAction.is(action)) {
         return {
             ...state,
             messages: {
@@ -129,7 +130,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
-    if(setTextMessageAction.is(action)){
+    if (setTextMessageAction.is(action)) {
         return {
             ...state,
             messages: {
@@ -142,14 +143,38 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         };
     };
 
-    if(addMessageToListAction.is(action)){
+    if (resetTextMessageAction.is(action)) {
         return {
             ...state,
             messages: {
                 ...state.messages,
+                textMessage: {
+                    ...state.messages.textMessage,
+                    text: "",
+                }
+            }
+        };
+    };
+
+    if (addLastMessageAction.is(action)) {
+        const dialog = state.dialogs.list.filter(dialog => dialog.dialogId === action.payload.dialogId)[0];
+        return {
+            ...state,
+            dialogs: {
+                ...state.dialogs,
                 list: [
-                    ...state.messages.list,
+                    ...state.dialogs.list.filter(dialog => dialog.dialogId !== action.payload.dialogId),
+                    {                        
+                        ...dialog,
+                        messages: [action.payload],
+                    },
+                ],
+            },
+            messages: {
+                ...state.messages,
+                list: [
                     action.payload,
+                    ...state.messages.list,
                 ]
             }
         }
@@ -157,7 +182,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
 
     // user
 
-    if(setHomeUserDataAction.is(action)){
+    if (setHomeUserDataAction.is(action)) {
         return {
             ...state,
             user: action.payload,
@@ -166,7 +191,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
 
     // WebSocket
 
-    if(setWebSocketAction.is(action)){
+    if (setWebSocketAction.is(action)) {
         return {
             ...state,
             webSocket: {

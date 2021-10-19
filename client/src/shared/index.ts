@@ -19,6 +19,7 @@ export { default as ListItemTitle } from './components/ChatList/ListItemTitle/Li
 export { default as ListItemSubtitle } from './components/ChatList/ListItemSubtitle/ListItemSubtitle';
 export { default as Loader } from './components/Loader/Loader';
 export { default as MessageItem } from './components/MessageList/MessageItem/MessageItem';
+export { default as MessageDateGroup } from './components/MessageList/MessageDateGroup/MessageDateGroup';
 export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
 
 // models

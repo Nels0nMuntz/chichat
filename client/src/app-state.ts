@@ -5,7 +5,7 @@ import { connectRouter } from 'connected-react-router';
 import { routerMiddleware } from 'connected-react-router';
 import { all } from '@redux-saga/core/effects';
 
-import { homeReducer, homeWatcherSaga, wsRecieverSaga } from 'features/home/store';
+import { homeReducer, homeWatcherSaga } from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
 import { history } from './history-instance';
@@ -34,7 +34,6 @@ function* appSaga(){
     yield all([
         authWatcherSaga(),
         homeWatcherSaga(),
-        wsRecieverSaga(),
     ]);
 };
 

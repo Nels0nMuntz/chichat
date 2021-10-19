@@ -7,7 +7,6 @@ import {
     IGetAllDialogResponse,
     IMessageResponse,
     IGetAllMessagesRequest,
-    IGetAllMessagesQueryString,
 } from "../models";
 import { DialogService } from "../services/dialog.service";
 import { ErrorException, IRequest } from "../shared";
@@ -52,8 +51,8 @@ export class DialogController {
                 const dialogDto = new DialogsReasponseDto(dialog, req.user.id);
                 return {
                     ...dialogDto,
-                    messages: dialogDto.messages.length ? [dialogDto.messages[0]] : [],
-                }
+                    messages: dialogDto.messages.length ? [dialogDto.messages.pop()] : [],
+                };
             });
             return res.status(200).json({ dialogs: dilogsDto });
         } catch (error) {

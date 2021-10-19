@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectTextMessageText,
     setTextMessageAction,
+    resetTextMessageAction,
     selectActiveDialog,
     selectUserData,
     selecteWebSocket,
@@ -48,6 +49,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
             }
         };
         dispatch(sendWSMessageAction({ payload: message }));
+        dispatch(resetTextMessageAction({ payload: null }));
     }, [user, activeDialog, textMessage, ws]);
 
     if(!activeDialog) return null;

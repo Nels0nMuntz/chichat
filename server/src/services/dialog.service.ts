@@ -42,22 +42,22 @@ export class DialogService {
         if(!dialog) {
             throw ErrorException.BadRequestError("Can not get messages. Dialog is not exists");
         };
-        const doc = await this.dialogRepository.findOne(
+        const doc: IDialogPopulated = await this.dialogRepository.findOne(
             { _id: dialogId },
-            { messages: 1 },
-            {
-                sort: { _createdAt: 'asc' },
-                skip: offset,
-                limit,
-                populate: 'messages',
-            }
+            null,
+            { populate: 'messages' },
         );
 
         if(!doc) {
             throw ErrorException.ServerError("Can not find messages in DB")
-        }
+        };
 
-        return doc.messages;
+        const messages = doc.messages
+            .sort((a, b) => (+new Date(b.updatedAt)) - (+new Date(a.updatedAt)))
+            .splice(offset)
+            .slice(0, limit)
+
+        return messages;
     }
 
     getAllDialogs = async (userId: string): Promise<Array<IDialogPopulated>> => {
@@ -65,7 +65,7 @@ export class DialogService {
         if(!isUserExists) {
             throw ErrorException.BadRequestError("Can not get dialogs. User does not exists");
         };
-        return await this.dialogRepository.find(
+        const dialogs = await this.dialogRepository.find(
             {
                 $or: ([
                     { member_1: userId },
@@ -79,8 +79,9 @@ export class DialogService {
                     "member_2",
                     "messages",
                 ],
-                
             }
         );
+
+        return dialogs;
     }
 };

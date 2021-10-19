@@ -31,7 +31,7 @@ const Dialog: React.FC<DialogProps> = React.memo(({ dialogId, member, lastMessag
     const messageText = lastMessage?.content.text || '';
     const suffix = lastMessage?.updatedAt
         ? formatDistanceToNow(
-            new Date(lastMessage.updatedAt),
+            new Date(lastMessage.createdAt),
             {
                 includeSeconds: true,
                 locale: uk

@@ -13,7 +13,7 @@ import {
 export const setHomeStateAction = defineAction<{ payload: Status }>("SET_HOME_STATE");
 
 // fetch/send
-export const fetchInitDataAction = defineAction<{}>("FETCH_INIT_DATA");
+export const initHomeAction = defineAction<{}>("HOME_INIT");
 
 export const fetchAllMessagesAction = defineAction<{ payload: IFetchAllMessagesRequest }>("FETCH_DIALOG_MESSAGES");
 
@@ -33,7 +33,9 @@ export const setMessagesListAction = defineAction<{ payload: IFetchAllMessagesRe
 
 export const setTextMessageAction = defineAction<{ payload: string }>("SET_TEXT_MESASGE");
 
-export const addMessageToListAction = defineAction<{ payload: IMessage }>("ADD_MESASGE_TO_LIST");
+export const resetTextMessageAction = defineAction<{ payload: null }>("RESET_TEXT_MESASGE");
+
+export const addLastMessageAction = defineAction<{ payload: IMessage }>("ADD_LAST_MESASGE");
 
 // user
 export const setHomeUserDataAction = defineAction<{ payload: IFetchUserDataResponse }>("SET_HOME_USER_DATA");

@@ -80,12 +80,12 @@
         .list-item-subtitle__last-message,
         .list-item-subtitle__last-seen {
             flex-grow: 1;
-        }
-        .list-item-subtitle__last-seen{
-            font-size: 14px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+        }
+        .list-item-subtitle__last-seen{
+            font-size: 14px;
         }
     }
 }

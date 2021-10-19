@@ -16,11 +16,13 @@ import {
     userService 
 } from "services";
 import { setNotification } from "features/notification/store";
+import { wsRecieverSaga } from "../watcher-sagas";
 
 
-export function* fetchInitDataWorkerSaga() {
+export function* initHomeWorkerSaga() {
     yield call(fetchAllDialogs);
     yield call(fetchUserData);
+    yield call(wsRecieverSaga);
 };
 
 function* fetchAllDialogs() {

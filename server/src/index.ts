@@ -39,4 +39,5 @@ start()
   .then(server => {
     const wsManager = new WebSocketManager(server);
     wsManager.init();
-  });
+  })
+  .catch(err => console.log(err));

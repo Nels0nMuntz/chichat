@@ -17,7 +17,7 @@ const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, selectedDi
     return (
         <CustomScroll>
             <div className={style.dialogs}>
-                {list.map(({ dialogId, member, messages }) => (
+                {list.sort((a, b) => +new Date(b.messages[0]?.createdAt) - (+new Date(a.messages[0]?.createdAt))).map(({ dialogId, member, messages }) => (
                     <Dialog
                         key={dialogId}
                         dialogId={dialogId}

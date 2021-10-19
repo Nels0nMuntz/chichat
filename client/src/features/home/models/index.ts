@@ -13,3 +13,6 @@ export * from './response/fetchUserDataResponse.model';
 // request
 export * from './request/fetchAllMessagesRequest.model';
 export * from './request/sendTextMessageRequest.model';
+
+// websocket/request
+export * from './websocket/request/initWSClientRequest.model';

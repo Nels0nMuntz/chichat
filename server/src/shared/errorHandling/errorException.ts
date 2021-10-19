@@ -37,8 +37,8 @@ export class ErrorException extends Error {
         return new ErrorException(ErrorCode.BAD_REQUEST, message, metaData);
     }
 
-    public static ServerError(message?: string){
+    public static ServerError(message?: string, metaData?: any){
         const _message = message || "Internal server error";
-        return new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, _message);
+        return new ErrorException(ErrorCode.INTERNAL_SERVER_ERROR, _message, metaData);
     }
 };

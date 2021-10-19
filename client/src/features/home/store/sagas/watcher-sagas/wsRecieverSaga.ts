@@ -1,37 +1,53 @@
 import { END, eventChannel, EventChannel } from "redux-saga";
-import { call, take, put } from "@redux-saga/core/effects";
+import { call, take, put, select } from "@redux-saga/core/effects";
 
 import { 
     setWebSocketAction,
-    addMessageToListAction,
+    addLastMessageAction,
+    sendWSMessageAction,
 } from '../../actions';
-import { IWSMessage, WSMessageTypes } from "shared";
-import { IMessage } from "features/home/models";
+import {
+    selectUserData,
+} from '../../selectors';
+import { IUser, IWSMessage, WSMessageTypes } from "shared";
+import { IInitWSClientRequest, IMessage } from "../../../models";
 
 
 export function* wsRecieverSaga() {
     const socket: WebSocket = yield call(createWebSocket);   
     yield put(setWebSocketAction({ payload: socket }));
-    const channel: EventChannel<any> = yield call(createWebSocketEventChanel, socket);    
+    const user: IUser = yield select(selectUserData)
+    const channel: EventChannel<any> = yield call(createWebSocketEventChanel, user.userId, socket);    
     
     while (true) {
         const message: IWSMessage = yield take(channel);
         
         switch (message.type) {
-            case WSMessageTypes.CREATE_MESSAGE:
+            case WSMessageTypes.INIT_CONNECTED_CLIENT: {
+                const _message = message as IInitWSClientRequest;
+                yield put(sendWSMessageAction({ payload: _message }));
+                break;
+            };                
+            case WSMessageTypes.CREATE_MESSAGE: {
                 const _message = message as IWSMessage<IMessage>;
-                yield put(addMessageToListAction({ payload: _message.payload }));                    
-                break;                
+                yield put(addLastMessageAction({ payload: _message.payload }));                    
+                break; 
+            };
             default:
                 break;
         };
     }
 };
 
-function createWebSocketEventChanel(socket: WebSocket) {
+function createWebSocketEventChanel(userId: string, socket: WebSocket) {
     return eventChannel((emitter: (input: any | END) => void) => {
         socket.onopen = () => {
             console.log('Client socket is opened');
+            const message: IInitWSClientRequest = {
+                type: WSMessageTypes.INIT_CONNECTED_CLIENT,
+                payload: { userId },
+            };
+            emitter(message);
         };
         socket.onerror = (err: any) => {
             console.log('Websocket error ' + err);
