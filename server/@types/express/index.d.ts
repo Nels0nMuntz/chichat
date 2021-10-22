@@ -1,5 +1,5 @@
 import { Request as ExpressRequest } from 'express';
-import { IDecodedToken } from '../../src/shared';
+import { IDecodedToken } from '../../src/models';
 
 
 declare global {

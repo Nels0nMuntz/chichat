@@ -1,4 +1,4 @@
-import { IRequest } from "src/shared";
+import { IRequest } from "../../common";
 
 export interface IGetAllMessagesQueryString {
     id: string;

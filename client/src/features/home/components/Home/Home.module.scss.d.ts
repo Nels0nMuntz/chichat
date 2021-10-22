@@ -7,15 +7,9 @@ interface CssExports {
   'messages_track': string;
   'messages_wrapper': string;
   'middle_column': string;
-  'search_wrapper': string;
   'searchbar': string;
   'searchbar_anim': string;
   'searchbar_open': string;
-  'sidebar': string;
-  'sidebar_anim': string;
-  'sidebar_close': string;
-  'sidebar_header': string;
-  'sidebar_track': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

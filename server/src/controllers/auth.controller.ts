@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { UserResponseDto } from '../dtos';
 import { errorFormatter } from '../helpers';
-import { IAuthSignUpRequest, IAuthSignInRequest, IAuthSignInResponse, IGeneratedTokens } from '../models';
+import { IAuthSignUpRequest, IAuthSignInRequest, IAuthSignInResponse, IGeneratedTokens, IRequest } from '../models';
 import { AuthService } from '../services';
-import { ErrorException, IRequest } from '../shared';
+import { ErrorException } from '../shared';
 
 
 export class AuthController {

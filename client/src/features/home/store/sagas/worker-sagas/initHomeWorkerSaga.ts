@@ -12,7 +12,7 @@ import {
     IFetchUserDataResponse,
 } from "features/home/models";
 import { 
-    dialogsService, 
+    dialogService, 
     userService 
 } from "services";
 import { setNotification } from "features/notification/store";
@@ -28,7 +28,7 @@ export function* initHomeWorkerSaga() {
 function* fetchAllDialogs() {
     try {
         yield put(setDialogsStatusAction({ payload: Status.Running }));
-        const { status, data }: AxiosResponse<IFetchAllDialogsResponse> = yield dialogsService.fetchAllDialogs();
+        const { status, data }: AxiosResponse<IFetchAllDialogsResponse> = yield dialogService.fetchAllDialogs();
         if (status === 200) {
             yield put(setDialogsListAction({ payload: data }));
             yield put(setDialogsStatusAction({ payload: Status.Success }));

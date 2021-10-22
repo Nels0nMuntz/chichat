@@ -37,11 +37,12 @@ const StyledTab = withStyles({
 })(Tab);
 
 type SearchTabsProps = {
+    tabs: Array<string>;
     active: number;
     handleChange: (e: React.ChangeEvent<{}>, newValue: number) => void
 };
 
-const SearchTabs: React.FC<SearchTabsProps> = ({ active, handleChange }) => {
+const SearchTabs: React.FC<SearchTabsProps> = ({ tabs, active, handleChange }) => {
 
     return (
         <div className={style.search_tabs_wrapper}>
@@ -52,12 +53,7 @@ const SearchTabs: React.FC<SearchTabsProps> = ({ active, handleChange }) => {
                 variant="scrollable"
                 scrollButtons="off"
             >
-                <StyledTab label="Chats" />
-                <StyledTab label="Media" />
-                <StyledTab label="Links" />
-                <StyledTab label="Files" />
-                <StyledTab label="Music" />
-                <StyledTab label="Voice" />
+                {tabs.map(tab => <StyledTab label={tab} key={tab} />)}
             </StyledTabs>
         </div>
     )

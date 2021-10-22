@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
+import { ErrorCode, ErrorException } from "../shared";
 import AuthRouter from "./auth.router";
 import { DialogRouter } from "./dialog.router";
 import { MessageRouter } from "./message.router";
@@ -12,7 +13,7 @@ class RootRouter {
     private dialogRouter: DialogRouter;
     private messageRouter: MessageRouter;
 
-    constructor(){
+    constructor() {
         this.router = Router();
         this.authRouter = new AuthRouter();
         this.userRouter = new UserRouter();
@@ -21,11 +22,12 @@ class RootRouter {
         this.initRoutes();
     }
 
-    private initRoutes(){
+    private initRoutes() {
         this.router.use('/auth', this.authRouter.router);
         this.router.use('/user', this.userRouter.router);
         this.router.use('/dialogs', this.dialogRouter.router);
         this.router.use('/messages', this.messageRouter.router);
+        this.router.use('/*', () => { throw new ErrorException(ErrorCode.NOT_FOUND, "Page not found") });
     }
 }
 

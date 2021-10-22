@@ -1,15 +1,15 @@
 import { NextFunction, Response, Request } from "express";
-import { DialogsReasponseDto } from "../dtos/dialogDtos/dialogsResponse.dto";
-import { CreateDialogRequestDto, CreateDialogResponseDto, MessageResponseDto } from "../dtos";
+import { CreateDialogRequestDto, DialogsReasponseDto, MessageResponseDto } from "../dtos";
 import {
+    IRequest,
     ICreateDialogRequest,
-    ICreateDialogResponse,
+    IDialogResponse,
     IGetAllDialogResponse,
     IMessageResponse,
     IGetAllMessagesRequest,
 } from "../models";
 import { DialogService } from "../services/dialog.service";
-import { ErrorException, IRequest } from "../shared";
+import { ErrorException } from "../shared";
 
 
 export class DialogController {
@@ -20,15 +20,16 @@ export class DialogController {
         this.service = new DialogService();
     }
 
-    create = async (req: IRequest<ICreateDialogRequest>, res: Response<ICreateDialogResponse>, next: NextFunction) => {
+    create = async (req: IRequest<ICreateDialogRequest>, res: Response<IDialogResponse>, next: NextFunction) => {
+        const userId = req.user.id;
         try {
             const dialogReqDto = new CreateDialogRequestDto(req.body);
             const doc = await this.service.create(dialogReqDto);
             if (!doc) {
                 throw ErrorException.BadRequestError("Invalid request data");
             };
-            const dialogResDto = new CreateDialogResponseDto(doc);
-            return res.status(201).json({ ...dialogResDto })
+            const dialogResDto = new DialogsReasponseDto(doc, userId);
+            return res.status(201).json({ ...dialogResDto });
         } catch (error) {
             next(error)
         }
@@ -41,8 +42,7 @@ export class DialogController {
                 throw ErrorException.BadRequestError("Invalid request data. There is no user ID");
             };
             
-            const dialogs = await this.service.getAllDialogs(userId);
-            
+            const dialogs = await this.service.getAllDialogs(userId);            
             
             if (!Array.isArray(dialogs)) {
                 throw ErrorException.ServerError();
@@ -63,9 +63,9 @@ export class DialogController {
     }
 
     getOne = async (req: Request, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
-        const _req = req as unknown as IGetAllMessagesRequest;
+        const request = req as unknown as IGetAllMessagesRequest;
         try {
-            const { id, offset, limit } = _req.query;           
+            const { id, offset, limit } = request.query;           
             if(!id || !offset || !limit) {
                 throw ErrorException.BadRequestError("Wrong query parameters")
             };

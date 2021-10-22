@@ -29,9 +29,9 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const textMessage = useSelector(selectTextMessageText);
     const ws = useSelector(selecteWebSocket);
 
-    const handleValueChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         dispatch(setTextMessageAction({ payload: e.target.value }));
-    }, []);
+    };
     const handleOpenEmojiPopup = React.useCallback(() => setPopups({ emoji: true, menu: false }), []);
     const handleCloseEmojiPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
     const handleOpenMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: true }), []);

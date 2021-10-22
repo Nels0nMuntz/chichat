@@ -1,0 +1,119 @@
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import Sidebar from '../components/Sidebar/Sidebar';
+
+import {
+    selectSidebarVisibility,
+    selectSidebarSearchField,
+    selectSidebarStatus,
+    selectActiveTab,
+    selectSearchUsers,
+    selectDialogsList,
+    selectMessagesState,
+    selectSearchMode,
+    setSidebarSearchFieldValueAction,
+    sidebarSearchAction,
+    setSidebarSearchFieldTypingAction,
+    setActiveSearchTabAction,
+    resetSidebarSearchAction,
+    setSelectedDialogAction,
+    fetchAllMessagesAction,
+    setSidebarSearchModeAction,
+    createDialogAction,
+    selectUserData,
+} from '../store'
+import { useMediaQuery, SearchGroups, isEmptyString } from 'shared';
+
+
+const SidebarContainer: React.FC = () => {
+
+    const dispatch = useDispatch();
+
+    const [matches] = useMediaQuery("(max-width: 900px)");
+    const [globalSearch, setGlobalSearch] = React.useState(false);
+
+    const status = useSelector(selectSidebarStatus);
+    const user = useSelector(selectUserData);
+    const searchMode = useSelector(selectSearchMode);
+    const visibility = useSelector(selectSidebarVisibility);
+    const { value, typing } = useSelector(selectSidebarSearchField);
+    const activeTab = useSelector(selectActiveTab);
+    const { offset, limit } = useSelector(selectMessagesState)
+    const dialogs = useSelector(selectDialogsList);
+    const users = useSelector(selectSearchUsers);
+
+    const enableSearchMode = React.useCallback(() => { dispatch(setSidebarSearchModeAction({ payload: true })) }, []);
+    const disableSearchMode = React.useCallback(() => { dispatch(setSidebarSearchModeAction({ payload: false })) }, []);
+    const handleSearch = React.useCallback((value: string) => {
+        if (isEmptyString(value)) {
+            dispatch(resetSidebarSearchAction({ payload: null }));
+            return;
+        };
+        dispatch(sidebarSearchAction({
+            payload: {
+                query: value,
+                group: activeTab,
+                internal: !globalSearch,
+            }
+        }));
+    }, [activeTab, globalSearch]);
+    const resetSearch = React.useCallback(() => { dispatch(resetSidebarSearchAction({ payload: null })) }, []);
+    const handleChange = (value: string) => { dispatch(setSidebarSearchFieldValueAction({ payload: value })) };
+    const handleTyping = React.useCallback((value: boolean) => { dispatch(setSidebarSearchFieldTypingAction({ payload: value })) }, []);
+    const handleKeydown = (e: KeyboardEvent) => {
+        if (e.code === "Escape") {
+            disableSearchMode();
+        }
+    };
+    const handleChangeActiveTab = React.useCallback((tab: SearchGroups) => { dispatch(setActiveSearchTabAction({ payload: tab })) }, []);
+    const handleToggleGlobalSearch = React.useCallback(() => setGlobalSearch(prev => !prev), []);
+    const handleSelectUser = React.useCallback((userId: string) => {
+        const dialog = dialogs.find(({ member }) => member.userId === userId);
+        if (dialog) {
+            dispatch(resetSidebarSearchAction({ payload: null }));
+            dispatch(setSelectedDialogAction({ payload: dialog }));
+            dispatch(fetchAllMessagesAction({ payload: { offset, limit, dialogId: dialog.dialogId } }));
+            disableSearchMode();
+        } else {
+            dispatch(createDialogAction({ payload: {
+                member_1: user.userId,
+                member_2: userId,
+            } }));
+        }
+    }, [dialogs]);
+
+    React.useEffect(() => {
+        if (searchMode) {
+            window.document.body.addEventListener("keydown", handleKeydown);
+        }
+        return () => {
+            window.document.body.removeEventListener("keydown", handleKeydown);
+        }
+    }, [searchMode]);
+
+    return (
+        <Sidebar
+            matches={matches}
+            status={status}
+            visibility={visibility}
+            searchMode={searchMode}
+            searchFieldValue={value}
+            searchFieldTyping={typing}
+            activeTab={activeTab}
+            globalSearch={globalSearch}
+            users={users}
+            enableSearchMode={enableSearchMode}
+            disableSearchMode={disableSearchMode}
+            handleSearch={handleSearch}
+            handleChange={handleChange}
+            handleTyping={handleTyping}
+            handleChangeActiveTab={handleChangeActiveTab}
+            handleToggleGlobalSearch={handleToggleGlobalSearch}
+            resetSearch={resetSearch}
+            handleSelectUser={handleSelectUser}
+        />
+    );
+};
+
+export default SidebarContainer;

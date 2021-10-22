@@ -74,9 +74,6 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ status, list, 
         }, [] as Array<IGroupedMessages>);
     }, [list]);
 
-    console.log(messages);
-
-
     if (status === Status.Running) return <Loader />;
 
     return (

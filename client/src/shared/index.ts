@@ -35,6 +35,7 @@ export * from './models/WS/WSMessage.model';
 export * from './models/WS/WSState.model';
 export * from './models/WS/WSAction.model';
 export * from './models/WS/WSMessageTypes.model';
+export * from './models/searchParams.model';
 
 // validation schemas
 export * from './validators/signInFormValidationSchema';
@@ -51,3 +52,6 @@ export { default as withLoader } from './HOC/withLoader';
 
 //hooks
 export { default as useMediaQuery } from './hooks/useMediaQuery';
+
+// constants
+export * from './constants/searchGroups';

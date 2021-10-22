@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorException } from "../shared";
 import { TokenService } from "../services";
-import { IDecodedToken } from '../shared';
+import { IDecodedToken } from "../models";
 
 
 const tokenService = new TokenService();

@@ -1,7 +1,7 @@
-import { UpdateResult } from "mongodb";
 import { Document, Model, FilterQuery, Query, QueryOptions, UpdateQuery } from "mongoose";
+import { IReadable, IWritable } from "../models";
 
-import { ErrorException, IReadable, IWritable } from "../shared";
+import { ErrorException } from "../shared";
 
 
 export class BaseRepository<T extends Document> implements IReadable<T>, IWritable<T> {

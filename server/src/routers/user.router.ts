@@ -15,7 +15,8 @@ export class UserRouter {
     }
 
     private initRoutes = () => {
-        this.router.use("/", checkAuthMW, this.controller.getOne);
+        this.router.get("/", checkAuthMW, this.controller.getOne);
+        this.router.get("/search", checkAuthMW, this.controller.search);
     }
 
 };

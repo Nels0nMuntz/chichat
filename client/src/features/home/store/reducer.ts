@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IUser, Status } from 'shared';
+import { IUser, Status, SearchGroups } from 'shared';
 import { IMessage, ITextMessageContent } from '../models';
 import { IDialog } from '../models/common/dialog.model';
 
@@ -15,6 +15,15 @@ import {
     setHomeUserDataAction,
     addLastMessageAction,
     setWebSocketAction,
+    setSidebarStatusAction,
+    setSidebarVisibilityAction,
+    setSidebarSearchFieldValueAction,
+    setSidebarSearchFieldTypingAction,
+    setActiveSearchTabAction,
+    setSidebarSearchUsersAction,
+    resetSidebarSearchAction,
+    setSidebarSearchModeAction,
+    addDialogsListItemAction,
 } from './actions';
 
 
@@ -31,6 +40,20 @@ interface IHomeState {
         limit: number;
         list: Array<IMessage>
         textMessage: ITextMessageContent;
+    };
+    sidebar: {
+        status: Status;
+        visibility: boolean;
+        search: {
+            field: {
+                value: string;
+                typing: boolean;
+            },
+            activeTab: SearchGroups,
+            searchMode: boolean;
+            users: Array<IUser>,
+            messages: Array<IMessage>,
+        };
     };
     user: IUser;
     webSocket: {
@@ -53,6 +76,20 @@ const initState: IHomeState = {
         textMessage: {
             text: "",
             type: "text",
+        },
+    },
+    sidebar: {
+        status: Status.Initial,
+        visibility: true,
+        search: {
+            field: {
+                value: '',
+                typing: false,
+            },
+            activeTab: SearchGroups.Chats,
+            searchMode: false,
+            users: [],
+            messages: [],
         },
     },
     user: {
@@ -104,8 +141,26 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
                 ...state.dialogs,
                 selectedDialog: action.payload,
             },
+            messages: {
+                ...state.messages,
+                offset: 0,
+                list: [],
+            }
         };
     };
+
+    if (addDialogsListItemAction.is(action)) {
+        return {
+            ...state,
+            dialogs: {
+                ...state.dialogs,
+                list: [
+                    action.payload,
+                    ...state.dialogs.list,
+                ]
+            }
+        };
+    }
 
 
     // messages
@@ -164,7 +219,7 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
                 ...state.dialogs,
                 list: [
                     ...state.dialogs.list.filter(dialog => dialog.dialogId !== action.payload.dialogId),
-                    {                        
+                    {
                         ...dialog,
                         messages: [action.payload],
                     },
@@ -179,6 +234,117 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
             }
         }
     }
+
+    // sidebar
+
+    if (setSidebarStatusAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                status: action.payload,
+            }
+        };
+    };
+
+    if (setSidebarVisibilityAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                visibility: action.payload,
+            }
+        };
+    };
+
+    if (setSidebarSearchFieldValueAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    field: {
+                        ...state.sidebar.search.field,
+                        value: action.payload,
+                    }
+                },
+            }
+        };
+    };
+
+    if (setSidebarSearchFieldTypingAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    field: {
+                        ...state.sidebar.search.field,
+                        typing: action.payload,
+                    }
+                }
+            }
+        };
+    };
+
+    if (setActiveSearchTabAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    activeTab: action.payload,
+                }
+            }
+        };
+    };
+
+    if (setSidebarSearchUsersAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    users: action.payload,
+                }
+            }
+        };
+    };
+
+    if (resetSidebarSearchAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    users: [],
+                    messages: [],
+                    field: {
+                        ...state.sidebar.search.field,
+                        value: "",
+                    }
+                }
+            }
+        };
+    };
+
+    if (setSidebarSearchModeAction.is(action)) {
+        return {
+            ...state,
+            sidebar: {
+                ...state.sidebar,
+                search: {
+                    ...state.sidebar.search,
+                    searchMode: action.payload,
+                }
+            }
+        };
+    };
 
     // user
 

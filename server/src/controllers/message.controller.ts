@@ -1,8 +1,8 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Response, Request } from "express";
 import { CreateMessageRequestDto, MessageResponseDto, UpdateMessageRequestDto } from "../dtos";
-import { ICreateMessageRequest, IMessageResponse, IUpdateMessageRequest } from "../models";
+import { ICreateMessageRequest, IMessageResponse, IUpdateMessageRequest, IRequest, ISearchQueryString } from "../models";
 import { MessageService } from "../services/message.service";
-import { ErrorException, IRequest } from "../shared";
+import { ErrorException } from "../shared";
 
 
 export class MessageController {
@@ -38,6 +38,17 @@ export class MessageController {
             res.status(200).json({ ...messageResData });
         } catch (error) {
             next(error);
+        }
+    }
+
+    search = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const request = req as unknown as IRequest<{}, ISearchQueryString>;
+            const userId = req.user.id;
+            const { query } = request.query;
+            
+        } catch (error) {
+            
         }
     }
 

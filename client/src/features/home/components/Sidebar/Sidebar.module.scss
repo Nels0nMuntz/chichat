@@ -1,0 +1,48 @@
+@import "../../../../assets/styles/mixins/media.scss";
+
+.sidebar {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--dialogs-width);
+    min-width: 320px; 
+    transform-origin: 0% 50%;   
+    transition: width var(--layout-animation-duration) var(--layout-animation-timing-function),
+        transform var(--layout-animation-duration) ease-in-out;
+    @include media-md-x{
+        min-width: unset;
+    }
+
+    .sidebar_header {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        padding: 6px 25px 8px 13px;
+        position: relative;
+        z-index: 1;
+        background-color: var(--color-bg);
+    }
+    .sidebar_track {
+        flex-grow: 1;
+    }
+    .search_wrapper {
+        height: 44px;
+        flex-grow: 1;
+        margin-left: 12px;
+    }
+    .sidebar_anim{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: var(--dialogs-width);
+        display: flex;
+        flex-direction: column;
+        border-right: var(--layout-border-width) solid var(--color-borders);
+        background-color: var(--color-bg);
+    }
+    &.sidebar_close{
+        width: 0;
+        overflow: hidden;
+        transform: scale3d(0.93, 0.93, 0.93);
+    }
+}

@@ -1,6 +1,7 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 import { axiosInstance } from "core";
-import { IFetchUserDataResponse } from "features/home/models";
+import { IFetchUserDataResponse, ISidebarSearchParams } from "features/home/models";
+import { IUser } from "shared";
 
 
 class UserService {
@@ -8,7 +9,7 @@ class UserService {
     private axios: AxiosInstance;
     private baseUrl: string;
 
-    constructor(){
+    constructor() {
         this.axios = axiosInstance;
         this.baseUrl = "/api/user";
     }
@@ -19,6 +20,14 @@ class UserService {
         } catch (error: any) {
             throw error.response.data.error;
         }
+    }
+
+    search = async (data: ISidebarSearchParams): Promise<AxiosResponse<Array<IUser>>> => {
+        try {
+            return await this.axios.get<Array<IUser>>(this.baseUrl + `/search?query=${data.query}&internal=${data.internal}`);
+        } catch (error: any) {
+            throw error.response.data.error;
+        };
     }
 
 };

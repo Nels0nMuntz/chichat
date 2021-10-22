@@ -39,4 +39,8 @@ export class MessageService {
         };
         return await this.messageRepository.updateOne(messageId, { content });
     }
+
+    search = async (userId: string, query: string) => {
+        
+    }
 }

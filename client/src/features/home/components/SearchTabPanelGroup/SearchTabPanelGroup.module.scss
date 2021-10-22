@@ -1,6 +1,8 @@
 .group{
     padding: 1rem 0.5rem 0.5rem;
-    border-bottom: 1px solid var(--color-borders);
+    &:not(:last-child){
+        border-bottom: 1px solid var(--color-borders);
+    }
 }
 .group_header{
     width: 100%;

@@ -22,27 +22,30 @@ const StyledIconButton = withStyles({
 type SearchFieldProps = {
     value: string;
     editMode: boolean;
+    typing: boolean;
+    loading: boolean;
     autoFocus?: boolean;
     handleFocus: () => void;
+    handleSearch: (value: string) => void;
+    resetSearch: () => void;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const SearchField: React.FC<SearchFieldProps> = ({ value, editMode, autoFocus, handleChange, handleFocus }) => {  
+const SearchField: React.FC<SearchFieldProps> = ({ value, editMode, typing, loading, autoFocus, handleChange, handleFocus, handleSearch, resetSearch }) => {
 
     const inputRef = React.useRef<HTMLInputElement>(null);
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.code === "Enter") {
+            handleSearch(value);
+        };
+    };
+
     React.useEffect(() => {
-        if(!editMode){
+        if (!editMode) {
             inputRef.current?.blur();
         };
     }, [editMode]);
-
-    // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if(e.code === "Escape") {
-    //         inputRef.current?.blur();
-    //         setValue("");
-    //     };
-    // };
 
     return (
         <div className={style.searchInputWrapper}>
@@ -55,19 +58,21 @@ const SearchField: React.FC<SearchFieldProps> = ({ value, editMode, autoFocus, h
                 onChange={handleChange}
                 autoFocus={autoFocus}
                 onFocus={handleFocus}
-                // onKeyDown={handleKeyDown}
+                onKeyDown={handleKeyDown}
             />
             <div className={`${style.adornment} ${style.startAdornment}`}>
                 <i className={`icon-search ${style.adornmentIcon}`}></i>
             </div>
             <div className={`${style.adornment} ${style.endAdornment}`}>
-                {true
+                {typing || loading
                     ? (
-                        <StyledIconButton size="small" >
+                        <CircularProgress size={20} color='inherit' className={style.circularProgress} />
+                    )
+                    : (
+                        <StyledIconButton size="small" onClick={resetSearch} >
                             <CloseIcon />
                         </StyledIconButton>
-                    )
-                    : <CircularProgress size={20} color='inherit' className={style.circularProgress} />}
+                    )}
             </div>
         </div>
     )
