@@ -2,6 +2,7 @@ import { Schema, model, Document, Model } from "mongoose";
 import { IMessageContent } from "../models/messageModels";
 import { IDialogDocument } from "./dialogModel";
 import { IUserDocument } from "./userModel";
+import { Modify } from "../shared";
 
 
 interface IMessageSchema {
@@ -14,6 +15,15 @@ interface IMessageSchema {
 };
 
 export interface IMessageDocument extends IMessageSchema, Document { };
+
+export type IMessagePopulated = Modify<IMessageDocument, {
+    dialogId: IDialogDocument;
+    createdBy: IUserDocument;
+    read: boolean;
+    content: IMessageContent;
+    createdAt: string;
+    updatedAt: string;
+}>;
 
 export interface IMessageModel extends Model<IMessageDocument> { };
 

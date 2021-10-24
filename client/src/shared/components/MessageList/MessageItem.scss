@@ -21,7 +21,8 @@
     // max-width: 576px;
     display: flex;
     align-items: flex-end;
-    margin-bottom: 0.375rem;
+    margin: 0 auto 0.375rem;    
+    max-width: var(--messages-container-width);
 
     .message-item__select-control {
         width: 24px;

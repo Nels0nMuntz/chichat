@@ -50,9 +50,9 @@
 
 .messages_track{
     width: 100%;
-    max-width: var(--messages-container-width);
     flex: 1;
     margin: 0 auto;
+    height: calc(100vh - var(--middle-header-height) - var(--message-input-height));
 }
 
 /* searchbar */

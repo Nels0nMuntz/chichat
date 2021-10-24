@@ -35,13 +35,11 @@ export class DialogService {
             throw ErrorException.BadRequestError("Can not create new dialog. Dialog is already exists");
         }
         const createdDialog = await this.dialogRepository.createOne({ ...doc });
-        // console.log({createdDialog});
         const populatedDialog = createdDialog.populate([
             "member_1",
             "member_2",
             "messages",
         ]);
-        console.log({populatedDialog});
         return populatedDialog;
     }
 
@@ -62,8 +60,8 @@ export class DialogService {
 
         const messages = doc.messages
             .sort((a, b) => (+new Date(b.updatedAt)) - (+new Date(a.updatedAt)))
-            .splice(offset)
-            .slice(0, limit)
+            // .splice(offset)
+            // .slice(0, limit)
 
         return messages;
     }

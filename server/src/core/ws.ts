@@ -1,33 +1,22 @@
 import { Server as HTTPServer } from "http";
 import { WebSocket, Server, MessageEvent } from 'ws';
 
-import { MessageService } from "../services";
+import { WSService } from "../services";
 import {
     IWSMessage,
     WSMessageTypes,
     IWSMessageActionData,
 } from "../models";
-import {
-    WSMessageManager,
-    WSRoomsMap,
-    WSClientsMap,
-} from "../shared";
 
 
 export class WebSocketManager {
 
     private wss: Server;
-    private clients: WSClientsMap;
-    private rooms: WSRoomsMap;
-    private messageService: MessageService;
-    private messageManager: WSMessageManager
+    private WSService: WSService;
 
     constructor(server: HTTPServer) {
         this.wss = new WebSocket.Server({ server });
-        this.clients = new WSClientsMap();
-        this.rooms = new WSRoomsMap();
-        this.messageService = new MessageService();
-        this.messageManager = new WSMessageManager();
+        this.WSService = new WSService();
     }
 
     init() {
@@ -43,10 +32,10 @@ export class WebSocketManager {
         const actionData = this.getMessageActionData(event);
         switch (actionData.parsedData.type) {
             case WSMessageTypes.INIT_CONNECTED_CLIENT:
-                this.messageManager.initClient(actionData);
+                this.WSService.initClient(actionData);
                 break;
             case WSMessageTypes.CREATE_MESSAGE:
-                this.messageManager.createMessage(actionData);
+                this.WSService.createMessage(actionData);
                 break;
             default:
                 break;
@@ -58,9 +47,6 @@ export class WebSocketManager {
         return {
             event,
             parsedData,
-            clients: this.clients,
-            rooms: this.rooms,
-            messageService: this.messageService,
         };
     }
 

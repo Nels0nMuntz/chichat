@@ -7,7 +7,7 @@ import MessageInput from '../../containers/MessageInputContainer';
 import MessagesTrack from '../../containers/MessagesTrackContainer';
 import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
 import Sidebar from 'features/home/containers/SidebarContainer';
-import { CustomScroll, useMediaQuery, IUser, withLoader } from 'shared';
+import { useMediaQuery, IUser, withLoader } from 'shared';
 
 import { setSidebarVisibilityAction, selectSidebarVisibility } from '../../store';
 
@@ -24,8 +24,10 @@ const Home: React.FC<HomeProps> = (props) => {
 
     const dispatch = useDispatch();
 
+    // const activeDialog = useSelector(selectActiveDialog);
     const sidebarVisibility = useSelector(selectSidebarVisibility);
 
+    // const [state, setState] = React.useState(false)
     const [searchbarVisility, setSearchbarVisility] = React.useState(false);
     const [matches] = useMediaQuery("(max-width: 900px)");
 
@@ -34,6 +36,14 @@ const Home: React.FC<HomeProps> = (props) => {
     }, [sidebarVisibility]);
     const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
     const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
+
+    // React.useEffect(() => {
+    //     if(!!activeDialog) {
+    //         setState(true)
+    //     }else{
+    //         setState(false)
+    //     }
+    // }, [activeDialog])
 
     return (
         <div className={style.home_wrapper}>
@@ -54,9 +64,9 @@ const Home: React.FC<HomeProps> = (props) => {
                             />
                             <div className={style.messages_wrapper}>
                                 <div className={style.messages_track}>
-                                    <CustomScroll>
+                                    {/* <CustomScroll> */}
                                         <MessagesTrack />
-                                    </CustomScroll>
+                                    {/* </CustomScroll> */}
                                 </div>
                                 <MessageInput />
                             </div>

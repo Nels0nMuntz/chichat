@@ -1,0 +1,10 @@
+.simplebar-content-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.simplebar-content {
+    flex-grow: 1;
+}
+.simplebar-track .simplebar-scrollbar::before{
+    background: rgba(87,98,113,0.5);
+}

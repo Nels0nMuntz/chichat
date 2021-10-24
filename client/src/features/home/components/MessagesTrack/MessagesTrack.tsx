@@ -3,7 +3,8 @@ import format from 'date-fns/format';
 import isSameDay from 'date-fns/isSameDay';
 import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
-import uk from 'date-fns/locale/uk'
+import uk from 'date-fns/locale/uk';
+import SimpleBar from 'simplebar-react';
 
 import { IMessage } from '../../models';
 import {
@@ -11,10 +12,10 @@ import {
     MessageItem,
     MessageContentText,
     Status,
-    Loader,
 } from 'shared';
 
 import style from './MessagesTrack.module.scss';
+import 'simplebar/dist/simplebar.min.css';
 
 const formatPeriod = (date: Date): string => {
     if (isThisWeek(date, { locale: uk })) return format(date, "EEEE");
@@ -37,9 +38,20 @@ type MessagesTrackProps = {
     userId: string;
 };
 
-const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ status, list, userId }) => {
+const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId }) => {
 
-    // const [selectMode, setSelectMode] = React.useState(false);
+    const scrollRef = React.useRef<SimpleBar>(null);
+
+    React.useEffect(() => {
+        if(scrollRef && scrollRef.current) {;
+            const scrollHeight = scrollRef.current.el.scrollHeight;
+            const el = document.querySelector(".simplebar-content-wrapper");
+            if(el){
+                console.log(el.scrollTop = scrollHeight)
+                console.log(el.scrollTop);  
+            };           
+        }
+    }, [scrollRef]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {
@@ -72,30 +84,30 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ status, list, 
                 }
             }
         }, [] as Array<IGroupedMessages>);
-    }, [list]);
-
-    if (status === Status.Running) return <Loader />;
+    }, [list]);    
 
     return (
-        <div className={style.messages_track}>
-            {messages.map(({ period, list }) => (
-                <MessageDateGroup
-                    key={+period}
-                    period={formatPeriod(period)}
-                >
-                    {list.map(({ messageId, content, createdBy, createdAt }) => (
-                        <MessageItem
-                            isOwn={createdBy === userId}
-                            key={messageId}
-                        >
-                            <MessageContentText meta={formatTime(new Date(createdAt))}>
-                                {content.text}
-                            </MessageContentText>
-                        </MessageItem>
-                    ))}
-                </MessageDateGroup>
-            ))}
-        </div>
+        <SimpleBar style={{ height: 'inherit' }} ref={scrollRef} forceVisible={true} >
+            <div className={style.messages_track}>
+                {messages.map(({ period, list }) => (
+                    <MessageDateGroup
+                        key={+period}
+                        period={formatPeriod(period)}
+                    >
+                        {list.map(({ messageId, content, createdBy, createdAt }) => (
+                            <MessageItem
+                                isOwn={createdBy === userId}
+                                key={messageId}
+                            >
+                                <MessageContentText meta={formatTime(new Date(createdAt))}>
+                                    {content.text}
+                                </MessageContentText>
+                            </MessageItem>
+                        ))}
+                    </MessageDateGroup>
+                ))}
+            </div>
+        </SimpleBar>
     );
 });
 
