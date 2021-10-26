@@ -1,3 +1,3 @@
-import { IMessage } from "../";
+import { IMessageResponse } from "../";
 
-export interface ISearchMessagesResponse extends Array<IMessage> { };
+export interface ISearchMessagesResponse extends Array<IMessageResponse> { };

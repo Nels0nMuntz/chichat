@@ -1,14 +1,18 @@
 import React from 'react';
+import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     selectTextMessageText,
-    setTextMessageAction,
-    resetTextMessageAction,
     selectActiveDialog,
     selectUserData,
-    selecteWebSocket,
+    selectSelectedMessages,
+    selectSelectMode,
+    setTextMessageAction,
+    resetTextMessageAction,
     sendWSMessageAction,
+    disableMessagesSelectModeAction,
+    deleteMessagesAction,
 } from '../store';
 import MessageInput from '../components/MessageInput/MessageInput';
 import { IWSMessage, WSMessageTypes } from 'shared';
@@ -27,7 +31,8 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const user = useSelector(selectUserData);
     const activeDialog = useSelector(selectActiveDialog);
     const textMessage = useSelector(selectTextMessageText);
-    const ws = useSelector(selecteWebSocket);
+    const selectedMessages = useSelector(selectSelectedMessages);
+    const selectMode = useSelector(selectSelectMode);
 
     const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         dispatch(setTextMessageAction({ payload: e.target.value }));
@@ -50,7 +55,13 @@ const MessageInputContainer: React.FC = React.memo(() => {
         };
         dispatch(sendWSMessageAction({ payload: message }));
         dispatch(resetTextMessageAction({ payload: null }));
-    }, [user, activeDialog, textMessage, ws]);
+    }, [user, activeDialog, textMessage]);
+    const handleSelectEmoji = React.useCallback((emoji: BaseEmoji) => { dispatch(setTextMessageAction({ payload: emoji })); }, []);
+    const disableSelectMode = React.useCallback(() => { selectMode && dispatch(disableMessagesSelectModeAction({ payload: null })) }, [selectMode]);
+    const handleDeleteMessages = React.useCallback(() => {
+        dispatch(deleteMessagesAction({ payload: selectedMessages }));
+        dispatch(disableMessagesSelectModeAction({ payload: null }));
+    }, [selectedMessages]);
 
     if(!activeDialog) return null;
     return (
@@ -58,12 +69,17 @@ const MessageInputContainer: React.FC = React.memo(() => {
             value={textMessage.text}
             menuPopup={popups.menu}
             emojiPopup={popups.emoji}
+            selectedMessages={selectedMessages.length}
+            selectMode={selectMode}
             handleValueChange={handleValueChange}
             handleOpenEmojiPopup={handleOpenEmojiPopup}
             handleCloseEmojiPopup={handleCloseEmojiPopup}
             handleOpenMenuPopup={handleOpenMenuPopup}
             handleCloseMenuPopup={handleCloseMenuPopup}
             handleSendTextMessage={handleSendTextMessage}
+            handleSelectEmoji={handleSelectEmoji}
+            disableSelectMode={disableSelectMode}
+            handleDeleteMessages={handleDeleteMessages}
         />
     )
 });

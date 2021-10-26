@@ -6,13 +6,9 @@ import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 import SimpleBar from 'simplebar-react';
 
+import TextMessageItem from './Messages/TextMessageItem';
 import { IMessage } from '../../models';
-import {
-    MessageDateGroup,
-    MessageItem,
-    MessageContentText,
-    Status,
-} from 'shared';
+import { MessageDateGroup, Status } from 'shared';
 
 import style from './MessagesTrack.module.scss';
 import 'simplebar/dist/simplebar.min.css';
@@ -23,35 +19,28 @@ const formatPeriod = (date: Date): string => {
     return format(date, "MMMM d, yyyy");
 };
 
-const formatTime = (date: Date): string => {
-    return format(new Date(date), "HH:mm");
-};
-
 interface IGroupedMessages {
     period: Date;
     list: Array<IMessage>;
 };
 
 type MessagesTrackProps = {
-    status: Status
-    list: Array<IMessage>;
+    status: Status;
     userId: string;
+    list: Array<IMessage>;
+    selectMode: boolean;
+    enableSelectMode: () => void;
+    toggleSelectMessage: (message: IMessage) => void;
 };
 
-const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId }) => {
-
-    const scrollRef = React.useRef<SimpleBar>(null);
+const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, selectMode, enableSelectMode, toggleSelectMessage }) => {
 
     React.useEffect(() => {
-        if(scrollRef && scrollRef.current) {;
-            const scrollHeight = scrollRef.current.el.scrollHeight;
-            const el = document.querySelector(".simplebar-content-wrapper");
-            if(el){
-                console.log(el.scrollTop = scrollHeight)
-                console.log(el.scrollTop);  
-            };           
-        }
-    }, [scrollRef]);
+        const el = document.querySelector(".simplebar-content-wrapper");
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        };
+    }, [list]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {
@@ -84,25 +73,25 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId }
                 }
             }
         }, [] as Array<IGroupedMessages>);
-    }, [list]);    
+    }, [list]);
 
     return (
-        <SimpleBar style={{ height: 'inherit' }} ref={scrollRef} forceVisible={true} >
+        <SimpleBar style={{ height: 'inherit' }} >
             <div className={style.messages_track}>
                 {messages.map(({ period, list }) => (
                     <MessageDateGroup
                         key={+period}
                         period={formatPeriod(period)}
                     >
-                        {list.map(({ messageId, content, createdBy, createdAt }) => (
-                            <MessageItem
-                                isOwn={createdBy === userId}
-                                key={messageId}
-                            >
-                                <MessageContentText meta={formatTime(new Date(createdAt))}>
-                                    {content.text}
-                                </MessageContentText>
-                            </MessageItem>
+                        {list.map(message => (
+                            <TextMessageItem
+                                key={message.messageId}
+                                userId={userId}
+                                message={message}
+                                selectMode={selectMode}
+                                enableSelectMode={enableSelectMode}
+                                toggleSelectMessage={toggleSelectMessage}
+                            />
                         ))}
                     </MessageDateGroup>
                 ))}

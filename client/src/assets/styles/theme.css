@@ -16,6 +16,9 @@
     --touche-ripple-hover: rgba(0255,255,255,0.075);
     --color-light-shadow: rgba(0,0,0,0.25);
     --color-default-shadow: rgba(16,16,16,0.6);
+    --color-stiky-date: #0a0a0a8c;
+    --color-message-content-meta: var(--color-text-200);
+    --color-icon-button-hover: rgba(255, 255, 255, 0.04);
 }
 .theme-light{
     --color-text: #2d2d2d;
@@ -35,4 +38,7 @@
     --touche-ripple-hover: rgba(0,0,0,0.05);
     --color-light-shadow: rgba(114,114,114,0.16);
     --color-default-shadow: rgba(114,114,114,0.611765);
+    --color-stiky-date: rgba(90, 110, 70, 0.6);
+    --color-message-content-meta: #50ae4e;
+    --color-icon-button-hover: rgba(0, 0, 0, 0.04);
 }

@@ -13,12 +13,6 @@ export const selectDialogsList = (state: AppState) => selectState(state).dialogs
 
 export const selectActiveDialog = (state: AppState) => selectState(state).dialogs.selectedDialog;
 
-
-// messages
-export const selectMessagesState = (state: AppState) => selectState(state).messages;
-
-export const selectTextMessageText = (state: AppState) => selectState(state).messages.textMessage;
-
 // sidebar
 export const selectSidebarStatus = (state: AppState) => selectState(state).sidebar.status;
 

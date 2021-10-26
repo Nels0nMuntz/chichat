@@ -1,17 +1,12 @@
 import { Action } from 'redux';
 import { IUser, Status, SearchGroups } from 'shared';
-import { IMessage, ITextMessageContent } from '../models';
-import { IDialog } from '../models/common/dialog.model';
+import { IMessage, IDialog } from '../models';
 
 import {
     setHomeStateAction,
     setDialogsStatusAction,
     setDialogsListAction,
     setSelectedDialogAction,
-    setMessagesStatusAction,
-    setMessagesListAction,
-    setTextMessageAction,
-    resetTextMessageAction,
     setHomeUserDataAction,
     addLastMessageAction,
     setWebSocketAction,
@@ -24,7 +19,7 @@ import {
     resetSidebarSearchAction,
     setSidebarSearchModeAction,
     addDialogsListItemAction,
-} from './actions';
+} from './';
 
 
 interface IHomeState {
@@ -33,13 +28,6 @@ interface IHomeState {
         status: Status;
         list: Array<IDialog>;
         selectedDialog: IDialog | null;
-    };
-    messages: {
-        status: Status;
-        offset: number;
-        limit: number;
-        list: Array<IMessage>
-        textMessage: ITextMessageContent;
     };
     sidebar: {
         status: Status;
@@ -67,16 +55,6 @@ const initState: IHomeState = {
         status: Status.Initial,
         list: [],
         selectedDialog: null,
-    },
-    messages: {
-        status: Status.Initial,
-        offset: 0,
-        limit: 10,
-        list: [],
-        textMessage: {
-            text: "",
-            type: "text",
-        },
     },
     sidebar: {
         status: Status.Initial,
@@ -129,7 +107,11 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
             ...state,
             dialogs: {
                 ...state.dialogs,
-                list: action.payload.dialogs,
+                list: action.payload.dialogs.map(({ dialogId, member, messages }) => ({
+                    dialogId,
+                    member,
+                    lastMessage: messages[0],
+                })),
             },
         };
     };
@@ -141,75 +123,22 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
                 ...state.dialogs,
                 selectedDialog: action.payload,
             },
-            messages: {
-                ...state.messages,
-                offset: 0,
-                list: [],
-            }
         };
     };
 
     if (addDialogsListItemAction.is(action)) {
+        const { dialogId, member, messages } = action.payload
         return {
             ...state,
             dialogs: {
                 ...state.dialogs,
                 list: [
-                    action.payload,
+                    { dialogId, member, lastMessage: messages[0] },
                     ...state.dialogs.list,
                 ]
             }
         };
     }
-
-
-    // messages
-
-    if (setMessagesStatusAction.is(action)) {
-        return {
-            ...state,
-            messages: {
-                ...state.messages,
-                status: action.payload,
-            }
-        };
-    };
-
-    if (setMessagesListAction.is(action)) {
-        return {
-            ...state,
-            messages: {
-                ...state.messages,
-                list: action.payload,
-            }
-        };
-    };
-
-    if (setTextMessageAction.is(action)) {
-        return {
-            ...state,
-            messages: {
-                ...state.messages,
-                textMessage: {
-                    ...state.messages.textMessage,
-                    text: action.payload,
-                }
-            }
-        };
-    };
-
-    if (resetTextMessageAction.is(action)) {
-        return {
-            ...state,
-            messages: {
-                ...state.messages,
-                textMessage: {
-                    ...state.messages.textMessage,
-                    text: "",
-                }
-            }
-        };
-    };
 
     if (addLastMessageAction.is(action)) {
         const dialog = state.dialogs.list.filter(dialog => dialog.dialogId === action.payload.dialogId)[0];
@@ -221,19 +150,12 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
                     ...state.dialogs.list.filter(dialog => dialog.dialogId !== action.payload.dialogId),
                     {
                         ...dialog,
-                        messages: [action.payload],
+                        lastMessage: action.payload,
                     },
                 ],
             },
-            messages: {
-                ...state.messages,
-                list: [
-                    action.payload,
-                    ...state.messages.list,
-                ]
-            }
         }
-    }
+    };
 
     // sidebar
 

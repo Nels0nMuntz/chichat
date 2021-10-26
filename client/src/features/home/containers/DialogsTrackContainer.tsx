@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
-import { setSelectedDialogAction, fetchAllMessagesAction } from '../store/actions';
-import { selectDialogsState, selectMessagesState } from '../store/selectors';
+import { setSelectedDialogAction, fetchAllMessagesAction } from '../store';
+import { selectDialogsState, selectMessagesState } from '../store';
 
 
 const DialogsTrackContainer: React.FC = React.memo(() => {

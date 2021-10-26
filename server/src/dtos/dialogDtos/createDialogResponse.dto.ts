@@ -1,4 +1,4 @@
-import { IDialogDocument } from "src/schemas";
+import { IDialogDocument } from "../../schemas";
 import { ICreateDialogResponse } from "../../models";
 
 export class CreateDialogResponseDto implements ICreateDialogResponse {

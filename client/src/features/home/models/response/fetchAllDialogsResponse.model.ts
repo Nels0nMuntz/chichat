@@ -1,5 +1,5 @@
-import { IDialog } from "../common/dialog.model";
+import { IDialogResponse } from "../";
 
 export interface IFetchAllDialogsResponse {
-    dialogs: Array<IDialog>;
+    dialogs: Array<IDialogResponse>;
 };

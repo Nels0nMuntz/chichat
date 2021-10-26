@@ -2,12 +2,15 @@
 // Please do not change this file!
 interface CssExports {
   'emoji_container': string;
+  'input_action_suffix': string;
   'input_action_wrapper': string;
   'input_wrapper': string;
   'input_wrapper_appendex': string;
   'menu_container': string;
   'message_input': string;
   'popover_container': string;
+  'select_mode': string;
+  'selectedMessagesText': string;
   'wrapper': string;
 }
 export const cssExports: CssExports;

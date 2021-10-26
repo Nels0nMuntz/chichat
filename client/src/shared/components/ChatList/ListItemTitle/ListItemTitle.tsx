@@ -9,14 +9,14 @@ type ListItemTitleProps = ChildrenProps & {
 
 const ListItemTitle: React.FC<ListItemTitleProps> = ({ label, suffix, children }) => {
     return (
-        <div className="chart-list-item__title">
+        <div className="chat-list-item__title">
             <h3>{children || label}</h3>
             {!suffix
                 ? null
                 : typeof suffix === "string"
                     ? (
-                        <div className="chart-list-item__meta">
-                            <div className="chart-list-item__time">{suffix}</div>
+                        <div className="chat-list-item__meta">
+                            <div className="chat-list-item__time">{suffix}</div>
                         </div>
                     ) : (
                         suffix

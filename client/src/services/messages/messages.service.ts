@@ -1,6 +1,10 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 import { axiosInstance } from "core";
-import { ISearchMessagesResponse, ISidebarSearchParams } from "features/home/models";
+import { 
+    ISearchMessagesResponse, 
+    ISidebarSearchParams,
+    IDeleteMessagesRequest,
+} from "features/home/models";
 
 
 class MessagesService {
@@ -10,7 +14,7 @@ class MessagesService {
 
     constructor(){
         this.axios = axiosInstance;
-        this.baseUrl = "/api/message";
+        this.baseUrl = "/api/messages";
     }
 
     search = async (params: ISidebarSearchParams): Promise<AxiosResponse<ISearchMessagesResponse>> => {
@@ -19,6 +23,14 @@ class MessagesService {
         } catch (error: any) {
             throw error.response.data.error;
         }
+    }
+
+    deleteMany = async (data: IDeleteMessagesRequest): Promise<AxiosResponse<void>> => {
+        try {
+            return await this.axios.delete<void>(this.baseUrl + '/deleteMany', { data });
+        } catch (error: any) {
+            throw error.response.data.error;
+        };
     }
 
 }

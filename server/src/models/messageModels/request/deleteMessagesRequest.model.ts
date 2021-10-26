@@ -1,0 +1,1 @@
+export interface IDeleteMessagesRequest extends Array<string> { };

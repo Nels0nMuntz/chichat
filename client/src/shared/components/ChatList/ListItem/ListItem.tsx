@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { ChildrenProps } from 'shared';
 
-import '../ChartList.scss';
+import '../ChatList.scss';
 
 
 type ListItemProps = ChildrenProps & {
@@ -14,8 +14,8 @@ const ListItem : React.FC<ListItemProps> = ({ children, selected, onClick }) => 
     return (
         <div 
             className={classNames(
-                "chart-list-item",
-                selected && "chart-list-item--selected"
+                "chat-list-item",
+                selected && "chat-list-item--selected"
             )}
             onClick={onClick}
         >

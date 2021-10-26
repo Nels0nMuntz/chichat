@@ -5,7 +5,7 @@ import { ChildrenProps } from 'shared';
 
 const ListItemInfo: React.FC<ChildrenProps> = ({ children }) => {
     return (
-        <div className="chart-list-item__info">
+        <div className="chat-list-item__info">
             {children}
         </div>
     )

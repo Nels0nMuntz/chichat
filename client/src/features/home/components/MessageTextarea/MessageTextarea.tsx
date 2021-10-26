@@ -10,6 +10,7 @@ type MessageTextareaProps = {
 };
 
 const MessageTextarea: React.FC<MessageTextareaProps> = React.memo(({ value, handleChange }) => {
+
     return (
         <TextareaAutosize
             className={style.textarea}

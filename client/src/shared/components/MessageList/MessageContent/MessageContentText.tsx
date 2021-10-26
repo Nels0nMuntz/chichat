@@ -2,18 +2,28 @@ import React from 'react';
 
 
 type MessageContentTextProps = {
-    children?: string
+    children?: string;
+    selectMode: boolean;
     meta?: string | JSX.Element;
+    handleMessageClick: () => void;
 };
 
-const MessageContentText : React.FC<MessageContentTextProps> = ({ meta, children }) => {
+const MessageContentText : React.FC<MessageContentTextProps> = ({ children, selectMode, meta, handleMessageClick }) => {
+
+    const onClickMessage = () => !selectMode && handleMessageClick();
+
     return (
         <div className="message-item__content message-item__content--text message-text-content">
             <p className="message-text-content__text">
                 {children || null}
                 {
                     meta
-                        ? <span className="message-text-content__meta">{meta}</span>
+                        ? <span 
+                            className="message-text-content__meta"
+                            onClick={onClickMessage}
+                        >
+                            {meta}
+                        </span>
                         : null
                 }                
             </p>

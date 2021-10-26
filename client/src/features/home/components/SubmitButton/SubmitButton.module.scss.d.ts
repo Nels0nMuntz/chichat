@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'adornment_icon': string;
+  'hidden': string;
   'micro_icon': string;
   'send_icon': string;
   'submit_button': string;

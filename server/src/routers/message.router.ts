@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { checkAuthMW } from "../middlewares";
 import { MessageController } from "../controllers/message.controller";
 
 
@@ -14,9 +15,9 @@ export class MessageRouter {
     }
 
     initRoutes(){
-        // TODO add auth check MW
-        this.router.post('/create', this.controller.create);
-        this.router.put('/update', this.controller.update);
+        this.router.post('/create', checkAuthMW, this.controller.create);
+        this.router.put('/update', checkAuthMW, this.controller.update);
+        this.router.delete('/deleteMany', checkAuthMW, this.controller.deleteMany);
     }
 
 };

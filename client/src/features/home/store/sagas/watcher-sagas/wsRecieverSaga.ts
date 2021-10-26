@@ -5,12 +5,10 @@ import {
     setWebSocketAction,
     addLastMessageAction,
     sendWSMessageAction,
-} from '../../actions';
-import {
     selectUserData,
-} from '../../selectors';
+} from '../../';
 import { IUser, IWSMessage, WSMessageTypes } from "shared";
-import { IInitWSClientRequest, IMessage } from "../../../models";
+import { IInitWSClientRequest, IMessageResponse } from "../../../models";
 
 
 export function* wsRecieverSaga() {
@@ -29,7 +27,7 @@ export function* wsRecieverSaga() {
                 break;
             };                
             case WSMessageTypes.CREATE_MESSAGE: {
-                const _message = message as IWSMessage<IMessage>;
+                const _message = message as IWSMessage<IMessageResponse>;
                 yield put(addLastMessageAction({ payload: _message.payload }));                    
                 break; 
             };

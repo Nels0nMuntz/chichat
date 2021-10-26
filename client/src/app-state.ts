@@ -5,7 +5,12 @@ import { connectRouter } from 'connected-react-router';
 import { routerMiddleware } from 'connected-react-router';
 import { all } from '@redux-saga/core/effects';
 
-import { homeReducer, homeWatcherSaga } from 'features/home/store';
+import { 
+    homeReducer, 
+    homeWatcherSaga,
+    messagesReducer,
+    messagesWatcherSaga,
+} from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
 import { history } from './history-instance';
@@ -16,6 +21,7 @@ const rootReducer = combineReducers({
     home: homeReducer,
     notification: notificationReducer,
     auth: authReducer,
+    messages: messagesReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -34,12 +40,10 @@ function* appSaga(){
     yield all([
         authWatcherSaga(),
         homeWatcherSaga(),
+        messagesWatcherSaga(),
     ]);
 };
 
 sagaMiddleware.run(appSaga);
-
-/* @ts-ignore */
-window.store = store;
 
 export type AppState = ReturnType<typeof rootReducer>;

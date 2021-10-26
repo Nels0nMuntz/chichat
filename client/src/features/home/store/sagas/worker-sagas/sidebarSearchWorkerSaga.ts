@@ -7,7 +7,7 @@ import {
 import { SearchGroups, Status } from 'shared';
 import { setNotification } from "features/notification/store";
 import { searchUsersWorkerSaga } from "./searchUsersWorkerSaga";
-import { searchMessgesWorkerSaga } from "./searchMessagesWorkerSaga";
+import { searchMessgesWorkerSaga } from "../../messages/sagas/worker-sagas/searchMessagesWorkerSaga";
 
 
 export function* sidebarSearchWorkerSaga(action: typeof sidebarSearchAction.typeOf.action){

@@ -5,4 +5,5 @@ export interface IMessage extends IMessageBase {
     read: boolean;
     createdAt: string;
     updatedAt: string;
+    selected: boolean;
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { BaseEmoji } from 'emoji-mart';
 import { withStyles } from '@material-ui/styles';
 import SentimentIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 
@@ -18,12 +19,13 @@ const StyledSentimentIcon = withStyles({
 })(SentimentIcon);
 
 type EmojiPickerPopupProps = {
-    open: boolean
-    handleOpen: () => void
-    handleClose: () => void
+    open: boolean;
+    handleOpen: () => void;
+    handleClose: () => void;
+    handleSelect: (emoji: BaseEmoji) => void;
 };
 
-const EmojiPickerPopup: React.FC<EmojiPickerPopupProps> = React.memo(({ open, handleOpen, handleClose }) => {
+const EmojiPickerPopup: React.FC<EmojiPickerPopupProps> = React.memo(({ open, handleOpen, handleClose, handleSelect }) => {
 
     const { theme } = React.useContext(ThemeContext);
 
@@ -37,7 +39,12 @@ const EmojiPickerPopup: React.FC<EmojiPickerPopupProps> = React.memo(({ open, ha
         <React.Fragment>
             <Popover
                 open={open}
-                component={<EmojiPicker theme={theme === AppTheme.Light ? "light" : "dark"} />}
+                component={
+                    <EmojiPicker 
+                        theme={theme === AppTheme.Light ? "light" : "dark"} 
+                        handleSelect={handleSelect}
+                    />
+                }
                 placement="bottom-start"
                 transformOrigin="0 100%"
                 container={сontainerRef}

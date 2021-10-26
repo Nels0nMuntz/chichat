@@ -1,4 +1,4 @@
-.chart-list-item{
+.chat-list-item{
     width: 100%;
     display: flex;
     padding: 8px;
@@ -13,7 +13,7 @@
         background-color: var(--color-bg-200);
     }
 
-    .chart-list-item__icon{
+    .chat-list-item__icon{
         flex-shrink: 0;
 
         .list-item-icon__inner{
@@ -26,23 +26,23 @@
         }
     }
 
-    .chart-list-item__info {
+    .chat-list-item__info {
         flex-grow: 1;
         padding: 4px 0 0;
         overflow: hidden;
     }
 
-    .chart-list-item__title,
-    .chart-list-item__subtitle {
+    .chat-list-item__title,
+    .chat-list-item__subtitle {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         overflow: hidden;
     }
 
-    .chart-list-item__title h3,
-    .chart-list-item__time,
-    .chart-list-item__last-message {
+    .chat-list-item__title h3,
+    .chat-list-item__time,
+    .chat-list-item__last-message {
         font-size: 1rem;
         margin: 0;
         overflow: hidden;
@@ -51,7 +51,7 @@
         user-select: none;
     }
 
-    .chart-list-item__title {
+    .chat-list-item__title {
         color: var(--color-text);
         h3 {
             width: 100%;
@@ -59,7 +59,7 @@
         }
     }
 
-    .chart-list-item__meta {
+    .chat-list-item__meta {
         max-width: 50%;
         flex-shrink: 0;
         line-height: 1;
@@ -68,13 +68,13 @@
         margin-left: auto;
     }
     
-    .chart-list-item__time {
+    .chat-list-item__time {
         font-size: 12px;
         line-height: 1.15rem;
         color: var(--color-text-100);
     }
 
-    .chart-list-item__subtitle {
+    .chat-list-item__subtitle {
         color: var(--color-text-100);
 
         .list-item-subtitle__last-message,
@@ -90,13 +90,13 @@
     }
 }
 
-.chart-list-item{
-    &.chart-list-item--selected{
+.chat-list-item{
+    &.chat-list-item--selected{
         background-color: var(--color-primary);
 
-        .chart-list-item__title,
-        .chart-list-item__subtitle,
-        .chart-list-item__time{
+        .chat-list-item__title,
+        .chat-list-item__subtitle,
+        .chat-list-item__time{
             color: var(--color-white);
         }
     }

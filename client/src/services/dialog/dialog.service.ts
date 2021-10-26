@@ -2,7 +2,7 @@ import { AxiosInstance, AxiosResponse } from "axios";
 import { axiosInstance } from "core";
 import { 
     ICreateDialogRequest, 
-    IDialog, 
+    IDialogResponse, 
     IFetchAllDialogsResponse, 
     IFetchAllMessagesRequest, 
     IFetchAllMessagesResponse,
@@ -35,9 +35,9 @@ class DialogService {
         }
     }
 
-    createDialog = async (data: ICreateDialogRequest): Promise<AxiosResponse<IDialog>> => {
+    createDialog = async (data: ICreateDialogRequest): Promise<AxiosResponse<IDialogResponse>> => {
         try {
-            return await this.axios.post<IDialog>(this.baseUrl + '/create', data);
+            return await this.axios.post<IDialogResponse>(this.baseUrl + '/create', data);
         } catch (error: any) {
             throw error.response.data.error;
         }

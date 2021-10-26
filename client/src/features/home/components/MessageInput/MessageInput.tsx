@@ -1,61 +1,137 @@
 import React from 'react';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core';
+import { BaseEmoji } from 'emoji-mart';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import ReplyIcon from '@material-ui/icons/Reply';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 import EmojiPickerPopup from '../Popups/EmojiPickerPopup';
 import AttachMenuPopup from '../Popups/AttachMenuPopup';
 import SubmitButton from '../SubmitButton/SubmitButton';
-import MessageTextarea from '../MessageTextarea/MessageInput';
+import MessageTextarea from '../MessageTextarea/MessageTextarea';
 
 import style from './MessageInput.module.scss';
 
+
+const StyledIconButton = withStyles({
+    root: {
+        padding: '8px',
+        '& .MuiSvgIcon-root': {
+            color: 'var(--color-text-100)',
+        },
+        '& .MuiSvgIcon-root.delete-icon-button': {
+            color: 'var(--color-error)',
+        },
+        '&:hover': {
+            backgroundColor: 'var(--color-icon-button-hover)',
+        }
+    },
+})(IconButton);
 
 type MessageInputProps = {
     value: string;
     menuPopup: boolean;
     emojiPopup: boolean;
+    selectedMessages: number;
+    selectMode: boolean;
     handleValueChange: React.ChangeEventHandler<HTMLTextAreaElement>;
     handleOpenEmojiPopup: () => void;
     handleCloseEmojiPopup: () => void;
     handleOpenMenuPopup: () => void;
     handleCloseMenuPopup: () => void;
     handleSendTextMessage: () => void;
+    handleSelectEmoji: (emoji: BaseEmoji) => void;
+    disableSelectMode: () => void;
+    handleDeleteMessages: () => void;
 }
 
-const MessageInput: React.FC<MessageInputProps> = (props) => {
+const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
 
     const {
         value,
         menuPopup,
         emojiPopup,
+        selectedMessages,
+        selectMode,
         handleValueChange,
         handleOpenEmojiPopup,
         handleCloseEmojiPopup,
         handleOpenMenuPopup,
         handleCloseMenuPopup,
         handleSendTextMessage,
+        handleSelectEmoji,
+        disableSelectMode,
+        handleDeleteMessages,
     } = props;
 
     return (
-        <div className={style.message_input}>
+        <div className={classNames(
+            style.message_input,
+            selectMode && style.select_mode,
+            "ignore-messages-track-click-away-listener",
+        )}>
             <div className={style.wrapper}>
                 <div className={style.input_wrapper}>
                     <div className={style.input_action_wrapper}>
-                        <EmojiPickerPopup
-                            open={emojiPopup}
-                            handleOpen={handleOpenEmojiPopup}
-                            handleClose={handleCloseEmojiPopup}
-                        />
+                        {selectMode ? (
+                            <StyledIconButton 
+                                size="medium" 
+                                title="Exit select mode" 
+                                aria-label="Exit select mode"
+                                onClick={disableSelectMode}
+                            >
+                                <CloseIcon />
+                            </StyledIconButton>
+                        ) : (
+                            <EmojiPickerPopup
+                                open={emojiPopup}
+                                handleOpen={handleOpenEmojiPopup}
+                                handleClose={handleCloseEmojiPopup}
+                                handleSelect={handleSelectEmoji}
+                            />
+                        )}
                     </div>
-                    <MessageTextarea
-                        value={value}
-                        handleChange={handleValueChange}
-                    />
-                    <div className={style.input_action_wrapper}>
-                        <AttachMenuPopup
-                            open={menuPopup}
-                            handleOpen={handleOpenMenuPopup}
-                            handleClose={handleCloseMenuPopup}
+                    {selectMode ? (
+                        <span className={style.selectedMessagesText}>{`${selectedMessages} message${selectedMessages > 1 ? 's' : ''} selected`}</span>
+                    ) : (
+                        <MessageTextarea
+                            value={value}
+                            handleChange={handleValueChange}
                         />
-                    </div>
+                    )}
+                    {selectMode ? (
+                        <React.Fragment>
+                            <div className={`${style.input_action_wrapper} ${style.input_action_suffix} ${style.select_mode}`}>
+                                <StyledIconButton 
+                                    size="medium" 
+                                    title="Forward messages" 
+                                    aria-label="Forward messages"
+                                >
+                                    <ReplyIcon />
+                                </StyledIconButton>
+                            </div>
+                            <div className={`${style.input_action_wrapper} ${style.select_mode}`}>
+                                <StyledIconButton 
+                                    size="medium" 
+                                    title="Delete messages" 
+                                    aria-label="Delete messages"
+                                    onClick={handleDeleteMessages}
+                                >
+                                    <DeleteOutlineIcon className="delete-icon-button" />
+                                </StyledIconButton>
+                            </div>
+                        </React.Fragment>
+                    ) : (
+                        <div className={style.input_action_wrapper}>
+                            <AttachMenuPopup
+                                open={menuPopup}
+                                handleOpen={handleOpenMenuPopup}
+                                handleClose={handleCloseMenuPopup}
+                            />
+                        </div>
+                    )}
                     <div className={style.input_wrapper_appendex}>
                         <svg width="9" height="20" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fillRule="evenodd">
@@ -65,12 +141,13 @@ const MessageInput: React.FC<MessageInputProps> = (props) => {
                     </div>
                 </div>
                 <SubmitButton
+                    visible={!selectedMessages}
                     mode={Boolean(value) ? "text" : "voice"}
                     handleSendTextMessage={handleSendTextMessage}
                 />
             </div>
-        </div>
+        </div >
     )
-};
+});
 
 export default MessageInput;

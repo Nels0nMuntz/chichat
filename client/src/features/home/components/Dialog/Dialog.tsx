@@ -1,5 +1,5 @@
 import React from 'react';
-import uk from "date-fns/locale/uk"
+import enUs from "date-fns/locale/en-US"
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 import {
@@ -12,7 +12,7 @@ import {
     IUser,
     getUserFullname,
 } from 'shared';
-import { IMessage } from '../../models';
+import { IMessageResponse } from '../../models';
 
 // import style from "./Dialog.module.scss";
 import '../../../../assets/styles/global/user-info.scss';
@@ -21,7 +21,7 @@ import '../../../../assets/styles/global/user-info.scss';
 type DialogProps = {
     dialogId: string;
     member: IUser;
-    lastMessage?: IMessage;
+    lastMessage?: IMessageResponse;
     isSelected: boolean;
     handleSelectDialog: (id: string) => void;
 };
@@ -34,7 +34,7 @@ const Dialog: React.FC<DialogProps> = React.memo(({ dialogId, member, lastMessag
             new Date(lastMessage.createdAt),
             {
                 includeSeconds: true,
-                locale: uk
+                locale: enUs
             }
         )
         : undefined;

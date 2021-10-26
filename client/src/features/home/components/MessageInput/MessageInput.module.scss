@@ -1,3 +1,28 @@
+.message_input {
+    flex: 0 0 auto;
+    position: relative;
+    width: 100%;
+    max-width: var(--messages-container-width);
+    margin: 0 auto;
+    padding: 8px 16px 24px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            rgba(#fff, 0) 0%,
+            rgba(#fff, 0.5) 5%,
+            rgba(#fff, 0.5) 95%,
+            rgba(#fff, 0) 100%
+        );
+    }
+}
+
 .wrapper {
     display: flex;
     align-items: flex-end;
@@ -11,13 +36,22 @@
     border-radius: 12px;
     border-bottom-right-radius: 0px;
     background-color: var(--color-bg);
+    transition: border-radius 0.1s linear;
     .input_wrapper_appendex {
         position: absolute;
         right: -9px;
         bottom: -3px;
         width: 9px;
         height: 20px;
-        // background: url(../../../../assets/img/appendix.svg) no-repeat left bottom / cover;
+        transform-origin: left center;
+        transition: opacity 0.1s linear, transform 0.1s linear;
+    }
+    .selectedMessagesText{
+        width: 100%;
+        align-self: center;
+        padding: 0.5rem 0;
+        font-weight: 500;
+        color: var(--color-text);
     }
 }
 .input_action_wrapper {
@@ -41,29 +75,20 @@
     top: -16px;
 }
 
-/* message_input */
-.message_input {
-    flex: 0;
-    position: relative;
-    width: 100%;
-    max-width: var(--messages-container-width);
-    margin: 0 auto;
-    padding: 8px 16px 24px;
-    height: var(--message-input-height);
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(
-            90deg,
-            rgba(#fff, 0) 0%,
-            rgba(#fff, 0.5) 5%,
-            rgba(#fff, 0.5) 95%,
-            rgba(#fff, 0) 100%
-        );
+/* select mode */
+.message_input.select_mode{
+    .input_action_wrapper{
+        padding: 8px;
+    }
+    .input_action_wrapper.input_action_suffix{
+        padding: 4px;
+        align-self: center;
+    }
+    .input_wrapper{
+        border-bottom-right-radius: 12px;
+    }
+    .input_wrapper_appendex{
+        opacity: 0;
+        transform: translateX(-100%);
     }
 }

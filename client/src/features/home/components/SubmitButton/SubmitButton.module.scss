@@ -9,7 +9,8 @@
     font-size: 30px;
     border-radius: 50%;
     background-color: var(--color-bg);
-    transition: background-color 0.1s linear;
+    transform-origin: center center;
+    transition: background-color 0.1s linear, transform 0.1s linear;
 
     &:hover {
         background-color: var(--color-primary);
@@ -29,5 +30,9 @@
 
     .micro_icon {
         color: var(--color-text-200);
+    }
+
+    &.hidden{
+        transform: scale(0);
     }
 }

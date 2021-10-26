@@ -1,6 +1,6 @@
 import { put } from "@redux-saga/core/effects";
 import { AxiosResponse } from "axios";
-import { IFetchAllMessagesResponse } from "../../../models";
+import { IFetchAllMessagesResponse } from "../../../../models";
 import { dialogService } from "services";
 import { Status } from "shared";
 import { 

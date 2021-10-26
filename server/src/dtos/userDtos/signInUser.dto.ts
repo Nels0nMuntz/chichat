@@ -1,4 +1,4 @@
-import { IAuthSignInRequest } from "src/models";
+import { IAuthSignInRequest } from "../../models";
 
 export class SignInUserDto {
     email: string;

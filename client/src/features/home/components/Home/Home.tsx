@@ -1,4 +1,5 @@
 import React from 'react';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,7 +10,13 @@ import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
 import Sidebar from 'features/home/containers/SidebarContainer';
 import { useMediaQuery, IUser, withLoader } from 'shared';
 
-import { setSidebarVisibilityAction, selectSidebarVisibility } from '../../store';
+import { 
+    setSidebarVisibilityAction, 
+    selectSidebarVisibility, 
+    selectSelectMode,
+    selectActiveDialog,
+    disableMessagesSelectModeAction,
+} from '../../store';
 
 import style from './Home.module.scss';
 
@@ -24,10 +31,10 @@ const Home: React.FC<HomeProps> = (props) => {
 
     const dispatch = useDispatch();
 
-    // const activeDialog = useSelector(selectActiveDialog);
+    const selectMode = useSelector(selectSelectMode);
     const sidebarVisibility = useSelector(selectSidebarVisibility);
+    const activeDialog = useSelector(selectActiveDialog);
 
-    // const [state, setState] = React.useState(false)
     const [searchbarVisility, setSearchbarVisility] = React.useState(false);
     const [matches] = useMediaQuery("(max-width: 900px)");
 
@@ -36,20 +43,19 @@ const Home: React.FC<HomeProps> = (props) => {
     }, [sidebarVisibility]);
     const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
     const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
-
-    // React.useEffect(() => {
-    //     if(!!activeDialog) {
-    //         setState(true)
-    //     }else{
-    //         setState(false)
-    //     }
-    // }, [activeDialog])
+    const handleClickAway = React.useCallback((event: any) => {        
+        if(selectMode){
+            if(event.target.closest(".ignore-messages-track-click-away-listener")) return;
+            dispatch(disableMessagesSelectModeAction({ payload: null }));
+        };
+    }, [selectMode])
 
     return (
+
         <div className={style.home_wrapper}>
             <div className="container">
                 <div className={style.home_grid}>
-                    <Sidebar/>
+                    <Sidebar />
                     <main className={classNames(
                         style.home_main,
                         searchbarVisility && style.searchbar_open)}
@@ -63,11 +69,11 @@ const Home: React.FC<HomeProps> = (props) => {
                                 toggleDialogsbarVisibility={toggleDialogsbarVisibility}
                             />
                             <div className={style.messages_wrapper}>
-                                <div className={style.messages_track}>
-                                    {/* <CustomScroll> */}
-                                        <MessagesTrack />
-                                    {/* </CustomScroll> */}
-                                </div>
+                                <ClickAwayListener onClickAway={handleClickAway}>
+                                    <div className={style.messages_track}>
+                                        {activeDialog && <MessagesTrack />}
+                                    </div>
+                                </ClickAwayListener>
                                 <MessageInput />
                             </div>
                         </div>

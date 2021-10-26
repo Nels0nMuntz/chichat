@@ -1,3 +1,3 @@
-import { IMessage } from "../common/message.model";
+import { IMessageResponse } from "../";
 
-export interface IFetchAllMessagesResponse extends Array<IMessage> { };
+export interface IFetchAllMessagesResponse extends Array<IMessageResponse> { };

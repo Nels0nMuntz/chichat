@@ -43,4 +43,8 @@ export class MessageService {
     search = async (userId: string, query: string) => {
         
     }
+
+    deleteMany = async (messageIds: Array<string>): Promise<void> => {
+        return await this.messageRepository.deleteMessages(messageIds);
+    }
 }

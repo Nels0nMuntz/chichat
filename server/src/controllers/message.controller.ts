@@ -1,6 +1,13 @@
 import { NextFunction, Response, Request } from "express";
 import { CreateMessageRequestDto, MessageResponseDto, UpdateMessageRequestDto } from "../dtos";
-import { ICreateMessageRequest, IMessageResponse, IUpdateMessageRequest, IRequest, ISearchQueryString } from "../models";
+import { 
+    ICreateMessageRequest, 
+    IMessageResponse, 
+    IUpdateMessageRequest, 
+    IRequest, 
+    ISearchQueryString,
+    IDeleteMessagesRequest,
+} from "../models";
 import { MessageService } from "../services/message.service";
 import { ErrorException } from "../shared";
 
@@ -50,6 +57,16 @@ export class MessageController {
         } catch (error) {
             
         }
+    }
+
+    deleteMany = async (req: IRequest<IDeleteMessagesRequest>, res: Response, next: NextFunction) => {
+        try {
+            const messageIds = req.body;
+            await this.service.deleteMany(messageIds);
+            return res.status(200).end()
+        } catch (error) {
+            next(error);
+        };
     }
 
 }
