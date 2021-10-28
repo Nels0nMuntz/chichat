@@ -7,6 +7,7 @@ import {
     IRequest, 
     ISearchQueryString,
     IDeleteMessagesRequest,
+    IGetMessagesRequest,
 } from "../models";
 import { MessageService } from "../services/message.service";
 import { ErrorException } from "../shared";
@@ -57,6 +58,21 @@ export class MessageController {
         } catch (error) {
             
         }
+    }
+
+    getMessages = async (req: Request, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
+        const request = req as unknown as IGetMessagesRequest;
+        const { dialogId, page, limit } = request.query;
+        try {
+            const messageDocs = await this.service.getMessages(dialogId, {
+                page: +page,
+                limit: +limit,
+            });
+            const messagesRes = messageDocs.map(message => new MessageResponseDto(message));
+            return res.status(200).json(messagesRes);
+        } catch (error) {
+            next(error);
+        };
     }
 
     deleteMany = async (req: IRequest<IDeleteMessagesRequest>, res: Response, next: NextFunction) => {

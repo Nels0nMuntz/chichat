@@ -56,3 +56,4 @@ export { default as useMediaQuery } from './hooks/useMediaQuery';
 
 // constants
 export * from './constants/searchGroups';
+export * from './constants/paginationLimit';

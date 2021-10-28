@@ -1,21 +1,23 @@
 import { put } from "@redux-saga/core/effects";
 import { AxiosResponse } from "axios";
-import { IFetchAllMessagesResponse } from "../../../../models";
-import { dialogService } from "services";
+import { IFetchMessagesResponse } from "../../../../models";
+import { messageService } from "services";
 import { Status } from "shared";
 import { 
-    fetchAllMessagesAction,
+    fetchMessagesAction,
     setMessagesStatusAction,
     setMessagesListAction,
-} from "../../actions";
+    incrementPaginationPageAction,
+} from "../../../";
 import { setNotification } from "features/notification/store";
 
-export function* fetchAllMessagesWorkerSaga(action: typeof fetchAllMessagesAction.typeOf.action){
+export function* fetchMessagesWorkerSaga(action: typeof fetchMessagesAction.typeOf.action){
     try {
         yield put(setMessagesStatusAction({ payload: Status.Running }));
-        const { status, data }: AxiosResponse<IFetchAllMessagesResponse> = yield dialogService.fetchAllMessages(action.payload);
+        const { status, data }: AxiosResponse<IFetchMessagesResponse> = yield messageService.fetchMessages(action.payload);
         if(status === 200){
             yield put(setMessagesListAction({ payload: data }));
+            yield put(incrementPaginationPageAction({ payload: { dialogId: action.payload.dialogId } }));
             yield put(setMessagesStatusAction({ payload: Status.Success }));
         }
     } catch (error: any) {

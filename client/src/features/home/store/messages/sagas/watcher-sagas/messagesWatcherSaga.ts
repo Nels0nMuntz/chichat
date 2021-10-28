@@ -1,13 +1,13 @@
 import { takeEvery } from "@redux-saga/core/effects";
 import { 
-    fetchAllMessagesAction,
-    deleteMessagesAction,
+    fetchMessagesAction,
+    deleteMessagesInDBAction,
 } from "features/home/store";
-import { fetchAllMessagesWorkerSaga } from "../worker-sagas/fetchAllMessagesWorkerSaga";
+import { fetchMessagesWorkerSaga } from "../worker-sagas/fetchMessagesWorkerSaga";
 import { deleteMessagesWorkerSaga } from "../worker-sagas/deleteMessagesWorkerSaga";
 
 
 export function* messagesWatcherSaga(){
-    yield takeEvery(fetchAllMessagesAction.TYPE, fetchAllMessagesWorkerSaga);
-    yield takeEvery(deleteMessagesAction.TYPE, deleteMessagesWorkerSaga);
+    yield takeEvery(fetchMessagesAction.TYPE, fetchMessagesWorkerSaga);
+    yield takeEvery(deleteMessagesInDBAction.TYPE, deleteMessagesWorkerSaga);
 };

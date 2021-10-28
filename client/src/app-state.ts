@@ -10,6 +10,10 @@ import {
     homeWatcherSaga,
     messagesReducer,
     messagesWatcherSaga,
+    sidebarReducer,
+    sidebarWatcherSaga,
+    dialogsReducer,
+    dialogsWatcherSaga,
 } from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
@@ -22,6 +26,8 @@ const rootReducer = combineReducers({
     notification: notificationReducer,
     auth: authReducer,
     messages: messagesReducer,
+    dialogs: dialogsReducer,
+    sidebar: sidebarReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -41,6 +47,8 @@ function* appSaga(){
         authWatcherSaga(),
         homeWatcherSaga(),
         messagesWatcherSaga(),
+        sidebarWatcherSaga(),
+        dialogsWatcherSaga(),
     ]);
 };
 

@@ -1,7 +1,8 @@
+import { UniqueId } from "..";
 import { IMessageContent } from "./messageContent.model";
 
 export interface IMessageBase {
-    dialogId: string;
+    dialogId: UniqueId;
     createdBy: string;
     content: IMessageContent;
 };

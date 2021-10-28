@@ -17,6 +17,7 @@ export class MessageRouter {
     initRoutes(){
         this.router.post('/create', checkAuthMW, this.controller.create);
         this.router.put('/update', checkAuthMW, this.controller.update);
+        this.router.get('/', checkAuthMW, this.controller.getMessages);
         this.router.delete('/deleteMany', checkAuthMW, this.controller.deleteMany);
     }
 

@@ -1,10 +1,10 @@
 import { put, call } from "@redux-saga/core/effects";
 import {
     setHomeStateAction,
-    setDialogsStatusAction,
-    setDialogsListAction,
+    setDialogStatusAction,
+    setDialogListAction,
     setHomeUserDataAction,
-} from "../../actions";
+} from "../../../";
 import { Status } from "shared";
 import { AxiosResponse } from "axios";
 import { 
@@ -27,16 +27,16 @@ export function* initHomeWorkerSaga() {
 
 function* fetchAllDialogs() {
     try {
-        yield put(setDialogsStatusAction({ payload: Status.Running }));
+        yield put(setDialogStatusAction({ payload: Status.Running }));
         const { status, data }: AxiosResponse<IFetchAllDialogsResponse> = yield dialogService.fetchAllDialogs();
         if (status === 200) {
-            yield put(setDialogsListAction({ payload: data }));
-            yield put(setDialogsStatusAction({ payload: Status.Success }));
+            yield put(setDialogListAction({ payload: data }));
+            yield put(setDialogStatusAction({ payload: Status.Success }));
             yield put(setHomeStateAction({ payload: Status.Success }));
         }
     } catch (error: any) {
         yield put(setHomeStateAction({ payload: Status.Error }));
-        yield put(setDialogsStatusAction({ payload: Status.Error }));
+        yield put(setDialogStatusAction({ payload: Status.Error }));
         yield put(setNotification({
             payload: {
                 status: Status.Error,

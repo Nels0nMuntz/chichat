@@ -1,5 +1,5 @@
 import { call, fork, put } from "@redux-saga/core/effects";
-import { ISidebarSearchParams } from "../../../models";
+import { ISidebarSearchParams } from "features/home/models";
 import { 
     sidebarSearchAction,
     setSidebarStatusAction,
@@ -7,7 +7,7 @@ import {
 import { SearchGroups, Status } from 'shared';
 import { setNotification } from "features/notification/store";
 import { searchUsersWorkerSaga } from "./searchUsersWorkerSaga";
-import { searchMessgesWorkerSaga } from "../../messages/sagas/worker-sagas/searchMessagesWorkerSaga";
+import { searchMessgesWorkerSaga } from "./searchMessagesWorkerSaga";
 
 
 export function* sidebarSearchWorkerSaga(action: typeof sidebarSearchAction.typeOf.action){

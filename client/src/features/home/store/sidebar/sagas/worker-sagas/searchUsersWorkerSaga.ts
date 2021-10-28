@@ -5,7 +5,7 @@ import { userService } from 'services';
 import {
     setSidebarSearchUsersAction,
 } from "../../actions";
-import { ISidebarSearchParams } from '../../../models';
+import { ISidebarSearchParams } from 'features/home/models';
 import { IUser } from 'shared';
 
 

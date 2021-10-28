@@ -35,11 +35,30 @@ type MessagesTrackProps = {
 
 const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, selectMode, enableSelectMode, toggleSelectMessage }) => {
 
+    // infinite scroll
+    const loader = React.useRef<HTMLDivElement>(null);
+    React.useEffect(() => {
+        const handleObserver = (entries: IntersectionObserverEntry[]) => {
+            const target = entries[0];
+            if (target.isIntersecting) {
+                console.log("Intersecting");
+            };
+        };
+        const options = {
+            root: document.querySelector(".simplebar-content-wrapper"),
+            rootMargin: '100px',
+            threshold: 1.0,
+        };
+        const observer = new IntersectionObserver(handleObserver, options);
+        if (loader.current) {
+            observer.observe(loader.current);
+        }
+    }, []);
+
+    // scroll to bottom
     React.useEffect(() => {
         const el = document.querySelector(".simplebar-content-wrapper");
-        if (el) {
-            el.scrollTop = el.scrollHeight;
-        };
+        if (el) el.scrollTop = el.scrollHeight;
     }, [list]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
@@ -78,21 +97,34 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, 
     return (
         <SimpleBar style={{ height: 'inherit' }} >
             <div className={style.messages_track}>
-                {messages.map(({ period, list }) => (
+                {messages.map(({ period, list }, groupIndex) => (
                     <MessageDateGroup
                         key={+period}
                         period={formatPeriod(period)}
                     >
-                        {list.map(message => (
-                            <TextMessageItem
-                                key={message.messageId}
-                                userId={userId}
-                                message={message}
-                                selectMode={selectMode}
-                                enableSelectMode={enableSelectMode}
-                                toggleSelectMessage={toggleSelectMessage}
-                            />
-                        ))}
+                        {list.map((message, messageIndex) => {                            
+                            if (messages.length === groupIndex + 1 && messageIndex === 0) return (
+                                <div key={message.messageId} ref={loader} className="last-item">
+                                    <TextMessageItem
+                                        userId={userId}
+                                        message={message}
+                                        selectMode={selectMode}
+                                        enableSelectMode={enableSelectMode}
+                                        toggleSelectMessage={toggleSelectMessage}
+                                    />
+                                </div>
+                            )
+                            return (
+                                <TextMessageItem
+                                    key={message.messageId}
+                                    userId={userId}
+                                    message={message}
+                                    selectMode={selectMode}
+                                    enableSelectMode={enableSelectMode}
+                                    toggleSelectMessage={toggleSelectMessage}
+                                />
+                            )
+                        })}
                     </MessageDateGroup>
                 ))}
             </div>

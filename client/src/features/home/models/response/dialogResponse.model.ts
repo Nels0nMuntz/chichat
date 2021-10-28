@@ -1,8 +1,8 @@
 import { IUser } from "shared";
-import { IMessageResponse } from "../";
+import { IMessageResponse, UniqueId } from "../";
 
 export interface IDialogResponse {
-    dialogId: string;
+    dialogId: UniqueId;
     member: IUser;
     messages: Array<IMessageResponse>;
 };

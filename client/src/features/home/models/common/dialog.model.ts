@@ -1,8 +1,11 @@
 import { IUser } from "shared";
-import { IMessageResponse } from "../";
+import { IMessage } from "../";
+import { IPaginationOptions } from "./paginationOptions.model";
+import { UniqueId } from "./uniqueId.model";
 
-export interface IDialog {
-    dialogId: string;
+export interface IDialog extends IPaginationOptions {
+    dialogId: UniqueId;
     member: IUser;
-    lastMessage: IMessageResponse;
+    messages: Array<IMessage>;
+    lastMessage: IMessage;
 };

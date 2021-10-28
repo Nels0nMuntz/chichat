@@ -10,15 +10,13 @@ import {
     selectActiveTab,
     selectSearchUsers,
     selectDialogsList,
-    selectMessagesState,
     selectSearchMode,
     setSidebarSearchFieldValueAction,
     sidebarSearchAction,
     setSidebarSearchFieldTypingAction,
     setActiveSearchTabAction,
     resetSidebarSearchAction,
-    setSelectedDialogAction,
-    fetchAllMessagesAction,
+    setActiveDialogAction,
     setSidebarSearchModeAction,
     createDialogAction,
     selectUserData,
@@ -26,7 +24,7 @@ import {
 import { useMediaQuery, SearchGroups, isEmptyString } from 'shared';
 
 
-const SidebarContainer: React.FC = () => {
+export const SidebarContainer: React.FC = React.memo(() => {
 
     const dispatch = useDispatch();
 
@@ -39,7 +37,6 @@ const SidebarContainer: React.FC = () => {
     const visibility = useSelector(selectSidebarVisibility);
     const { value, typing } = useSelector(selectSidebarSearchField);
     const activeTab = useSelector(selectActiveTab);
-    const { offset, limit } = useSelector(selectMessagesState)
     const dialogs = useSelector(selectDialogsList);
     const users = useSelector(selectSearchUsers);
 
@@ -72,8 +69,7 @@ const SidebarContainer: React.FC = () => {
         const dialog = dialogs.find(({ member }) => member.userId === userId);
         if (dialog) {
             dispatch(resetSidebarSearchAction({ payload: null }));
-            dispatch(setSelectedDialogAction({ payload: dialog }));
-            dispatch(fetchAllMessagesAction({ payload: { offset, limit, dialogId: dialog.dialogId } }));
+            dispatch(setActiveDialogAction({ payload: dialog.dialogId }));
             disableSearchMode();
         } else {
             dispatch(createDialogAction({ payload: {
@@ -114,6 +110,4 @@ const SidebarContainer: React.FC = () => {
             handleSelectUser={handleSelectUser}
         />
     );
-};
-
-export default SidebarContainer;
+});

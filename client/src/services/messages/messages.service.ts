@@ -4,6 +4,8 @@ import {
     ISearchMessagesResponse, 
     ISidebarSearchParams,
     IDeleteMessagesRequest,
+    IFetchMessagesRequest,
+    IFetchMessagesResponse,
 } from "features/home/models";
 
 
@@ -20,6 +22,14 @@ class MessagesService {
     search = async (params: ISidebarSearchParams): Promise<AxiosResponse<ISearchMessagesResponse>> => {
         try {
             return await this.axios.get<ISearchMessagesResponse>(this.baseUrl + `/search`, { params });
+        } catch (error: any) {
+            throw error.response.data.error;
+        }
+    }
+
+    fetchMessages = async (data: IFetchMessagesRequest) : Promise<AxiosResponse<IFetchMessagesResponse>> => {
+        try {
+            return await this.axios.get(this.baseUrl, { params: data });
         } catch (error: any) {
             throw error.response.data.error;
         }

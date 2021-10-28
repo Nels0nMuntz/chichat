@@ -6,9 +6,9 @@ import {
     addLastMessageAction,
     sendWSMessageAction,
     selectUserData,
-} from '../../';
+} from '../../..';
 import { IUser, IWSMessage, WSMessageTypes } from "shared";
-import { IInitWSClientRequest, IMessageResponse } from "../../../models";
+import { IInitWSClientRequest, IMessageResponse } from "../../../../models";
 
 
 export function* wsRecieverSaga() {

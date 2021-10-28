@@ -1,7 +1,8 @@
+import { UniqueId } from "..";
 import { IMessageBase } from "./messageBase.model";
 
 export interface IMessage extends IMessageBase {
-    messageId: string;
+    messageId: UniqueId;
     read: boolean;
     createdAt: string;
     updatedAt: string;

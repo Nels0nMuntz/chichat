@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'messages_track': string;
+  'messages_track_shadow': string;
+  'wrapper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

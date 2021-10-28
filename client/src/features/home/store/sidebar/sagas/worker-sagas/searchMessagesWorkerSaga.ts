@@ -1,7 +1,7 @@
 import { put } from "@redux-saga/core/effects";
 import { AxiosResponse } from "axios";
 import { messageService } from "services";
-import { setSidebarSearchMessagesAction } from "../../../actions";
+import { setSidebarSearchMessagesAction } from "../../actions";
 import { ISidebarSearchParams, ISearchMessagesResponse } from "../../../../models";
 
 

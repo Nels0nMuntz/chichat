@@ -17,16 +17,18 @@ const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, selectedDi
     return (
         <CustomScroll>
             <div className={style.dialogs}>
-                {list.sort((a, b) => +new Date(b.lastMessage?.createdAt) - (+new Date(a.lastMessage?.createdAt))).map(({ dialogId, member, lastMessage }) => (
-                    <Dialog
-                        key={dialogId}
-                        dialogId={dialogId}
-                        member={member}
-                        lastMessage={lastMessage}
-                        isSelected={Boolean(selectedDialog) && selectedDialog === dialogId}
-                        handleSelectDialog={handleSelectDialog}
-                    />
-                ))}
+                {list
+                    .sort((a, b) => +new Date(b.lastMessage.updatedAt) - (+new Date(a.lastMessage.updatedAt)))
+                    .map(({ dialogId, member, lastMessage }) => (
+                        <Dialog
+                            key={dialogId}
+                            dialogId={dialogId}
+                            member={member}
+                            lastMessage={lastMessage}
+                            isSelected={Boolean(selectedDialog) && selectedDialog === dialogId}
+                            handleSelectDialog={handleSelectDialog}
+                        />
+                    ))}
             </div>
         </CustomScroll>
     );

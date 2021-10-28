@@ -2,11 +2,12 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Home from '../components/Home/Home';
-import { initHomeAction } from '../store/actions';
+import { initHomeAction } from '../store';
 import {
     selectHomeStatus,
     selectActiveDialog,
-} from '../store/selectors';
+    selectDialogsList,
+} from '../store';
 
 
 const HomeContainer: React.FC = () => {
@@ -14,7 +15,11 @@ const HomeContainer: React.FC = () => {
     const dispatch = useDispatch();
 
     const homeStatus = useSelector(selectHomeStatus);
-    const selectedDialog = useSelector(selectActiveDialog);
+    const dialogs = useSelector(selectDialogsList);
+    const activeDialogId = useSelector(selectActiveDialog);
+
+    const activeDialog = dialogs.find(dialog => dialog.dialogId === activeDialogId);
+    const activeDialogMember = activeDialog?.member;
 
     React.useEffect(() => {
         dispatch(initHomeAction({}));
@@ -23,7 +28,7 @@ const HomeContainer: React.FC = () => {
     return (
         <Home
             status={homeStatus}
-            selectedDialogMember={selectedDialog?.member || null}
+            selectedDialogMember={activeDialogMember || null}
         />
     )
 };
