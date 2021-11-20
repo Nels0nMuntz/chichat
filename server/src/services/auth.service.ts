@@ -53,7 +53,7 @@ export class AuthService {
     public signin = async (body: IAuthSignInRequest): Promise<{ user: IUserDocument, tokens: IGeneratedTokens }> => {
         const { email, password } = new SignInUserDto(body);
         const document = await this.repository.findOneByEmail(email);
-        if (!document){
+        if (!document) {
             throw ErrorException.BadRequestError("User does not exists", [{ param: "email", msg: "User does not exists" }]);
         }
 
@@ -86,14 +86,16 @@ export class AuthService {
     public refresh = async (refreshToken: string): Promise<{ accessToken: string, refreshToken: string }> => {
         if (!refreshToken) {
             throw ErrorException.UnauthorizedError();
-        }
+        };
+
         const validatedToken = this.tokenService.validateRefreshToken(refreshToken);
         const tokenFromDB = await this.tokenService.getRefreshToken(refreshToken);
 
         if (!validatedToken || !tokenFromDB) {
             throw ErrorException.UnauthorizedError();
-        }
-        const document = await this.repository.findOne({ id: tokenFromDB.userId });
+        };
+
+        const document = await this.repository.findById(tokenFromDB.userId);
 
         const tokenPayload = new TokenPayloadDto(document);
         const tokens = this.tokenService.generateTokens({ ...tokenPayload });

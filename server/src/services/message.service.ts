@@ -67,10 +67,7 @@ export class MessageService {
                 limit: options.limit,
                 skip: options.limit * (options.page - 1),
             }
-        );
-
-        console.log(dialogId)
-        console.log({ allMessages: allMessages.length, limitedMessages: limitedMessages.length });        
+        );     
 
         return limitedMessages;
     }

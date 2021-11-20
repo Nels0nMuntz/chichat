@@ -7,7 +7,7 @@ import Searchbar from '../Searchbar/Searchbar';
 import MessageInput from '../../containers/MessageInputContainer';
 import MessagesTrack from '../../containers/MessagesTrackContainer';
 import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
-import Sidebar from 'features/home/containers/SidebarContainer';
+import { SidebarContainer as Sidebar} from 'features/home/containers/SidebarContainer';
 import { useMediaQuery, IUser, withLoader } from 'shared';
 
 import { 

@@ -30,6 +30,9 @@ export class BaseRepository<T extends Document> implements IReadable<T>, IWritab
 
     findOne = async (filter: FilterQuery<T>, projection?: Object, options?: QueryOptions): Promise<T> => {
         try {
+            console.log(filter);
+            console.log(await this.model.findOne(filter, projection || null, options || null));
+            
             return await this.model.findOne(filter, projection || null, options || null);
         } catch (error) {
             throw ErrorException.ServerError("Can not find document in DB");

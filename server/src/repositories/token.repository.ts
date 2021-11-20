@@ -21,6 +21,9 @@ export class TokenRepository {
 
     public getOneByToken = async (token: string): Promise<ITokenDocument> => {
         try {
+            const all = await this.model.find();
+            const doc = await this.model.findOne({ refreshToken: token });
+            
             return await this.model.findOne({ refreshToken: token });
         } catch (error) {
             console.log({ message: "Can not find refresh token in DB", error });
