@@ -2,7 +2,6 @@ import { Action } from "redux";
 import { Status } from "shared";
 import { ITextMessageContent } from "../../models";
 import {
-    setMessagesStatusAction,
     setTextMessageAction,
     resetTextMessageAction,
     enableMessagesSelectModeAction,
@@ -26,13 +25,6 @@ const initState: IMessagesState = {
 };
 
 export const messagesReducer = (state: IMessagesState = initState, action: Action): IMessagesState => {
-
-    if (setMessagesStatusAction.is(action)) {
-        return {
-            ...state,
-            status: action.payload,
-        };
-    };
 
     if (setTextMessageAction.is(action)) {
         return {

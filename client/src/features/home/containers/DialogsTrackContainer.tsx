@@ -5,6 +5,7 @@ import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
 import { UniqueId } from '../models';
 import { fetchMessagesAction, setActiveDialogAction } from '../store';
 import { selectActiveDialog, selectDialogsList, selectDialogsStatus } from '../store';
+import { Status } from 'shared';
 
 
 const DialogsTrackContainer: React.FC = React.memo(() => {
@@ -17,15 +18,16 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
 
     const handleSelectDialog = React.useCallback((id: UniqueId) => {
         const dialog = dialogs.find(dialog => dialog.dialogId === id);
-        if(dialog){
-            dispatch(setActiveDialogAction({ payload: dialog.dialogId || null }));
-            if(!dialog.messages.length) {
-                dispatch(fetchMessagesAction({ payload: {
+        if (!dialog) return;
+        dispatch(setActiveDialogAction({ payload: dialog.dialogId }));
+        if (dialog.status === Status.Initial) {
+            dispatch(fetchMessagesAction({
+                payload: {
                     dialogId: dialog.dialogId,
                     page: dialog.page,
                     limit: dialog.limit,
-                } }));
-            };
+                }
+            }));
         };
     }, [dialogs]);
 

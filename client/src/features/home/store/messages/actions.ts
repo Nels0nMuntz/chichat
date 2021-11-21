@@ -1,9 +1,9 @@
 import { defineAction } from "rd-redux-utils";
 import { BaseEmoji } from "emoji-mart";
-import { Status } from "shared";
+// import { Status } from "shared";
 import { 
     IFetchMessagesRequest, 
-    IFetchMessagesResponse, 
+    // IFetchMessagesResponse, 
     IMessage, 
     IMessageResponse,
     UniqueId,
@@ -12,9 +12,9 @@ import {
 
 export const fetchMessagesAction = defineAction<{ payload: IFetchMessagesRequest }>("FETCH_DIALOG_MESSAGES");
 
-export const setMessagesStatusAction = defineAction<{ payload: Status }>("SET_MESSAGES_STATUS");
+// export const setMessagesStatusAction = defineAction<{ payload: Status }>("SET_MESSAGES_STATUS");
 
-export const setMessagesListAction = defineAction<{ payload: IFetchMessagesResponse }>("SET_MESSAGES_LIST");
+// export const setMessagesListAction = defineAction<{ payload: IFetchMessagesResponse }>("SET_MESSAGES_LIST");
 
 export const setTextMessageAction = defineAction<{ payload: string | BaseEmoji }>("SET_TEXT_MESASGE");
 

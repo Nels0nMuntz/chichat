@@ -2,12 +2,12 @@ import { Action } from "redux";
 import { Status, paginationLimit } from "shared";
 import { IDialog, IMessage, UniqueId } from "features/home/models";
 import {
-    setDialogListAction,
+    setDialogsListAction,
     setDialogStatusAction,
+    setDialogsListStatusAction,
     setActiveDialogAction,
-    addDialogListItemAction,
+    addNewDialogAction,
     addLastMessageAction,
-    setMessagesListAction,
     deleteMessagesOnClientAction,
     incrementPaginationPageAction,
     toggleSelectMessageAction,
@@ -29,17 +29,18 @@ const initialState: IDialogsState = {
 
 export const dialogsReducer = (state: IDialogsState = initialState, action: Action): IDialogsState => {
 
-    if (setDialogStatusAction.is(action)) {
+    if (setDialogsListStatusAction.is(action)) {
         return {
             ...state,
             status: action.payload,
         };
     };
 
-    if (setDialogListAction.is(action)) {
+    if (setDialogsListAction.is(action)) {
         return {
             ...state,
             list: action.payload.dialogs.map(({ dialogId, member, messages }) => ({
+                status: Status.Initial,
                 dialogId,
                 member,
                 messages: [],
@@ -70,12 +71,13 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if (addDialogListItemAction.is(action)) {
+    if (addNewDialogAction.is(action)) {
         const { dialogId, member, messages } = action.payload;
         return {
             ...state,
             list: [
                 {
+                    status: Status.Initial,
                     dialogId,
                     member,
                     messages: [],
@@ -92,7 +94,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         const newMessage: IMessage = { ...action.payload, selected: false };
         const dialogId = action.payload.dialogId;
         const dialog = state.list.find(dialog => dialog.dialogId === dialogId);
-        let dialogsList = state.list.filter(dialog => dialog.dialogId !== dialogId);
+        const dialogsList = state.list.filter(dialog => dialog.dialogId !== dialogId);
         if(dialog) {
             dialogsList.push({
                 ...dialog,
@@ -106,25 +108,6 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         return {
             ...state,
             list: dialogsList,
-        };
-    };
-
-    if (setMessagesListAction.is(action)) {
-        const dialogId = action.payload[0].dialogId;
-        const dialog = state.list.find(dialog => dialog.dialogId === dialogId);
-        const rest = state.list.filter(dialog => dialog.dialogId !== dialogId);
-        if (dialog) {
-            rest.push({
-                ...dialog,
-                messages: [
-                    ...action.payload.map<IMessage>(message => ({ ...message, selected: false })),
-                    ...dialog.messages,
-                ],
-            });
-        };
-        return {
-            ...state,
-            list: rest,
         };
     };
 
@@ -201,6 +184,15 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             ]
         };
     };
+
+    if(setDialogStatusAction.is(action)){
+        return {
+            ...state,
+            list: state.list.map((dialog) => {
+                return action.payload.dialogId === dialog.dialogId ? { ...dialog, status: action.payload.status } : dialog;
+            })
+        }
+    }
 
     return state;
 

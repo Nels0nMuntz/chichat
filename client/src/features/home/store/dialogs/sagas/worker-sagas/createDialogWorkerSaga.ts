@@ -6,7 +6,7 @@ import { Status } from "shared";
 import { 
     createDialogAction,
     setDialogStatusAction,
-    addDialogListItemAction,
+    addNewDialogAction,
     resetSidebarSearchAction,
     setActiveDialogAction,
     setSidebarSearchModeAction,
@@ -19,7 +19,7 @@ export function* createDialogWorkerSaga(action: typeof createDialogAction.typeOf
         yield put(setDialogStatusAction({ payload: Status.Running }));
         const { status, data }: AxiosResponse<IDialogResponse> = yield dialogService.createDialog(action.payload);
         if(status === 201){
-            yield put(addDialogListItemAction({ payload: data }));
+            yield put(addNewDialogAction({ payload: data }));
             yield put(setDialogStatusAction({ payload: Status.Success }));
             yield put(resetSidebarSearchAction({ payload: null }));
             yield put(setActiveDialogAction({ payload: data.dialogId }));

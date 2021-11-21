@@ -5,11 +5,13 @@ import { ICreateDialogRequest, IDialogResponse, IFetchAllDialogsResponse, Unique
 
 export const createDialogAction = defineAction<{ payload: ICreateDialogRequest }>("CREATE_DIALOG");
 
-export const setDialogStatusAction = defineAction<{ payload: Status }>("SET_DIALOGS_STATUS");
+export const setDialogStatusAction = defineAction<{ payload: { dialogId: UniqueId, status: Status } }>("SET_DIALOG_STATUS");
 
-export const setDialogListAction = defineAction<{ payload: IFetchAllDialogsResponse }>("SET_DIALOGS_LIST");
+export const setDialogsListStatusAction = defineAction<{ payload: Status }>("SET_DIALOGS_LIST_STATUS");
 
-export const addDialogListItemAction = defineAction<{ payload: IDialogResponse }>("ADD_DIALOG_LIST_ITEM");
+export const setDialogsListAction = defineAction<{ payload: IFetchAllDialogsResponse }>("SET_DIALOGS_LIST");
+
+export const addNewDialogAction = defineAction<{ payload: IDialogResponse }>("ADD_NEW_DIALOG");
 
 export const setActiveDialogAction = defineAction<{ payload: UniqueId | null }>("SET_ACTIVE_DIALOG");
 
