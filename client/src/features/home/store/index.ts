@@ -4,17 +4,12 @@ export * from './home/actions';
 export * from './home/selectors';
 export * from './home/sagas/watcher-sagas/homeWatcherSaga';
 
-// messages
-export * from './messages/reducer';
-export * from './messages/selectors';
-export * from './messages/actions';
-export * from './messages/sagas/watcher-sagas/messagesWatcherSaga';
-
 // dialogs
 export * from './dialogs/reducer';
 export * from './dialogs/actions';
 export * from './dialogs/selectors';
 export * from './dialogs/sagas/watcher-sagas/dialogsWatcherSaga';
+export * from './dialogs/dtos/message.dto'
 
 // sidebar
 export * from './sidebar/reducer';

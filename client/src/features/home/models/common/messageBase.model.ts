@@ -3,6 +3,6 @@ import { IMessageContent } from "./messageContent.model";
 
 export interface IMessageBase {
     dialogId: UniqueId;
-    createdBy: string;
+    createdBy: UniqueId;
     content: IMessageContent;
 };

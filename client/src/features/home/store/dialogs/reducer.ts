@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { Status, paginationLimit } from "shared";
+import { Status } from "shared";
 import { IDialog, IMessage, UniqueId } from "features/home/models";
 import {
     setDialogsListAction,
@@ -7,11 +7,11 @@ import {
     setDialogsListStatusAction,
     setActiveDialogAction,
     addNewDialogAction,
-    addLastMessageAction,
-    deleteMessagesOnClientAction,
     incrementPaginationPageAction,
-    toggleSelectMessageAction,
-    disableMessagesSelectModeAction,
+    // addLastMessageAction,
+    // deleteMessagesOnClientAction,
+    // toggleSelectMessageAction,
+    // disableMessagesSelectModeAction,
 } from '../';
 
 
@@ -39,15 +39,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
     if (setDialogsListAction.is(action)) {
         return {
             ...state,
-            list: action.payload.dialogs.map(({ dialogId, member, messages }) => ({
-                status: Status.Initial,
-                dialogId,
-                member,
-                messages: [],
-                lastMessage: { ...messages[0], selected: false },
-                page: 1,
-                limit: paginationLimit,
-            })),
+            list: action.payload,
         };
     };
 
@@ -59,9 +51,10 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                     if(dialog.dialogId === state.activeDialogId) {
                         return  {
                             ...dialog,
-                            messages: [
-                                ...dialog.messages.map<IMessage>(message => message.selected ? { ...message, selected: false } : message),
-                            ],
+                            messages: {
+                                ...dialog.messages,
+                                list: dialog.messages.list.map<IMessage>(message => message.selected ? { ...message, selected: false } : message),
+                            }
                         };
                     };
                     return dialog;
@@ -72,65 +65,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
     };
 
     if (addNewDialogAction.is(action)) {
-        const { dialogId, member, messages } = action.payload;
         return {
             ...state,
             list: [
-                {
-                    status: Status.Initial,
-                    dialogId,
-                    member,
-                    messages: [],
-                    lastMessage: { ...messages[0], selected: false },
-                    page: 1,
-                    limit: paginationLimit,
-                },
+                action.payload,
                 ...state.list,
             ],
-        };
-    }
-
-    if (addLastMessageAction.is(action)) {
-        const newMessage: IMessage = { ...action.payload, selected: false };
-        const dialogId = action.payload.dialogId;
-        const dialog = state.list.find(dialog => dialog.dialogId === dialogId);
-        const dialogsList = state.list.filter(dialog => dialog.dialogId !== dialogId);
-        if(dialog) {
-            dialogsList.push({
-                ...dialog,
-                messages: [
-                    newMessage,
-                    ...dialog.messages,
-                ],
-                lastMessage: newMessage,
-            });
-        };
-        return {
-            ...state,
-            list: dialogsList,
-        };
-    };
-
-    if (deleteMessagesOnClientAction.is(action)) {
-        const messageIds = action.payload;
-        let dialogsList = state.list;
-        const activeDialogId = state.activeDialogId;
-        if (activeDialogId) {
-            const dialog = dialogsList.find(dialog => dialog.dialogId === activeDialogId);
-            if(dialog){
-                const messagesList = dialog.messages.filter(message => !messageIds.some(id => id === message.messageId))
-                const updatedDialog: IDialog = {
-                    ...dialog,
-                    messages: messagesList,
-                    lastMessage: messagesList[0],
-                };
-                dialogsList = [...dialogsList].filter(dialog => dialog.dialogId !== activeDialogId);
-                dialogsList.push(updatedDialog);
-            };
-        };
-        return {
-            ...state,
-            list: dialogsList,
         };
     };
 
@@ -147,44 +87,6 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(toggleSelectMessageAction.is(action)) {
-        return {
-            ...state,
-            list: [
-                ...state.list.map(dialog => {
-                    if(dialog.dialogId === action.payload.dialogId) {
-                        return {
-                            ...dialog,
-                            messages: [
-                                ...dialog.messages.map<IMessage>(message => {
-                                    return message.messageId === action.payload.messageId ? { ...message, selected: !message.selected } : message;
-                                }),
-                            ],
-                        };
-                    };
-                    return dialog;
-                }),
-            ]
-        };
-    };
-
-    if(disableMessagesSelectModeAction.is(action)) {
-        return {
-            ...state,
-            list: [
-                ...state.list.map(dialog => {
-                    if(dialog.dialogId === state.activeDialogId){
-                        return {
-                            ...dialog,
-                            messages: [...dialog.messages.map(message => ({ ...message, selected: false }))],
-                        };
-                    };
-                    return dialog;
-                })
-            ]
-        };
-    };
-
     if(setDialogStatusAction.is(action)){
         return {
             ...state,
@@ -192,7 +94,89 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                 return action.payload.dialogId === dialog.dialogId ? { ...dialog, status: action.payload.status } : dialog;
             })
         }
-    }
+    };
+
+    // if (addLastMessageAction.is(action)) {
+    //     const newMessage: IMessage = { ...action.payload, selected: false };
+    //     const dialogId = action.payload.dialogId;
+    //     const dialog = state.list.find(dialog => dialog.dialogId === dialogId);
+    //     const dialogsList = state.list.filter(dialog => dialog.dialogId !== dialogId);
+    //     if(dialog) {
+    //         dialogsList.push({
+    //             ...dialog,
+    //             messages: [
+    //                 newMessage,
+    //                 ...dialog.messages,
+    //             ],
+    //             lastMessage: newMessage,
+    //         });
+    //     };
+    //     return {
+    //         ...state,
+    //         list: dialogsList,
+    //     };
+    // };
+
+    // if (deleteMessagesOnClientAction.is(action)) {
+    //     const messageIds = action.payload;
+    //     let dialogsList = state.list;
+    //     const activeDialogId = state.activeDialogId;
+    //     if (activeDialogId) {
+    //         const dialog = dialogsList.find(dialog => dialog.dialogId === activeDialogId);
+    //         if(dialog){
+    //             const messagesList = dialog.messages.filter(message => !messageIds.some(id => id === message.messageId))
+    //             const updatedDialog: IDialog = {
+    //                 ...dialog,
+    //                 messages: messagesList,
+    //                 lastMessage: messagesList[0],
+    //             };
+    //             dialogsList = [...dialogsList].filter(dialog => dialog.dialogId !== activeDialogId);
+    //             dialogsList.push(updatedDialog);
+    //         };
+    //     };
+    //     return {
+    //         ...state,
+    //         list: dialogsList,
+    //     };
+    // };
+
+    // if(toggleSelectMessageAction.is(action)) {
+    //     return {
+    //         ...state,
+    //         list: [
+    //             ...state.list.map(dialog => {
+    //                 if(dialog.dialogId === action.payload.dialogId) {
+    //                     return {
+    //                         ...dialog,
+    //                         messages: [
+    //                             ...dialog.messages.map<IMessage>(message => {
+    //                                 return message.messageId === action.payload.messageId ? { ...message, selected: !message.selected } : message;
+    //                             }),
+    //                         ],
+    //                     };
+    //                 };
+    //                 return dialog;
+    //             }),
+    //         ]
+    //     };
+    // };
+
+    // if(disableMessagesSelectModeAction.is(action)) {
+    //     return {
+    //         ...state,
+    //         list: [
+    //             ...state.list.map(dialog => {
+    //                 if(dialog.dialogId === state.activeDialogId){
+    //                     return {
+    //                         ...dialog,
+    //                         messages: [...dialog.messages.map(message => ({ ...message, selected: false }))],
+    //                     };
+    //                 };
+    //                 return dialog;
+    //             })
+    //         ]
+    //     };
+    // };
 
     return state;
 

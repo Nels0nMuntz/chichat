@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
 import { UniqueId } from '../models';
-import { fetchMessagesAction, setActiveDialogAction } from '../store';
+import { fetchDialogMessagesAction, setActiveDialogAction } from '../store';
 import { selectActiveDialog, selectDialogsList, selectDialogsStatus } from '../store';
 import { Status } from 'shared';
 
@@ -21,7 +21,7 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
         if (!dialog) return;
         dispatch(setActiveDialogAction({ payload: dialog.dialogId }));
         if (dialog.status === Status.Initial) {
-            dispatch(fetchMessagesAction({
+            dispatch(fetchDialogMessagesAction({
                 payload: {
                     dialogId: dialog.dialogId,
                     page: dialog.page,
