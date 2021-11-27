@@ -1,4 +1,5 @@
-import { IMessage, IMessageContent, IMessageResponse, UniqueId } from "features/home/models";
+import { IMessage, IMessageContent, IMessageResponse } from "features/home/models";
+import { UniqueId } from "shared";
 
 export class MessageResponseDto implements IMessageResponse {
 

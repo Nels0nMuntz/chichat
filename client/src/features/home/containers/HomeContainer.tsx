@@ -5,8 +5,7 @@ import Home from '../components/Home/Home';
 import { initHomeAction } from '../store';
 import {
     selectHomeStatus,
-    selectActiveDialogId,
-    selectDialogsList,
+    selectActiveDialog,
 } from '../store';
 
 
@@ -15,11 +14,7 @@ const HomeContainer: React.FC = () => {
     const dispatch = useDispatch();
 
     const homeStatus = useSelector(selectHomeStatus);
-    const dialogs = useSelector(selectDialogsList);
-    const activeDialogId = useSelector(selectActiveDialogId);
-
-    const activeDialog = dialogs.find(dialog => dialog.dialogId === activeDialogId);
-    const activeDialogMember = activeDialog?.member;
+    const activeDialog = useSelector(selectActiveDialog);
 
     React.useEffect(() => {
         dispatch(initHomeAction({}));
@@ -28,7 +23,7 @@ const HomeContainer: React.FC = () => {
     return (
         <Home
             status={homeStatus}
-            selectedDialogMember={activeDialogMember || null}
+            selectedDialogMember={activeDialog?.member || null}
         />
     )
 };

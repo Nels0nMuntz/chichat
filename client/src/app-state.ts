@@ -8,8 +8,6 @@ import { all } from '@redux-saga/core/effects';
 import { 
     homeReducer, 
     homeWatcherSaga,
-    messagesReducer,
-    messagesWatcherSaga,
     sidebarReducer,
     sidebarWatcherSaga,
     dialogsReducer,
@@ -25,7 +23,6 @@ const rootReducer = combineReducers({
     home: homeReducer,
     notification: notificationReducer,
     auth: authReducer,
-    messages: messagesReducer,
     dialogs: dialogsReducer,
     sidebar: sidebarReducer,
 });
@@ -46,7 +43,6 @@ function* appSaga(){
     yield all([
         authWatcherSaga(),
         homeWatcherSaga(),
-        messagesWatcherSaga(),
         sidebarWatcherSaga(),
         dialogsWatcherSaga(),
     ]);

@@ -5,16 +5,15 @@ export * from './common/messageBase.model';
 export * from './common/messageContent.model';
 export * from './common/messageTypes.model';
 export * from './common/sidebarSearchParams.model';
-export * from './common/uniqueId.model';
 export * from './common/paginationOptions.model';
 
 // response
 export * from './response/dialogResponse.model';
 export * from './response/messageResponse.model';
-export * from './response/fetchAllDialogsResponse.model';
 export * from './response/fetchMessagesResponse.model';
 export * from './response/fetchUserDataResponse.model';
 export * from './response/searchMessagesResponse.model';
+export * from './response/fetchAllDialogsResponse.model';
 
 // request
 export * from './request/fetchMessagesRequest.model';

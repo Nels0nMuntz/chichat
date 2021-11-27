@@ -1,5 +1,5 @@
-import { IDialog, IDialogResponse, IMessageResponse, UniqueId } from "features/home/models";
-import { IUser } from "shared";
+import { IDialog, IDialogResponse, IMessageResponse } from "features/home/models";
+import { IUser, UniqueId } from "shared";
 import { MessageResponseDto } from "./messageResponse.dto";
 
 

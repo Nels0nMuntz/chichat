@@ -9,26 +9,25 @@ import {
     ListItemInfo,
     ListItemTitle,
     ListItemSubtitle,
-    IUser,
     getUserFullname,
+    isEmptyString,
 } from 'shared';
-import { IMessageResponse } from '../../models';
+import { IDialog } from '../../models';
 
-// import style from "./Dialog.module.scss";
+import styles from './Dialog.module.scss';
 import '../../../../assets/styles/global/user-info.scss';
 
 
 type DialogProps = {
-    dialogId: string;
-    member: IUser;
-    lastMessage?: IMessageResponse;
-    isSelected: boolean;
+    dialog: IDialog;
     handleSelectDialog: (id: string) => void;
 };
 
-const Dialog: React.FC<DialogProps> = React.memo(({ dialogId, member, lastMessage, isSelected, handleSelectDialog }) => {
+const Dialog: React.FC<DialogProps> = React.memo(({ dialog, handleSelectDialog }) => {
 
-    const messageText = lastMessage?.content.text || '';
+    const inputText = dialog.form.text;
+    const lastMessage = dialog.messages.lastMessage;
+    const lastMessageText = lastMessage?.content.text || '';
     const suffix = lastMessage?.updatedAt
         ? formatDistanceToNow(
             new Date(lastMessage.createdAt),
@@ -38,21 +37,24 @@ const Dialog: React.FC<DialogProps> = React.memo(({ dialogId, member, lastMessag
             }
         )
         : undefined;
+    const draft = !dialog.isActive && !isEmptyString(inputText) ? <span><span className={styles.draft}>Draft:</span> {inputText}</span> : undefined;
 
     return (
         <ListItem
-            selected={isSelected}
-            onClick={() => handleSelectDialog(dialogId)}
+            selected={dialog.isActive}
+            onClick={() => handleSelectDialog(dialog.dialogId)}
         >
             <ListItemIcon>
                 <Avatar
-                    user={member}
+                    user={dialog.member}
                     size="large"
                 />
             </ListItemIcon>
             <ListItemInfo>
-                <ListItemTitle suffix={suffix}>{getUserFullname(member)}</ListItemTitle>
-                <ListItemSubtitle>{messageText}</ListItemSubtitle>
+                <ListItemTitle suffix={suffix}>{getUserFullname(dialog.member)}</ListItemTitle>
+                <ListItemSubtitle>
+                    {draft || lastMessageText}
+                </ListItemSubtitle>
             </ListItemInfo>
         </ListItem>
     );

@@ -1,4 +1,4 @@
-import { UniqueId } from "..";
+import { UniqueId } from "shared";
 
 export interface ICreateDialogRequest {
     member_1: UniqueId;

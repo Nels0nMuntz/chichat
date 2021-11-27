@@ -1,4 +1,5 @@
-import { IMessage, IMessageContent, IMessageResponse, UniqueId } from "features/home/models";
+import { IMessage, IMessageContent, IMessageResponse } from "features/home/models";
+import { UniqueId } from "shared";
 
 export class MessageDto implements IMessage {
 
@@ -21,29 +22,4 @@ export class MessageDto implements IMessage {
         this.updatedAt = message.updatedAt;
         this.selected = false;
     }
-
-    // static fromResponse = (message: IMessageResponse): IMessage => {
-    //     return {
-    //         dialogId: message.dialogId,
-    //         messageId: message.messageId,
-    //         createdBy: message.createdBy,
-    //         createdAt: message.createdAt,
-    //         content: message.content,
-    //         read: message.read,
-    //         updatedAt: message.updatedAt,
-    //         selected: false,
-    //     }
-    // }
-
-    // static toResponse = (message: IMessage): IMessageResponse => {
-    //     return {
-    //         dialogId: message.dialogId,
-    //         messageId: message.messageId,
-    //         createdBy: message.createdBy,
-    //         createdAt: message.createdAt,
-    //         content: message.content,
-    //         read: message.read,
-    //         updatedAt: message.updatedAt,
-    //     }
-    // }
 }

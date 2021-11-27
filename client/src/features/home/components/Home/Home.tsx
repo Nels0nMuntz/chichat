@@ -13,9 +13,8 @@ import { useMediaQuery, IUser, withLoader } from 'shared';
 import { 
     setSidebarVisibilityAction, 
     selectSidebarVisibility, 
-    selectSelectMode,
     selectActiveDialog,
-    disableMessagesSelectModeAction,
+    changeSelectModeAction,
 } from '../../store';
 
 import style from './Home.module.scss';
@@ -31,9 +30,9 @@ const Home: React.FC<HomeProps> = (props) => {
 
     const dispatch = useDispatch();
 
-    const selectMode = useSelector(selectSelectMode);
     const sidebarVisibility = useSelector(selectSidebarVisibility);
     const activeDialog = useSelector(selectActiveDialog);
+    const selectMode = activeDialog?.messages.selectMode;
 
     const [searchbarVisility, setSearchbarVisility] = React.useState(false);
     const [matches] = useMediaQuery("(max-width: 900px)");
@@ -46,7 +45,7 @@ const Home: React.FC<HomeProps> = (props) => {
     const handleClickAway = React.useCallback((event: any) => {        
         if(selectMode){
             if(event.target.closest(".ignore-messages-track-click-away-listener")) return;
-            dispatch(disableMessagesSelectModeAction({ payload: null }));
+            dispatch(changeSelectModeAction({ payload: false }));
         };
     }, [selectMode])
 

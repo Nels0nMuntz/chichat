@@ -1,5 +1,5 @@
-import { IDialog, IDialogForm, IDialogMessages, IDialogResponse, UniqueId } from "features/home/models";
-import { IUser, PAGINATION_LIMIT, Status } from "shared";
+import { IDialog, IDialogForm, IDialogMessages, IDialogResponse } from "features/home/models";
+import { IUser, PAGINATION_LIMIT, Status, UniqueId } from "shared";
 import { MessageDto } from "./message.dto";
 
 
@@ -8,6 +8,7 @@ export class DialogDto implements IDialog {
     status: Status;
     dialogId: UniqueId;
     member: IUser;
+    isActive: boolean;
     messages: IDialogMessages;
     form: IDialogForm;
     limit: typeof PAGINATION_LIMIT;
@@ -17,10 +18,10 @@ export class DialogDto implements IDialog {
         this.status = Status.Initial;
         this.dialogId = dialog.dialogId;
         this.member = dialog.member;
+        this.isActive = false;
         this.messages = {
             list: dialog.messages.length ? dialog.messages.map(message => new MessageDto(message)) : [],
             lastMessage: dialog.messages.length ? new MessageDto(dialog.messages[dialog.messages.length - 1]) : null,
-            selectedMessages: [],
             selectMode: false,
         };
         this.form = {

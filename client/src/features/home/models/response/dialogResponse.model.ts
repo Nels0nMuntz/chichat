@@ -1,5 +1,5 @@
-import { IUser } from "shared";
-import { IMessageResponse, UniqueId } from "../";
+import { IUser, UniqueId } from "shared";
+import { IMessageResponse } from "../";
 
 export interface IDialogResponse {
     dialogId: UniqueId;

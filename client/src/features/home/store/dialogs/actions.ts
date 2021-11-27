@@ -1,8 +1,9 @@
 import { defineAction } from "rd-redux-utils";
-import { Status, } from "shared";
-import { ICreateDialogRequest, UniqueId, IDialog, PaginationLimit } from "features/home/models";
+import { Status, UniqueId } from "shared";
+import { ICreateDialogRequest, IDialog, IMessage, PaginationLimit } from "features/home/models";
 
 
+// dialogs
 export const fetchDialogMessagesAction = defineAction<{ payload: {
     dialogId: UniqueId,
     page: number,
@@ -23,4 +24,15 @@ export const setActiveDialogAction = defineAction<{ payload: UniqueId | null }>(
 
 export const incrementPaginationPageAction = defineAction<{ payload: { dialogId: UniqueId } }>("INCREMENT_PAGINATION_PAGE");
 
-export const setDialogMessageTextAction = defineAction<{ payload: { dialogId: UniqueId, value: string } }>("SET_DIALOG_MESSAGE_TEXT");
+// messages
+export const setMessageTextAction = defineAction<{ payload: string }>("SET_MESSAGE_TEXT");
+
+export const resetMessageTextAction = defineAction<{ payload: null }>("RESET_MESSAGE_TEXT");
+
+export const changeSelectModeAction = defineAction<{ payload: boolean }>("CHANGE_SELECT_MODE");
+
+export const toggleSelectMessageAction = defineAction<{ payload: IMessage }>("TOGGLE_SELECT_MESSAGE");
+
+export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage> } }>("SET_DIALOG_MESSAGES");
+
+export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");

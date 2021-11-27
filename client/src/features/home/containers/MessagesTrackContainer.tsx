@@ -2,14 +2,10 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { 
-    selectMessagesStatus, 
-    selectSelectMode,
     selectUserData,
-    selectDialogsList,
     selectActiveDialog,
-    toggleSelectMessageAction,
-    enableMessagesSelectModeAction,
-    disableMessagesSelectModeAction,
+    changeSelectModeAction,
+    toggleSelectMessageAction
 } from '../store';
 import MessagesTrack from '../components/MessagesTrack/MessagesTrack';
 import { Status, Loader } from 'shared';
@@ -20,21 +16,18 @@ const MessagesTrackContainer: React.FC = React.memo(() => {
 
     const dispatch = useDispatch();
 
-    const status = useSelector(selectMessagesStatus);
-    const selectMode = useSelector(selectSelectMode);
     const user = useSelector(selectUserData);
-    const dialogs = useSelector(selectDialogsList);
-    const activeDialogid = useSelector(selectActiveDialog);
-    
-    const messagesList = dialogs.find(({ dialogId }) => dialogId === activeDialogid)?.messages || [];
+    const activeDialog = useSelector(selectActiveDialog);
+    const status = activeDialog?.status || Status.Initial;
+    const messagesList = activeDialog?.messages.list || [];
+    const selectMode = activeDialog?.messages.selectMode || false;
 
-    const enableSelectMode = React.useCallback(() => { !selectMode && dispatch(enableMessagesSelectModeAction({ payload: null })) }, [selectMode]);
-    const disableSelectMode = React.useCallback(() => { selectMode && dispatch(disableMessagesSelectModeAction({ payload: null })) }, [selectMode]);
+    const enableSelectMode = React.useCallback(() => { !selectMode && dispatch(changeSelectModeAction({ payload: true })) }, [selectMode]);
+    const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
     const toggleSelectMessage = React.useCallback((message: IMessage) => { dispatch(toggleSelectMessageAction({ payload: message })) }, []);
     const handleKeydown = (e: KeyboardEvent) => {
         if (e.code === "Escape") disableSelectMode();
     };
-    // const handleFetchMessages = React.useCallback()
 
     React.useEffect(() => {
         if (selectMode) {

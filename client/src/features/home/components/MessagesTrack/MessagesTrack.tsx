@@ -99,7 +99,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, 
             <div className={style.messages_track}>
                 {messages.map(({ period, list }, groupIndex) => (
                     <MessageDateGroup
-                        key={+period}
+                        key={groupIndex}
                         period={formatPeriod(period)}
                     >
                         {list.map((message, messageIndex) => {                            

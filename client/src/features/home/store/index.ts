@@ -9,7 +9,10 @@ export * from './dialogs/reducer';
 export * from './dialogs/actions';
 export * from './dialogs/selectors';
 export * from './dialogs/sagas/watcher-sagas/dialogsWatcherSaga';
-export * from './dialogs/dtos/message.dto'
+export * from './dialogs/dtos/message.dto';
+export * from './dialogs/dtos/messageResponse.dto';
+export * from './dialogs/dtos/dialog.dto';
+export * from './dialogs/dtos/dialogResponse.dto';
 
 // sidebar
 export * from './sidebar/reducer';

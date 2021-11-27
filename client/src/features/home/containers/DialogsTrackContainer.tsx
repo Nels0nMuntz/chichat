@@ -2,10 +2,9 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
-import { UniqueId } from '../models';
 import { fetchDialogMessagesAction, setActiveDialogAction } from '../store';
-import { selectActiveDialogId, selectDialogsList, selectDialogsStatus } from '../store';
-import { Status } from 'shared';
+import { selectDialogsList, selectDialogsStatus } from '../store';
+import { Status, UniqueId } from 'shared';
 
 
 const DialogsTrackContainer: React.FC = React.memo(() => {
@@ -14,7 +13,6 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
 
     const status = useSelector(selectDialogsStatus);
     const dialogs = useSelector(selectDialogsList);
-    const activeDialogId = useSelector(selectActiveDialogId);
 
     const handleSelectDialog = React.useCallback((id: UniqueId) => {
         const dialog = dialogs.find(dialog => dialog.dialogId === id);
@@ -35,7 +33,6 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
         <DialogsTrack
             status={status}
             list={dialogs}
-            selectedDialog={activeDialogId || null}
             handleSelectDialog={handleSelectDialog}
         />
     );

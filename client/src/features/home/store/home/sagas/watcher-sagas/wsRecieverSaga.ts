@@ -3,12 +3,13 @@ import { call, take, put, select } from "@redux-saga/core/effects";
 
 import { 
     setWebSocketAction,
-    addLastMessageAction,
+    addNewMessageAction,
     sendWSMessageAction,
     selectUserData,
 } from '../../..';
 import { IUser, IWSMessage, WSMessageTypes } from "shared";
 import { IInitWSClientRequest, IMessageResponse } from "../../../../models";
+import { MessageDto } from "features/home/store";
 
 
 export function* wsRecieverSaga() {
@@ -28,7 +29,10 @@ export function* wsRecieverSaga() {
             };                
             case WSMessageTypes.CREATE_MESSAGE: {
                 const _message = message as IWSMessage<IMessageResponse>;
-                yield put(addLastMessageAction({ payload: _message.payload }));                    
+                yield put(addNewMessageAction({ payload: {
+                    dialogId: _message.payload.dialogId,
+                    message: new MessageDto(_message.payload),
+                } }));                    
                 break; 
             };
             default:

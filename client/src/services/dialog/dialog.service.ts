@@ -3,7 +3,7 @@ import { axiosInstance } from "core";
 import { 
     ICreateDialogRequest, 
     IDialogResponse, 
-    IFetchAllDialogsResponse, 
+    IFetchAllDialogsResponse,
 } from "features/home/models";
 
 

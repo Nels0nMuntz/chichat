@@ -9,23 +9,22 @@ import style from './DialogsTrack.module.scss';
 
 type DialogsTrackProps = {
     list: Array<IDialog>;
-    selectedDialog: string | null;
     handleSelectDialog: (id: string) => void;
 };
 
-const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, selectedDialog, handleSelectDialog }) => {
+const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, handleSelectDialog }) => {
     return (
         <CustomScroll>
             <div className={style.dialogs}>
                 {list
-                    .sort((a, b) => +new Date(b.lastMessage.updatedAt) - (+new Date(a.lastMessage.updatedAt)))
-                    .map(({ dialogId, member, lastMessage }) => (
+                    .sort((a, b) => {
+                        if(!a.messages.lastMessage || !b.messages.lastMessage) return -1;
+                        return +new Date(b.messages.lastMessage.updatedAt) - (+new Date(a.messages.lastMessage.updatedAt))
+                    })
+                    .map(dialog => (
                         <Dialog
-                            key={dialogId}
-                            dialogId={dialogId}
-                            member={member}
-                            lastMessage={lastMessage}
-                            isSelected={Boolean(selectedDialog) && selectedDialog === dialogId}
+                            key={dialog.dialogId}
+                            dialog={dialog}
                             handleSelectDialog={handleSelectDialog}
                         />
                     ))}

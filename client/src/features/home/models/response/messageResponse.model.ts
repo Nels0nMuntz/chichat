@@ -1,4 +1,4 @@
-import { UniqueId } from "..";
+import { UniqueId } from "shared";
 import { IMessageBase } from "../common/messageBase.model";
 
 export interface IMessageResponse extends IMessageBase {

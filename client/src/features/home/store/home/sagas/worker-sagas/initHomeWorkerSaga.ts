@@ -1,22 +1,24 @@
 import { put, call } from "@redux-saga/core/effects";
-import {
-    setHomeStateAction,
-    setDialogStatusAction,
-    setDialogListAction,
-    setHomeUserDataAction,
-} from "../../../";
 import { Status } from "shared";
 import { AxiosResponse } from "axios";
+
+import {
+    setHomeStateAction,
+    setHomeUserDataAction,
+    setDialogsListAction,
+    setDialogsListStatusAction,
+} from "features/home/store";
+import { setNotification } from "features/notification/store";
 import { 
-    IFetchAllDialogsResponse, 
+    IFetchAllDialogsResponse,
     IFetchUserDataResponse,
 } from "features/home/models";
 import { 
     dialogService, 
     userService 
 } from "services";
-import { setNotification } from "features/notification/store";
 import { wsRecieverSaga } from "../watcher-sagas";
+import { DialogDto } from "features/home/store/dialogs/dtos/dialog.dto";
 
 
 export function* initHomeWorkerSaga() {
@@ -27,16 +29,21 @@ export function* initHomeWorkerSaga() {
 
 function* fetchAllDialogs() {
     try {
-        yield put(setDialogStatusAction({ payload: Status.Running }));
+        yield put(setDialogsListStatusAction({ payload: Status.Running }));
         const { status, data }: AxiosResponse<IFetchAllDialogsResponse> = yield dialogService.fetchAllDialogs();
         if (status === 200) {
-            yield put(setDialogListAction({ payload: data }));
-            yield put(setDialogStatusAction({ payload: Status.Success }));
+            const dialogsList = data.dialogs.map(dialog => {
+                const dialogDto = new DialogDto(dialog);
+                dialogDto.messages.list.length = 0;
+                return dialogDto;
+            });
+            yield put(setDialogsListAction({ payload: dialogsList }));
+            yield put(setDialogsListStatusAction({ payload: Status.Success }));
             yield put(setHomeStateAction({ payload: Status.Success }));
         }
     } catch (error: any) {
         yield put(setHomeStateAction({ payload: Status.Error }));
-        yield put(setDialogStatusAction({ payload: Status.Error }));
+        yield put(setDialogsListStatusAction({ payload: Status.Error }));
         yield put(setNotification({
             payload: {
                 status: Status.Error,

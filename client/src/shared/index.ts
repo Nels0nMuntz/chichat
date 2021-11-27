@@ -36,7 +36,9 @@ export * from './models/WS/WSMessage.model';
 export * from './models/WS/WSState.model';
 export * from './models/WS/WSAction.model';
 export * from './models/WS/WSMessageTypes.model';
+export * from './models/WS/WSManager';
 export * from './models/searchParams.model';
+export * from './models/uniqueId.model';
 
 // validation schemas
 export * from './validators/signInFormValidationSchema';
