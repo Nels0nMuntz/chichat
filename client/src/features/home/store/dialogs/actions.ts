@@ -1,5 +1,5 @@
 import { defineAction } from "rd-redux-utils";
-import { Status } from "shared";
+import { Status, } from "shared";
 import { ICreateDialogRequest, UniqueId, IDialog, PaginationLimit } from "features/home/models";
 
 
@@ -22,3 +22,5 @@ export const addNewDialogAction = defineAction<{ payload: IDialog }>("ADD_NEW_DI
 export const setActiveDialogAction = defineAction<{ payload: UniqueId | null }>("SET_ACTIVE_DIALOG");
 
 export const incrementPaginationPageAction = defineAction<{ payload: { dialogId: UniqueId } }>("INCREMENT_PAGINATION_PAGE");
+
+export const setDialogMessageTextAction = defineAction<{ payload: { dialogId: UniqueId, value: string } }>("SET_DIALOG_MESSAGE_TEXT");

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
 import { UniqueId } from '../models';
 import { fetchDialogMessagesAction, setActiveDialogAction } from '../store';
-import { selectActiveDialog, selectDialogsList, selectDialogsStatus } from '../store';
+import { selectActiveDialogId, selectDialogsList, selectDialogsStatus } from '../store';
 import { Status } from 'shared';
 
 
@@ -14,7 +14,7 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
 
     const status = useSelector(selectDialogsStatus);
     const dialogs = useSelector(selectDialogsList);
-    const activeDialogId = useSelector(selectActiveDialog);
+    const activeDialogId = useSelector(selectActiveDialogId);
 
     const handleSelectDialog = React.useCallback((id: UniqueId) => {
         const dialog = dialogs.find(dialog => dialog.dialogId === id);

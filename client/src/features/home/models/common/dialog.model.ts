@@ -8,7 +8,6 @@ export interface IDialogMessages {
     list: Array<IMessage>;
     lastMessage: IMessage | null;
     selectMode: boolean;
-    selectedMessages: Array<IMessage>;
 };
 
 export interface IDialogForm {
@@ -17,9 +16,10 @@ export interface IDialogForm {
 }
 
 export interface IDialog extends IPaginationOptions {
-    status: Status; 
     dialogId: UniqueId;
+    status: Status; 
     member: IUser; 
     messages: IDialogMessages;
     form: IDialogForm;
+    isActive: boolean;
 };

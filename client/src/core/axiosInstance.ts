@@ -4,7 +4,7 @@ import { ISignInResponse } from "features/auth/models";
 import { localStorageService } from "services";
 
 export const axiosInstance = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:4000",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",

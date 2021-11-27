@@ -3,16 +3,18 @@ import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-    selectTextMessageText,
-    selectActiveDialog,
+    // selectTextMessageText,
+    selectActiveDialogId,
+    selectActiveDialogMessages,
     selectUserData,
-    selectSelectMode,
+    // selectSelectMode,
     selectDialogsList,
-    setTextMessageAction,
-    resetTextMessageAction,
+    // setTextMessageAction,
+    // resetTextMessageAction,
+    setDialogMessageTextAction,
     sendWSMessageAction,
-    disableMessagesSelectModeAction,
-    deleteMessagesInDBAction,
+    // disableMessagesSelectModeAction,
+    // deleteMessagesInDBAction,
 } from '../store';
 import MessageInput from '../components/MessageInput/MessageInput';
 import { IWSMessage, WSMessageTypes } from 'shared';
@@ -29,28 +31,31 @@ const MessageInputContainer: React.FC = React.memo(() => {
     });
 
     const user = useSelector(selectUserData);
-    const dialogs = useSelector(selectDialogsList);
-    const activeDialog = useSelector(selectActiveDialog);
-    const textMessage = useSelector(selectTextMessageText);
-    const selectMode = useSelector(selectSelectMode);
+    const activeDialogId = useSelector(selectActiveDialogId);
+    const selectedMessages = useSelector(selectActiveDialogMessages);
 
-    const selectedMessages = dialogs
-        .find(({ dialogId }) => dialogId === activeDialog)?.messages
-        .filter(message => message.selected) || [];
+    // const textMessage = useSelector(selectTextMessageText);
+    // const selectMode = useSelector(selectSelectMode);
 
-    const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        dispatch(setTextMessageAction({ payload: e.target.value }));
-    };
+    // const selectedMessages = dialogs
+    //     .find(({ dialogId }) => dialogId === activeDialog)?.messages
+    //     .filter(message => message.selected) || [];
+
+    const handleValueChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if(activeDialogId){
+            dispatch(setDialogMessageTextAction({ payload: { dialogId: activeDialogId, value: e.target.value } }));
+        };
+    }, [activeDialogId]);
     const handleOpenEmojiPopup = React.useCallback(() => setPopups({ emoji: true, menu: false }), []);
     const handleCloseEmojiPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
     const handleOpenMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: true }), []);
     const handleCloseMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
     const handleSendTextMessage = React.useCallback(() => {
-        if(!activeDialog) return;
+        if(!activeDialogId) return;
         const message: IWSMessage<IMessageBase> = {
             type: WSMessageTypes.CREATE_MESSAGE,
             payload: {
-                dialogId: activeDialog,
+                dialogId: activeDialogId,
                 createdBy: user.userId,
                 content: {
                     type: "text",

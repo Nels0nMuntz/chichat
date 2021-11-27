@@ -8,6 +8,7 @@ import {
     setActiveDialogAction,
     addNewDialogAction,
     incrementPaginationPageAction,
+    setDialogMessageTextAction,
     // addLastMessageAction,
     // deleteMessagesOnClientAction,
     // toggleSelectMessageAction,
@@ -48,7 +49,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             ...state,
             list: [
                 ...state.list.map(dialog => {
-                    if(dialog.dialogId === state.activeDialogId) {
+                    if(dialog.dialogId === action.payload) {
                         return  {
                             ...dialog,
                             messages: {
@@ -60,7 +61,6 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                     return dialog;
                 }),
             ],
-            activeDialogId: action.payload,
         };
     };
 
@@ -94,6 +94,26 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                 return action.payload.dialogId === dialog.dialogId ? { ...dialog, status: action.payload.status } : dialog;
             })
         }
+    };
+
+    if(setDialogMessageTextAction.is(action)){
+        return {
+            ...state,
+            list: [
+                ...state.list.map(dialog => {
+                    if(dialog.dialogId === action.payload.dialogId){
+                        return {
+                            ...dialog,
+                            form: {
+                                ...dialog.form,
+                                text: action.payload.value,
+                            }
+                        }
+                    };
+                    return dialog;
+                }),
+            ],
+        };
     };
 
     // if (addLastMessageAction.is(action)) {
