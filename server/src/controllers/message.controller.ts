@@ -8,6 +8,7 @@ import {
     ISearchQueryString,
     IDeleteMessagesRequest,
     IGetMessagesRequest,
+    IGetMessagesResponse,
 } from "../models";
 import { MessageService } from "../services/message.service";
 import { ErrorException } from "../shared";
@@ -60,16 +61,16 @@ export class MessageController {
         }
     }
 
-    getMessages = async (req: Request, res: Response<Array<IMessageResponse>>, next: NextFunction) => {
+    getMessages = async (req: Request, res: Response<IGetMessagesResponse>, next: NextFunction) => {
         const request = req as unknown as IGetMessagesRequest;
         const { dialogId, page, limit } = request.query;
         try {
-            const messageDocs = await this.service.getMessages(dialogId, {
+            const { messages, hasMore } = await this.service.getMessages(dialogId, {
                 page: +page,
                 limit: +limit,
             });
-            const messagesRes = messageDocs.map(message => new MessageResponseDto(message));
-            return res.status(200).json(messagesRes);
+            const messagesRes = messages.map(message => new MessageResponseDto(message));
+            return res.status(200).json({ messages: messagesRes, hasMore });
         } catch (error) {
             next(error);
         };

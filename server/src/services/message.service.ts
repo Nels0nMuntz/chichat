@@ -2,7 +2,7 @@ import { IMessageDocument } from "../schemas";
 import { CreateMessageRequestDto, UpdateMessageRequestDto } from "../dtos";
 import { DialogRepository, MessageRepository, UserRepository } from "../repositories";
 import { ErrorException } from "../shared";
-import { UniqueId, IPaginationOptions } from "../models";
+import { UniqueId, IPaginationOptions, IGetMessagesResponse } from "../models";
 
 
 export class MessageService {
@@ -45,20 +45,13 @@ export class MessageService {
 
     }
 
-    getMessages = async (dialogId: UniqueId, options: IPaginationOptions): Promise<Array<IMessageDocument>> => {
+    getMessages = async (dialogId: UniqueId, options: IPaginationOptions): Promise<{ messages: Array<IMessageDocument>, hasMore: boolean }> => {
         const dialog = await this.dialogRepository.findById(dialogId);
         if (!dialog) {
             throw ErrorException.BadRequestError("Can not find dialog by ID in DB");
         };
         
-        const allMessages = await this.messageRepository.find(
-            { dialogId },
-            null,
-            {
-                sort: { createdAt: -1 },
-                // skip: options.limit * (options.page - 1),
-            }
-        );
+        const allMessages = await this.messageRepository.find({ dialogId });
         const limitedMessages = await this.messageRepository.find(
             { dialogId },
             null,
@@ -69,7 +62,10 @@ export class MessageService {
             }
         );     
 
-        return limitedMessages;
+        return {
+            messages: limitedMessages,
+            hasMore: allMessages.length > options.page * options.limit,
+        };
     }
 
     deleteMany = async (messageIds: Array<string>): Promise<void> => {

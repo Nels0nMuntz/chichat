@@ -7,6 +7,7 @@ export interface IDialogMessages {
     list: Array<IMessage>;
     lastMessage: IMessage | null;
     selectMode: boolean;
+    hasMore?: boolean;
 };
 
 export interface IDialogForm {

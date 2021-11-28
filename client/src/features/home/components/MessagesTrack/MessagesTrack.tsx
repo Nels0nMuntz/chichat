@@ -31,9 +31,10 @@ type MessagesTrackProps = {
     selectMode: boolean;
     enableSelectMode: () => void;
     toggleSelectMessage: (message: IMessage) => void;
+    handleFetchMessages: () => void;
 };
 
-const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, selectMode, enableSelectMode, toggleSelectMessage }) => {
+const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, selectMode, enableSelectMode, toggleSelectMessage, handleFetchMessages }) => {
 
     // infinite scroll
     const loader = React.useRef<HTMLDivElement>(null);
@@ -42,6 +43,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo(({ list, userId, 
             const target = entries[0];
             if (target.isIntersecting) {
                 console.log("Intersecting");
+                handleFetchMessages();
             };
         };
         const options = {

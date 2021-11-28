@@ -187,10 +187,10 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                             messages: {
                                 ...dialog.messages,
                                 list: [
-                                    ...action.payload.messages,
                                     ...dialog.messages.list,
+                                    ...action.payload.messages,
                                 ],
-                                lastMessage: action.payload.messages[0],
+                                hasMore: action.payload.hasMore,
                             },
                         };
                     };

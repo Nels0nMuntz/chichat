@@ -1,3 +1,6 @@
 import { IMessageResponse } from "..";
 
-export interface IFetchMessagesResponse extends Array<IMessageResponse> { };
+export interface IFetchMessagesResponse  {
+    messages: Array<IMessageResponse>;
+    hasMore: boolean;
+};

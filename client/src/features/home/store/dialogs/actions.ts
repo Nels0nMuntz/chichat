@@ -33,6 +33,6 @@ export const changeSelectModeAction = defineAction<{ payload: boolean }>("CHANGE
 
 export const toggleSelectMessageAction = defineAction<{ payload: IMessage }>("TOGGLE_SELECT_MESSAGE");
 
-export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage> } }>("SET_DIALOG_MESSAGES");
+export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
 
 export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");

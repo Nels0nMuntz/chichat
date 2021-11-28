@@ -9,3 +9,4 @@ export * from './request/getMessagesRequest.model';
 
 // response
 export * from './response/messageResponse.model';
+export * from './response/getMessagesResponse.model';

@@ -5,7 +5,8 @@ import {
     selectUserData,
     selectActiveDialog,
     changeSelectModeAction,
-    toggleSelectMessageAction
+    toggleSelectMessageAction,
+    fetchDialogMessagesAction,
 } from '../store';
 import MessagesTrack from '../components/MessagesTrack/MessagesTrack';
 import { Status, Loader } from 'shared';
@@ -25,6 +26,15 @@ const MessagesTrackContainer: React.FC = React.memo(() => {
     const enableSelectMode = React.useCallback(() => { !selectMode && dispatch(changeSelectModeAction({ payload: true })) }, [selectMode]);
     const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
     const toggleSelectMessage = React.useCallback((message: IMessage) => { dispatch(toggleSelectMessageAction({ payload: message })) }, []);
+    const handleFetchMessages = React.useCallback(() => {
+        if(activeDialog && activeDialog.messages.hasMore){
+            dispatch(fetchDialogMessagesAction({ payload: {
+                dialogId: activeDialog.dialogId,
+                page: activeDialog.page,
+                limit: activeDialog.limit,
+            } }));
+        }
+    }, [activeDialog]);
     const handleKeydown = (e: KeyboardEvent) => {
         if (e.code === "Escape") disableSelectMode();
     };
@@ -48,6 +58,7 @@ const MessagesTrackContainer: React.FC = React.memo(() => {
             selectMode={selectMode}
             enableSelectMode={enableSelectMode}
             toggleSelectMessage={toggleSelectMessage}
+            handleFetchMessages={handleFetchMessages}
         />
     );
 });

@@ -20,7 +20,8 @@ export function* fetchDialogMessagesWorkerSaga(action: typeof fetchDialogMessage
         if(status === 200){
             yield put(setDialogMessagesAction({ payload: { 
                 dialogId: action.payload.dialogId,
-                messages: data.map(message => new MessageDto(message)),
+                messages: data.messages.map(message => new MessageDto(message)),
+                hasMore: data.hasMore,
             } }));
             yield put(incrementPaginationPageAction({ payload: { dialogId: action.payload.dialogId } }));
             yield put(setDialogStatusAction({ payload: { dialogId: action.payload.dialogId, status: Status.Success } }));
