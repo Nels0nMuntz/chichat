@@ -1,3 +1,3 @@
-import { PaginationLimit } from "features/home/models";
+export type PaginationLimit = 15;
 
-export const PAGINATION_LIMIT: PaginationLimit = 5;
+export const PAGINATION_LIMIT: PaginationLimit = 15;

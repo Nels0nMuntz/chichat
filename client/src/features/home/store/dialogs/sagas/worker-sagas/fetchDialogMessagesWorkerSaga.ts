@@ -18,12 +18,12 @@ export function* fetchDialogMessagesWorkerSaga(action: typeof fetchDialogMessage
         yield put(setDialogStatusAction({ payload: { dialogId: action.payload.dialogId, status: Status.Running } }));
         const { status, data }: AxiosResponse<IFetchMessagesResponse> = yield messageService.fetchMessages(action.payload);
         if(status === 200){
+            yield put(incrementPaginationPageAction({ payload: { dialogId: action.payload.dialogId } }));
             yield put(setDialogMessagesAction({ payload: { 
                 dialogId: action.payload.dialogId,
                 messages: data.messages.map(message => new MessageDto(message)),
                 hasMore: data.hasMore,
             } }));
-            yield put(incrementPaginationPageAction({ payload: { dialogId: action.payload.dialogId } }));
             yield put(setDialogStatusAction({ payload: { dialogId: action.payload.dialogId, status: Status.Success } }));
         };
     } catch (error: any) {

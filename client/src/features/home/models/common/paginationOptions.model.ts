@@ -1,4 +1,4 @@
-export type PaginationLimit = 5;
+import { PaginationLimit } from "shared";
 
 export interface IPaginationOptions {
     page: number;

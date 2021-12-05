@@ -1,6 +1,6 @@
 import { defineAction } from "rd-redux-utils";
-import { Status, UniqueId } from "shared";
-import { ICreateDialogRequest, IDialog, IMessage, PaginationLimit } from "features/home/models";
+import { Status, UniqueId, PaginationLimit } from "shared";
+import { ICreateDialogRequest, IDialog, IMessage } from "features/home/models";
 
 
 // dialogs
@@ -15,6 +15,8 @@ export const createDialogAction = defineAction<{ payload: ICreateDialogRequest }
 export const setDialogStatusAction = defineAction<{ payload: { dialogId: UniqueId, status: Status } }>("SET_DIALOG_STATUS");
 
 export const setDialogsListStatusAction = defineAction<{ payload: Status }>("SET_DIALOGS_LIST_STATUS");
+
+export const setDialogMessagesStatusAction = defineAction<{ payload: { dialogId: UniqueId, status: Status } }>("SET_DIALOG_MESSAGES_STATUS");
 
 export const setDialogsListAction = defineAction<{ payload: Array<IDialog> }>("SET_DIALOGS_LIST");
 

@@ -11,8 +11,6 @@ export class DialogDto implements IDialog {
     isActive: boolean;
     messages: IDialogMessages;
     form: IDialogForm;
-    limit: typeof PAGINATION_LIMIT;
-    page: 1;
 
     constructor(dialog: IDialogResponse){
         this.status = Status.Initial;
@@ -20,15 +18,16 @@ export class DialogDto implements IDialog {
         this.member = dialog.member;
         this.isActive = false;
         this.messages = {
+            status: Status.Initial,
             list: dialog.messages.length ? dialog.messages.map(message => new MessageDto(message)) : [],
             lastMessage: dialog.messages.length ? new MessageDto(dialog.messages[dialog.messages.length - 1]) : null,
             selectMode: false,
+            page: 1,
+            limit: PAGINATION_LIMIT,
         };
         this.form = {
             status: Status.Initial,
             text: '',
         };
-        this.limit = PAGINATION_LIMIT;
-        this.page = 1;
     }
 }

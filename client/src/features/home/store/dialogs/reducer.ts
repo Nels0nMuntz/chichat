@@ -14,6 +14,7 @@ import {
     toggleSelectMessageAction,
     addNewMessageAction,
     setDialogMessagesAction,
+    setDialogMessagesStatusAction,
 } from '../';
 
 
@@ -33,6 +34,35 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         return {
             ...state,
             status: action.payload,
+        };
+    };
+
+    if(setDialogStatusAction.is(action)){
+        return {
+            ...state,
+            list: state.list.map<IDialog>((dialog) => {
+                return action.payload.dialogId === dialog.dialogId ? { ...dialog, status: action.payload.status } : dialog;
+            })
+        }
+    };
+
+    if(setDialogMessagesStatusAction.is(action)){
+        return {
+            ...state,
+            list: [
+                ...state.list.map<IDialog>(dialog => {
+                    if(dialog.dialogId === action.payload.dialogId){
+                        return {
+                            ...dialog,
+                            messages: {
+                                ...dialog.messages,
+                                status: action.payload.status,
+                            },
+                        };
+                    };
+                    return dialog;
+                }),
+            ],
         };
     };
 
@@ -76,20 +106,17 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             list: [
                 ...state.list.map<IDialog>(dialog => {
                     return dialog.dialogId === action.payload.dialogId
-                        ? { ...dialog, page: dialog.page + 1 }
+                        ? { 
+                            ...dialog, 
+                            messages: {
+                                ...dialog.messages,
+                                page: dialog.messages.page + 1,
+                            },
+                        }
                         : dialog;
                 }),
             ]
         };
-    };
-
-    if(setDialogStatusAction.is(action)){
-        return {
-            ...state,
-            list: state.list.map<IDialog>((dialog) => {
-                return action.payload.dialogId === dialog.dialogId ? { ...dialog, status: action.payload.status } : dialog;
-            })
-        }
     };
 
     if(setMessageTextAction.is(action)){

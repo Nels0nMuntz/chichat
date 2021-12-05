@@ -1,53 +1,41 @@
 import React from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import classNames from 'classnames';
-import { useSelector, useDispatch } from 'react-redux';
 
 import Searchbar from '../Searchbar/Searchbar';
 import MessageInput from '../../containers/MessageInputContainer';
 import MessagesTrack from '../../containers/MessagesTrackContainer';
 import MiddleColumnHeader from '../MiddleColumnHeader/MiddleColumnHeader';
 import { SidebarContainer as Sidebar} from 'features/home/containers/SidebarContainer';
-import { useMediaQuery, IUser, withLoader } from 'shared';
-
-import { 
-    setSidebarVisibilityAction, 
-    selectSidebarVisibility, 
-    selectActiveDialog,
-    changeSelectModeAction,
-} from '../../store';
+import { IDialog } from 'features/home/models';
+import { withLoader } from 'shared';
 
 import style from './Home.module.scss';
 
 
 type HomeProps = {
-    selectedDialogMember: IUser | null;
+    activeDialog: IDialog | undefined;
+    matches: boolean
+    searchbarVisility: boolean;
+    sidebarVisibility: boolean;
+    closeSearchbar: () => void;
+    toggleDialogsbarVisibility: () => void;
+    toggleSearchbarVisility: () => void;
+    handleClickAway: (event: any) => void;
 };
 
 const Home: React.FC<HomeProps> = (props) => {
 
-    const { selectedDialogMember } = props;
-
-    const dispatch = useDispatch();
-
-    const sidebarVisibility = useSelector(selectSidebarVisibility);
-    const activeDialog = useSelector(selectActiveDialog);
-    const selectMode = activeDialog?.messages.selectMode;
-
-    const [searchbarVisility, setSearchbarVisility] = React.useState(false);
-    const [matches] = useMediaQuery("(max-width: 900px)");
-
-    const toggleDialogsbarVisibility = React.useCallback(() => {
-        dispatch(setSidebarVisibilityAction({ payload: !sidebarVisibility }));
-    }, [sidebarVisibility]);
-    const closeSearchbar = React.useCallback(() => setSearchbarVisility(false), []);
-    const toggleSearchbarVisility = React.useCallback(() => setSearchbarVisility(!searchbarVisility), [searchbarVisility]);
-    const handleClickAway = React.useCallback((event: any) => {        
-        if(selectMode){
-            if(event.target.closest(".ignore-messages-track-click-away-listener")) return;
-            dispatch(changeSelectModeAction({ payload: false }));
-        };
-    }, [selectMode])
+    const {
+        activeDialog,
+        matches,
+        searchbarVisility,
+        sidebarVisibility,
+        closeSearchbar,
+        toggleDialogsbarVisibility,
+        toggleSearchbarVisility,
+        handleClickAway,
+    } = props;    
 
     return (
 
@@ -61,7 +49,7 @@ const Home: React.FC<HomeProps> = (props) => {
                     >
                         <div className={style.middle_column}>
                             <MiddleColumnHeader
-                                member={selectedDialogMember}
+                                member={activeDialog?.member || null}
                                 matches={matches}
                                 sidebarVisibility={sidebarVisibility}
                                 toggleSearchbarVisility={toggleSearchbarVisility}
@@ -69,8 +57,8 @@ const Home: React.FC<HomeProps> = (props) => {
                             />
                             <div className={style.messages_wrapper}>
                                 <ClickAwayListener onClickAway={handleClickAway}>
-                                    <div id="messages-track" className={style.messages_track}>
-                                        {activeDialog && <MessagesTrack />}
+                                    <div className={style.messages_track}>
+                                        {activeDialog && <MessagesTrack activeDialog={activeDialog} />}
                                     </div>
                                 </ClickAwayListener>
                                 <MessageInput />

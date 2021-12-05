@@ -3,7 +3,8 @@ import { IMessage } from "../";
 import { IPaginationOptions } from "./paginationOptions.model";
 
 
-export interface IDialogMessages {
+export interface IDialogMessages extends IPaginationOptions {
+    status: Status;
     list: Array<IMessage>;
     lastMessage: IMessage | null;
     selectMode: boolean;
@@ -15,7 +16,7 @@ export interface IDialogForm {
     text: string;   
 }
 
-export interface IDialog extends IPaginationOptions {
+export interface IDialog {
     dialogId: UniqueId;
     status: Status; 
     member: IUser; 

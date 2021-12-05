@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DialogsTrack from '../components/DialogsTrack/DialogsTrack';
-import { fetchDialogMessagesAction, setActiveDialogAction } from '../store';
+import { setActiveDialogAction, fetchDialogMessagesAction } from '../store';
 import { selectDialogsList, selectDialogsStatus } from '../store';
 import { Status, UniqueId } from 'shared';
 
@@ -22,8 +22,8 @@ const DialogsTrackContainer: React.FC = React.memo(() => {
             dispatch(fetchDialogMessagesAction({
                 payload: {
                     dialogId: dialog.dialogId,
-                    page: dialog.page,
-                    limit: dialog.limit,
+                    page: dialog.messages.page,
+                    limit: dialog.messages.limit,
                 }
             }));
         };

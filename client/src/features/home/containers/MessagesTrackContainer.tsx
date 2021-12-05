@@ -1,43 +1,47 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { 
+import {
     selectUserData,
-    selectActiveDialog,
     changeSelectModeAction,
     toggleSelectMessageAction,
     fetchDialogMessagesAction,
+    setDialogMessagesStatusAction,
 } from '../store';
 import MessagesTrack from '../components/MessagesTrack/MessagesTrack';
-import { Status, Loader } from 'shared';
-import { IMessage } from '../models';
+import { Status } from 'shared';
+import { IDialog, IMessage } from '../models';
 
 
-const MessagesTrackContainer: React.FC = React.memo(() => {
+type MessagesTrackContainerProps = {
+    activeDialog: IDialog;
+};
+
+const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeDialog }) => {
 
     const dispatch = useDispatch();
 
     const user = useSelector(selectUserData);
-    const activeDialog = useSelector(selectActiveDialog);
-    const status = activeDialog?.status || Status.Initial;
-    const messagesList = activeDialog?.messages.list || [];
-    const selectMode = activeDialog?.messages.selectMode || false;
+    const dialogId = activeDialog.dialogId;
+    const messagesStatus = activeDialog.messages.status;
+    const selectMode = activeDialog.messages.selectMode;
+    const messagesList = activeDialog.messages.list;
+    const hasMore = activeDialog.messages.hasMore;
+    const page = activeDialog.messages.page;
+    const limit = activeDialog.messages.limit;
 
-    const enableSelectMode = React.useCallback(() => { !selectMode && dispatch(changeSelectModeAction({ payload: true })) }, [selectMode]);
-    const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
+    const enableSelectMode = React.useCallback(() => { dispatch(changeSelectModeAction({ payload: true })) }, []);
+    const disableSelectMode = React.useCallback(() => { dispatch(changeSelectModeAction({ payload: false })) }, []);
     const toggleSelectMessage = React.useCallback((message: IMessage) => { dispatch(toggleSelectMessageAction({ payload: message })) }, []);
     const handleFetchMessages = React.useCallback(() => {
-        if(activeDialog && activeDialog.messages.hasMore){
-            dispatch(fetchDialogMessagesAction({ payload: {
-                dialogId: activeDialog.dialogId,
-                page: activeDialog.page,
-                limit: activeDialog.limit,
-            } }));
-        }
-    }, [activeDialog]);
+        if (hasMore) {
+            dispatch(fetchDialogMessagesAction({ payload: { dialogId, page, limit } }));
+        };
+    }, [hasMore, dialogId, page, limit]);
     const handleKeydown = (e: KeyboardEvent) => {
         if (e.code === "Escape") disableSelectMode();
     };
+    const handleLoading = React.useCallback((status: Status) => { dispatch(setDialogMessagesStatusAction({ payload: { dialogId, status } })) }, [dialogId]);
 
     React.useEffect(() => {
         if (selectMode) {
@@ -48,19 +52,19 @@ const MessagesTrackContainer: React.FC = React.memo(() => {
         }
     }, [selectMode]);
 
-    if (status === Status.Running) return <Loader />;
-
     return (
         <MessagesTrack
-            status={status}
+            status={messagesStatus}
             userId={user.userId}
             list={messagesList}
             selectMode={selectMode}
+            page={page}
             enableSelectMode={enableSelectMode}
             toggleSelectMessage={toggleSelectMessage}
             handleFetchMessages={handleFetchMessages}
+            handleLoading={handleLoading}
         />
     );
-});
+};
 
 export default MessagesTrackContainer;
