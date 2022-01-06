@@ -4,14 +4,12 @@ import isSameDay from 'date-fns/isSameDay';
 import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
-import SimpleBar from 'simplebar-react';
 
 import TextMessageItem from './Messages/TextMessageItem';
 import { IMessage } from '../../models';
 import { MessageDateGroup, Status } from 'shared';
 
 import style from './MessagesTrack.module.scss';
-import 'simplebar/dist/simplebar.min.css';
 
 const formatPeriod = (date: Date): string => {
     if (isThisWeek(date, { locale: uk })) return format(date, "EEEE");
@@ -36,13 +34,17 @@ type MessagesTrackProps = {
     handleLoading: (status: Status) => void;
 };
 
-let curr: any = 0;
-let prev: any = 0;
+let curr = 0;
 
 const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
 
+    const [scroll, setScroll] = React.useState(false);
+    const [scrollHeight, setScrollHeight] = React.useState(0);
+
+    const [prevLoader, setPrevLoader] = React.useState<IntersectionObserverEntry | null>(null)
+
     const {
-        // status,
+        status,
         list,
         userId,
         selectMode,
@@ -53,60 +55,38 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         // handleLoading,
     } = props;
 
-    // infinite scroll
-    const loader = React.useRef<HTMLDivElement>(null);
-    React.useEffect(() => {
-        const root = document.querySelector(".simplebar-content-wrapper");
-        const handleObserver = (entries: IntersectionObserverEntry[]) => {
-            const target = entries[0];
-            
-            // lastItem = target.target;
-            console.log(list);            
-            // console.log(lastItem);
+    // const entryRef = React.useRef<HTMLDivElement>(null);
 
-            if (root) {
-                // root.scrollTop = root.scrollHeight - lastItem;
-                curr = root.scrollHeight;
-                // console.log(lastItem);                
-            };
-            
-            
-            if (target.isIntersecting) {
-                // lastItem.scrollIntoView();
+    // infinite scroll
+    const loader = React.useRef<any>(null);
+
+    // React.useEffect(() => {
+    //     handleFetchMessages();
+    // }, [list])
+
+    React.useEffect(() => {
+        const root = document.getElementById("messages_track");
+        const handleObserver = (entries: IntersectionObserverEntry[]) => {
+            const entry = entries[0];
+            if (entry.intersectionRatio > 0) {
+                setScroll(true);
+                // console.log({ entry, target: entry.target });
+                // console.log(root?.scrollHeight);
+
                 handleFetchMessages();
 
-                // if(lastItem){
-                //     // lastItem.scrollIntoView();
-                // }
 
                 if (root) {
-                    root.scrollTop = root.scrollHeight - prev;
-                    curr = prev
-                    // lastItem = root.scrollHeight;
-                    // console.log(lastItem);
-                    
+                    console.log({ scrollHeight: root.scrollHeight, rect: entry.boundingClientRect });
+                    setScrollHeight(root.scrollHeight)
+    
+                    // root.scrollTop = root.scrollHeight - entry.boundingClientRect.top;
+                    // root.scrollTop = 800;
                 };
-                
-                // if (root && lastItem === 0) {
-                //     root.scrollTop = root.scrollHeight;
-                //     lastItem = root.scrollHeight
-                // };
-                // if (root && lastItem > 0) {
-                //     root.scrollTop = root.scrollHeight - lastItem;
-                //     lastItem = root.scrollHeight
-                // };
-                
-                // if(lastItem){
-                //     console.log(lastItem);
-                    
-                //     lastItem.scrollIntoView();
-                // }
 
-                // lastItem = target.target;
+                // setPrevLoader(entry);
             };
-            if (target.boundingClientRect.top < 0) {
-                // handleLoading(Status.Success);
-            };
+
         };
         const options = {
             root,
@@ -117,15 +97,27 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         if (loader.current) {
             observer.observe(loader.current);
         };
-    }, [list]);
+    }, [list, setScrollHeight]);
 
     // scroll to bottom
-    // React.useEffect(() => {
-    //     const el = document.querySelector(".simplebar-content-wrapper");
-    //     if (el && status !== Status.Success) {
-    //         el.scrollTop = el.scrollHeight;
-    //     };
-    // }, [list, status]);
+    React.useEffect(() => {
+        const el = document.getElementById("messages_track");
+        if (el && status !== Status.Success && !scroll) {
+            console.log('scroll');
+            el.scrollTop = el.scrollHeight;
+        };
+    }, [list, status, scroll]);
+
+    React.useLayoutEffect(() => {
+        const root = document.getElementById("messages_track");
+        if (root){
+            const diff = root.scrollHeight - scrollHeight;
+            root.scrollTop = curr + diff + 40;
+            curr = diff;
+            // console.log(root.scrollHeight - scrollHeight);
+            
+        }
+    }, [scrollHeight, list]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {
@@ -161,40 +153,38 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
     }, [list]);
 
     return (
-        <SimpleBar style={{ height: 'inherit' }} >
-            <div className={style.messages_track}>
-                {messages.map(({ period, list }, groupIndex) => (
-                    <MessageDateGroup
-                        key={groupIndex}
-                        period={formatPeriod(period)}
-                    >
-                        {list.map((message, messageIndex) => {
-                            if (messages.length === groupIndex + 1 && messageIndex === 0) return (
-                                <div key={message.messageId} ref={loader} className="last-item">
-                                    <TextMessageItem
-                                        userId={userId}
-                                        message={message}
-                                        selectMode={selectMode}
-                                        enableSelectMode={enableSelectMode}
-                                        toggleSelectMessage={toggleSelectMessage}
-                                    />
-                                </div>
-                            )
-                            return (
+        <div className={style.messages_track}>
+            {messages.map(({ period, list }, groupIndex) => (
+                <MessageDateGroup
+                    key={groupIndex}
+                    period={formatPeriod(period)}
+                >
+                    {list.map((message, messageIndex) => {
+                        if (messages.length === groupIndex + 1 && messageIndex === 0) return (
+                            <div key={message.messageId} ref={loader} className="last-item">
                                 <TextMessageItem
-                                    key={message.messageId}
                                     userId={userId}
                                     message={message}
                                     selectMode={selectMode}
                                     enableSelectMode={enableSelectMode}
                                     toggleSelectMessage={toggleSelectMessage}
                                 />
-                            )
-                        })}
-                    </MessageDateGroup>
-                ))}
-            </div>
-        </SimpleBar>
+                            </div>
+                        )
+                        return (
+                            <TextMessageItem
+                                key={message.messageId}
+                                userId={userId}
+                                message={message}
+                                selectMode={selectMode}
+                                enableSelectMode={enableSelectMode}
+                                toggleSelectMessage={toggleSelectMessage}
+                            />
+                        )
+                    })}
+                </MessageDateGroup>
+            ))}
+        </div>
     );
 });
 

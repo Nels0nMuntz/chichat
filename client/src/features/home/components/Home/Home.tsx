@@ -57,7 +57,7 @@ const Home: React.FC<HomeProps> = (props) => {
                             />
                             <div className={style.messages_wrapper}>
                                 <ClickAwayListener onClickAway={handleClickAway}>
-                                    <div className={style.messages_track}>
+                                    <div id="messages_track" className={style.messages_track}>
                                         {activeDialog && <MessagesTrack activeDialog={activeDialog} />}
                                     </div>
                                 </ClickAwayListener>
