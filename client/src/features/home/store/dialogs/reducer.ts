@@ -70,7 +70,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         return {
             ...state,
             list: action.payload,
-        };
+        }; 
     };
 
     if (setActiveDialogAction.is(action)) {

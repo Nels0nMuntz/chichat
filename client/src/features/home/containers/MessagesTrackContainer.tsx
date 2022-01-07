@@ -56,6 +56,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
         <MessagesTrack
             status={messagesStatus}
             userId={user.userId}
+            dialogId={dialogId}
             list={messagesList}
             selectMode={selectMode}
             page={page}

@@ -4,10 +4,11 @@ import isSameDay from 'date-fns/isSameDay';
 import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import TextMessageItem from './Messages/TextMessageItem';
 import { IMessage } from '../../models';
-import { MessageDateGroup, Status } from 'shared';
+import { MessageDateGroup, Status, UniqueId } from 'shared';
 
 import style from './MessagesTrack.module.scss';
 
@@ -17,6 +18,14 @@ const formatPeriod = (date: Date): string => {
     return format(date, "MMMM d, yyyy");
 };
 
+const scrollToBottom = () => {
+    const el = document.getElementById("messages_track");
+    if(el) {
+        console.log('scroll');
+        el.scrollTop = el.scrollHeight;
+    };
+};
+
 interface IGroupedMessages {
     period: Date;
     list: Array<IMessage>;
@@ -24,7 +33,8 @@ interface IGroupedMessages {
 
 type MessagesTrackProps = {
     status: Status;
-    userId: string;
+    userId: UniqueId;
+    dialogId: UniqueId;
     list: Array<IMessage>;
     selectMode: boolean;
     page: number;
@@ -34,19 +44,15 @@ type MessagesTrackProps = {
     handleLoading: (status: Status) => void;
 };
 
-let curr = 0;
-
 const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
 
-    const [scroll, setScroll] = React.useState(false);
-    const [scrollHeight, setScrollHeight] = React.useState(0);
-
-    const [prevLoader, setPrevLoader] = React.useState<IntersectionObserverEntry | null>(null)
+    const [hasScrollToBottom, setHasScrollToBottom] = React.useState(true);
 
     const {
         status,
         list,
         userId,
+        dialogId,
         selectMode,
         // page,
         enableSelectMode,
@@ -55,69 +61,37 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         // handleLoading,
     } = props;
 
-    // const entryRef = React.useRef<HTMLDivElement>(null);
+    console.log(dialogId); 
 
-    // infinite scroll
     const loader = React.useRef<any>(null);
-
-    // React.useEffect(() => {
-    //     handleFetchMessages();
-    // }, [list])
 
     React.useEffect(() => {
         const root = document.getElementById("messages_track");
         const handleObserver = (entries: IntersectionObserverEntry[]) => {
             const entry = entries[0];
-            if (entry.intersectionRatio > 0) {
-                setScroll(true);
-                // console.log({ entry, target: entry.target });
-                // console.log(root?.scrollHeight);
-
+            if (entry.isIntersecting) {
+                setHasScrollToBottom(false);
                 handleFetchMessages();
-
-
-                if (root) {
-                    console.log({ scrollHeight: root.scrollHeight, rect: entry.boundingClientRect });
-                    setScrollHeight(root.scrollHeight)
-    
-                    // root.scrollTop = root.scrollHeight - entry.boundingClientRect.top;
-                    // root.scrollTop = 800;
-                };
-
-                // setPrevLoader(entry);
             };
 
         };
         const options = {
             root,
-            rootMargin: '10px',
+            rootMargin: '300px',
             threshold: 1.0,
         };
         const observer = new IntersectionObserver(handleObserver, options);
         if (loader.current) {
             observer.observe(loader.current);
         };
-    }, [list, setScrollHeight]);
+    }, [list]);
 
     // scroll to bottom
     React.useEffect(() => {
-        const el = document.getElementById("messages_track");
-        if (el && status !== Status.Success && !scroll) {
-            console.log('scroll');
-            el.scrollTop = el.scrollHeight;
+        if (status !== Status.Success && hasScrollToBottom) {
+            scrollToBottom();
         };
-    }, [list, status, scroll]);
-
-    React.useLayoutEffect(() => {
-        const root = document.getElementById("messages_track");
-        if (root){
-            const diff = root.scrollHeight - scrollHeight;
-            root.scrollTop = curr + diff + 40;
-            curr = diff;
-            // console.log(root.scrollHeight - scrollHeight);
-            
-        }
-    }, [scrollHeight, list]);
+    }, [list, status, hasScrollToBottom, scrollToBottom]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {
@@ -152,38 +126,46 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         }, [] as Array<IGroupedMessages>);
     }, [list]);
 
+    React.useEffect(() => {     
+        scrollToBottom();
+    }, [dialogId, scrollToBottom]);
+
     return (
         <div className={style.messages_track}>
-            {messages.map(({ period, list }, groupIndex) => (
-                <MessageDateGroup
-                    key={groupIndex}
-                    period={formatPeriod(period)}
-                >
-                    {list.map((message, messageIndex) => {
-                        if (messages.length === groupIndex + 1 && messageIndex === 0) return (
-                            <div key={message.messageId} ref={loader} className="last-item">
+            
+            {messages
+                .map(({ period, list }, groupIndex) => (
+                    <MessageDateGroup
+                        key={groupIndex}
+                        period={formatPeriod(period)}
+                    >
+                        {list.map((message, messageIndex) => {
+                            if (messages.length === groupIndex + 1 && messageIndex === 0) return (
+                                <div key={message.messageId} ref={loader} className="last-item">
+                                    <TextMessageItem
+                                        userId={userId}
+                                        message={message}
+                                        selectMode={selectMode}
+                                        enableSelectMode={enableSelectMode}
+                                        toggleSelectMessage={toggleSelectMessage}
+                                    />
+                                </div>
+                            )
+                            return (
                                 <TextMessageItem
+                                    key={message.messageId}
                                     userId={userId}
                                     message={message}
                                     selectMode={selectMode}
                                     enableSelectMode={enableSelectMode}
                                     toggleSelectMessage={toggleSelectMessage}
                                 />
-                            </div>
-                        )
-                        return (
-                            <TextMessageItem
-                                key={message.messageId}
-                                userId={userId}
-                                message={message}
-                                selectMode={selectMode}
-                                enableSelectMode={enableSelectMode}
-                                toggleSelectMessage={toggleSelectMessage}
-                            />
-                        )
-                    })}
-                </MessageDateGroup>
-            ))}
+                            )
+                        })}
+                    </MessageDateGroup>
+                ))
+                .reverse()
+            }
         </div>
     );
 });
