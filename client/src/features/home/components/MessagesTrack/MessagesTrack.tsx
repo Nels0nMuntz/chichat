@@ -4,7 +4,6 @@ import isSameDay from 'date-fns/isSameDay';
 import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
 import TextMessageItem from './Messages/TextMessageItem';
 import { IMessage } from '../../models';
@@ -20,8 +19,7 @@ const formatPeriod = (date: Date): string => {
 
 const scrollToBottom = () => {
     const el = document.getElementById("messages_track");
-    if(el) {
-        console.log('scroll');
+    if (el) {
         el.scrollTop = el.scrollHeight;
     };
 };
@@ -59,9 +57,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         toggleSelectMessage,
         handleFetchMessages,
         // handleLoading,
-    } = props;
-
-    console.log(dialogId); 
+    } = props; 
 
     const loader = React.useRef<any>(null);
 
@@ -69,6 +65,8 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         const root = document.getElementById("messages_track");
         const handleObserver = (entries: IntersectionObserverEntry[]) => {
             const entry = entries[0];
+            console.log(entry.intersectionRatio);
+
             if (entry.isIntersecting) {
                 setHasScrollToBottom(false);
                 handleFetchMessages();
@@ -77,8 +75,8 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         };
         const options = {
             root,
-            rootMargin: '300px',
-            threshold: 1.0,
+            rootMargin: '100px',
+            threshold: 0,
         };
         const observer = new IntersectionObserver(handleObserver, options);
         if (loader.current) {
@@ -92,6 +90,10 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
             scrollToBottom();
         };
     }, [list, status, hasScrollToBottom, scrollToBottom]);
+
+    React.useEffect(() => {
+        scrollToBottom();
+    }, [dialogId, scrollToBottom]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {
@@ -126,13 +128,8 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         }, [] as Array<IGroupedMessages>);
     }, [list]);
 
-    React.useEffect(() => {     
-        scrollToBottom();
-    }, [dialogId, scrollToBottom]);
-
     return (
         <div className={style.messages_track}>
-            
             {messages
                 .map(({ period, list }, groupIndex) => (
                     <MessageDateGroup
@@ -141,15 +138,18 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
                     >
                         {list.map((message, messageIndex) => {
                             if (messages.length === groupIndex + 1 && messageIndex === 0) return (
-                                <div key={message.messageId} ref={loader} className="last-item">
-                                    <TextMessageItem
-                                        userId={userId}
-                                        message={message}
-                                        selectMode={selectMode}
-                                        enableSelectMode={enableSelectMode}
-                                        toggleSelectMessage={toggleSelectMessage}
-                                    />
-                                </div>
+                                <React.Fragment>
+                                    <div className="trigger" style={{ width: '100%', height: '100px' }}></div>
+                                    <div key={message.messageId} ref={loader} className="last-item">
+                                        <TextMessageItem
+                                            userId={userId}
+                                            message={message}
+                                            selectMode={selectMode}
+                                            enableSelectMode={enableSelectMode}
+                                            toggleSelectMessage={toggleSelectMessage}
+                                        />
+                                    </div>
+                                </React.Fragment>
                             )
                             return (
                                 <TextMessageItem
