@@ -17,13 +17,6 @@ const formatPeriod = (date: Date): string => {
     return format(date, "MMMM d, yyyy");
 };
 
-const scrollToBottom = () => {
-    const el = document.getElementById("messages_track");
-    if (el) {
-        el.scrollTop = el.scrollHeight;
-    };
-};
-
 interface IGroupedMessages {
     period: Date;
     list: Array<IMessage>;
@@ -36,6 +29,7 @@ type MessagesTrackProps = {
     list: Array<IMessage>;
     selectMode: boolean;
     page: number;
+    containerEl: HTMLDivElement | null;
     enableSelectMode: () => void;
     toggleSelectMessage: (message: IMessage) => void;
     handleFetchMessages: () => void;
@@ -52,17 +46,17 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         userId,
         dialogId,
         selectMode,
-        // page,
+        containerEl,
         enableSelectMode,
         toggleSelectMessage,
         handleFetchMessages,
-        // handleLoading,
     } = props;
 
     const loader = React.useRef<any>(null);
 
+    // create IntersectionObserver instatnce
     React.useEffect(() => {
-        const root = document.getElementById("messages_track");
+        const root = containerEl;
         const handleObserver = (entries: IntersectionObserverEntry[]) => {
             const entry = entries[0];
             if (entry.isIntersecting) {
@@ -80,23 +74,27 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         if (loader.current) {
             observer.observe(loader.current);
         };
-    }, [list]);
+    }, [list, containerEl]);
 
     // scroll to bottom
     React.useEffect(() => {
         if (status !== Status.Success && hasScrollToBottom) {
-            scrollToBottom();
+            if (containerEl) {
+                containerEl.scrollTop = containerEl.scrollHeight;
+            };
         } else {
-            const el = document.getElementById("messages_track");
-            if (el) {
-                el.scrollTop = el.scrollTop + 1;
+            if (containerEl) {
+                containerEl.scrollTop = containerEl.scrollTop + 1;
             };
         };
-    }, [list, status, hasScrollToBottom, scrollToBottom]);
+    }, [list, status, hasScrollToBottom, containerEl]);
 
+    // scroll to bottom when open new dialog
     React.useEffect(() => {
-        scrollToBottom();
-    }, [dialogId, scrollToBottom]);
+        if (containerEl) {
+            containerEl.scrollTop = containerEl.scrollHeight;
+        };
+    }, [dialogId, containerEl]);
 
     const messages: Array<IGroupedMessages> = React.useMemo(() => {
         return list.reduce((prev, curr) => {

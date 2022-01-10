@@ -23,21 +23,21 @@ const StyledMenuItem = withStyles({
 })(MenuItem);
 
 interface PopupMemuItem {
-    icon: JSX.Element
-    title: string | JSX.Element
+    icon: JSX.Element;
+    title: string | JSX.Element;
+    onClick?: () => void;
 };
 
 interface PopupMenuProps {
-    menu: Array<PopupMemuItem | JSX.Element>
-    onClose: () => void
-    onClick: () => void
+    menu: Array<PopupMemuItem | JSX.Element>;
+    onClose: () => void;
 };
 
 const isPopupMemuItem = (arg: any): arg is PopupMemuItem => {
     return 'icon' in arg;
 };
 
-const PopupMenu: React.FC<PopupMenuProps> = React.memo(({ menu, onClose, onClick }) => {
+const PopupMenu: React.FC<PopupMenuProps> = React.memo(({ menu, onClose }) => {
 
     const handleListKeyDown = React.useCallback((event: React.KeyboardEvent) => {
         if (event.key === 'Tab') {
@@ -51,7 +51,10 @@ const PopupMenu: React.FC<PopupMenuProps> = React.memo(({ menu, onClose, onClick
             {menu.map((item, i) => {
                 if (isPopupMemuItem(item)) {
                     return (
-                        <StyledMenuItem key={i} onClick={onClick}>
+                        <StyledMenuItem 
+                            key={i} 
+                            onClick={() => item.onClick || onClose}
+                        >
                             <ListItemIcon>
                                 {item.icon}
                             </ListItemIcon>

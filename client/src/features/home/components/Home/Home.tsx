@@ -35,7 +35,13 @@ const Home: React.FC<HomeProps> = (props) => {
         toggleDialogsbarVisibility,
         toggleSearchbarVisility,
         handleClickAway,
-    } = props;    
+    } = props;
+    
+    const messageTrackRef = React.useRef<HTMLDivElement>(null);
+    
+    const [messageTrackEl, setMessageTrackEl] = React.useState<HTMLDivElement | null>(null);
+
+    React.useEffect(() => setMessageTrackEl(messageTrackRef.current), []);
 
     return (
 
@@ -57,8 +63,13 @@ const Home: React.FC<HomeProps> = (props) => {
                             />
                             <div className={style.messages_wrapper}>
                                 <ClickAwayListener onClickAway={handleClickAway}>
-                                    <div id="messages_track" className={style.messages_track}>
-                                        {activeDialog && <MessagesTrack activeDialog={activeDialog} />}
+                                    <div className={style.messages_track} ref={messageTrackRef}>
+                                        {activeDialog && (
+                                            <MessagesTrack 
+                                                activeDialog={activeDialog}
+                                                containerEl={messageTrackEl}
+                                            />
+                                        )}
                                     </div>
                                 </ClickAwayListener>
                                 <MessageInput />

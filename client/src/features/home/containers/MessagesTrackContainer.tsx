@@ -15,9 +15,10 @@ import { IDialog, IMessage } from '../models';
 
 type MessagesTrackContainerProps = {
     activeDialog: IDialog;
+    containerEl: HTMLDivElement | null;
 };
 
-const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeDialog }) => {
+const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeDialog, containerEl }) => {
 
     const dispatch = useDispatch();
 
@@ -64,6 +65,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
             toggleSelectMessage={toggleSelectMessage}
             handleFetchMessages={handleFetchMessages}
             handleLoading={handleLoading}
+            containerEl={containerEl}
         />
     );
 };

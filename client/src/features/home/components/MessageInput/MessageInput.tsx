@@ -45,6 +45,8 @@ type MessageInputProps = {
     handleSelectEmoji: (emoji: BaseEmoji) => void;
     disableSelectMode: () => void;
     handleDeleteMessages: () => void;
+    handleChangeMediaInput: () => void;
+    handleChangeDocumentInput: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
@@ -64,7 +66,18 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
         handleSelectEmoji,
         disableSelectMode,
         handleDeleteMessages,
+        handleChangeMediaInput,
+        handleChangeDocumentInput,
     } = props;
+
+    const inputMediaRef = React.useRef<HTMLInputElement>(null);
+    const inputDocumentRef = React.useRef<HTMLInputElement>(null);
+
+    const [inputMediaEl, setInputMediaEl] = React.useState<HTMLInputElement | null>(null);
+    const [inputDocumentEl, setInputDocumentEl] = React.useState<HTMLInputElement | null>(null);
+
+    React.useEffect(() => setInputMediaEl(inputMediaRef.current), []);
+    React.useEffect(() => setInputDocumentEl(inputDocumentRef.current), []);
 
     return (
         <div className={classNames(
@@ -76,9 +89,9 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                 <div className={style.input_wrapper}>
                     <div className={style.input_action_wrapper}>
                         {selectMode ? (
-                            <StyledIconButton 
-                                size="medium" 
-                                title="Exit select mode" 
+                            <StyledIconButton
+                                size="medium"
+                                title="Exit select mode"
                                 aria-label="Exit select mode"
                                 onClick={disableSelectMode}
                             >
@@ -104,18 +117,18 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                     {selectMode ? (
                         <React.Fragment>
                             <div className={`${style.input_action_wrapper} ${style.input_action_suffix} ${style.select_mode}`}>
-                                <StyledIconButton 
-                                    size="medium" 
-                                    title="Forward messages" 
+                                <StyledIconButton
+                                    size="medium"
+                                    title="Forward messages"
                                     aria-label="Forward messages"
                                 >
                                     <ReplyIcon />
                                 </StyledIconButton>
                             </div>
                             <div className={`${style.input_action_wrapper} ${style.select_mode}`}>
-                                <StyledIconButton 
-                                    size="medium" 
-                                    title="Delete messages" 
+                                <StyledIconButton
+                                    size="medium"
+                                    title="Delete messages"
                                     aria-label="Delete messages"
                                     onClick={handleDeleteMessages}
                                 >

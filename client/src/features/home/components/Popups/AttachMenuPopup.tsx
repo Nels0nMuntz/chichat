@@ -41,10 +41,9 @@ const AttachMenuPopup: React.FC<AttachMenuPopupProps> = React.memo(({ open, hand
                 component={
                     <PopupMenu
                         menu={[
-                            { icon: <PhotoIcon/>, title: 'Photo or Video' },
-                            { icon: <InsertDriveFileIcon/>, title: 'File' }
+                            { icon: <PhotoIcon />, title: 'Photo or Video' },
+                            { icon: <InsertDriveFileIcon />, title: 'File' },
                         ]}
-                        onClick={handleClose}
                         onClose={handleClose}
                     />
                 }
