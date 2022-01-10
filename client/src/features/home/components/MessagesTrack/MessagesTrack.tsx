@@ -57,7 +57,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         toggleSelectMessage,
         handleFetchMessages,
         // handleLoading,
-    } = props; 
+    } = props;
 
     const loader = React.useRef<any>(null);
 
@@ -65,8 +65,6 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         const root = document.getElementById("messages_track");
         const handleObserver = (entries: IntersectionObserverEntry[]) => {
             const entry = entries[0];
-            console.log(entry.intersectionRatio);
-
             if (entry.isIntersecting) {
                 setHasScrollToBottom(false);
                 handleFetchMessages();
@@ -75,7 +73,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         };
         const options = {
             root,
-            rootMargin: '100px',
+            rootMargin: '10px',
             threshold: 0,
         };
         const observer = new IntersectionObserver(handleObserver, options);
@@ -88,6 +86,11 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
     React.useEffect(() => {
         if (status !== Status.Success && hasScrollToBottom) {
             scrollToBottom();
+        } else {
+            const el = document.getElementById("messages_track");
+            if (el) {
+                el.scrollTop = el.scrollTop + 1;
+            };
         };
     }, [list, status, hasScrollToBottom, scrollToBottom]);
 
@@ -138,18 +141,15 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
                     >
                         {list.map((message, messageIndex) => {
                             if (messages.length === groupIndex + 1 && messageIndex === 0) return (
-                                <React.Fragment>
-                                    <div className="trigger" style={{ width: '100%', height: '100px' }}></div>
-                                    <div key={message.messageId} ref={loader} className="last-item">
-                                        <TextMessageItem
-                                            userId={userId}
-                                            message={message}
-                                            selectMode={selectMode}
-                                            enableSelectMode={enableSelectMode}
-                                            toggleSelectMessage={toggleSelectMessage}
-                                        />
-                                    </div>
-                                </React.Fragment>
+                                <div key={message.messageId} ref={loader} className="last-item">
+                                    <TextMessageItem
+                                        userId={userId}
+                                        message={message}
+                                        selectMode={selectMode}
+                                        enableSelectMode={enableSelectMode}
+                                        toggleSelectMessage={toggleSelectMessage}
+                                    />
+                                </div>
                             )
                             return (
                                 <TextMessageItem
