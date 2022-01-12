@@ -53,7 +53,7 @@ const PopupMenu: React.FC<PopupMenuProps> = React.memo(({ menu, onClose }) => {
                     return (
                         <StyledMenuItem 
                             key={i} 
-                            onClick={() => item.onClick || onClose}
+                            onClick={() => item.onClick && item.onClick() || onClose}
                         >
                             <ListItemIcon>
                                 {item.icon}

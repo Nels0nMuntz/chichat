@@ -96,7 +96,6 @@ const HomeMenuPopup: React.FC<HomeMenuPopupProps> = React.memo(({ searchMode, ha
                             { icon: <HelpOutlineOutlinedIcon />, title: 'ChiChat Features' },
                             { icon: <BugReportOutlinedIcon />, title: 'Report Bug' },
                         ]}
-                        onClick={handleClose}
                         onClose={handleClose}
                     />
                 }

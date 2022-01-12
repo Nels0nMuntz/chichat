@@ -45,8 +45,8 @@ type MessageInputProps = {
     handleSelectEmoji: (emoji: BaseEmoji) => void;
     disableSelectMode: () => void;
     handleDeleteMessages: () => void;
-    handleChangeMediaInput: () => void;
-    handleChangeDocumentInput: () => void;
+    handleClickMediaUpload: () => void;
+    handleClickDocumentUpload: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
@@ -66,18 +66,9 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
         handleSelectEmoji,
         disableSelectMode,
         handleDeleteMessages,
-        handleChangeMediaInput,
-        handleChangeDocumentInput,
+        handleClickMediaUpload,
+        handleClickDocumentUpload,
     } = props;
-
-    const inputMediaRef = React.useRef<HTMLInputElement>(null);
-    const inputDocumentRef = React.useRef<HTMLInputElement>(null);
-
-    const [inputMediaEl, setInputMediaEl] = React.useState<HTMLInputElement | null>(null);
-    const [inputDocumentEl, setInputDocumentEl] = React.useState<HTMLInputElement | null>(null);
-
-    React.useEffect(() => setInputMediaEl(inputMediaRef.current), []);
-    React.useEffect(() => setInputDocumentEl(inputDocumentRef.current), []);
 
     return (
         <div className={classNames(
@@ -142,6 +133,8 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                                 open={menuPopup}
                                 handleOpen={handleOpenMenuPopup}
                                 handleClose={handleCloseMenuPopup}
+                                handleClickMediaUpload={handleClickMediaUpload}
+                                handleClickDocumentUpload={handleClickDocumentUpload}
                             />
                         </div>
                     )}

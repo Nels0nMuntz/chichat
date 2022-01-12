@@ -24,9 +24,19 @@ type AttachMenuPopupProps = {
     open: boolean
     handleOpen: () => void
     handleClose: () => void
+    handleClickMediaUpload: () => void;
+    handleClickDocumentUpload: () => void;
 };
 
-const AttachMenuPopup: React.FC<AttachMenuPopupProps> = React.memo(({ open, handleOpen, handleClose }) => {
+const AttachMenuPopup: React.FC<AttachMenuPopupProps> = React.memo((props) => {
+
+    const { 
+        open, 
+        handleOpen, 
+        handleClose,
+        handleClickMediaUpload,
+        handleClickDocumentUpload,
+    } = props;
 
     const сontainer = React.useRef<HTMLDivElement>(null);
 
@@ -41,8 +51,16 @@ const AttachMenuPopup: React.FC<AttachMenuPopupProps> = React.memo(({ open, hand
                 component={
                     <PopupMenu
                         menu={[
-                            { icon: <PhotoIcon />, title: 'Photo or Video' },
-                            { icon: <InsertDriveFileIcon />, title: 'File' },
+                            { 
+                                icon: <PhotoIcon />, 
+                                title: 'Photo or Video',
+                                onClick: handleClickMediaUpload,
+                            },
+                            { 
+                                icon: <InsertDriveFileIcon />, 
+                                title: 'File',
+                                onClick: handleClickDocumentUpload,
+                            },
                         ]}
                         onClose={handleClose}
                     />

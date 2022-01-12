@@ -48,6 +48,7 @@ export * from './validators/signUpFormValidationSchema';
 export * from './utils/generateAvatar';
 export * from './utils/isEmptyString';
 export * from './utils/getUserFullname';
+export * from './utils/uploadFiles';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

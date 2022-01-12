@@ -46,7 +46,6 @@ const MoreActionsPopup: React.FC = React.memo(() => {
                             { icon: <CheckCircle />, title: 'Select messages' },
                             { icon: <Delete />, title: <StyledListItemText>Delete chat</StyledListItemText> },
                         ]}
-                        onClick={handleClose}
                         onClose={handleClose}
                     />
                 }

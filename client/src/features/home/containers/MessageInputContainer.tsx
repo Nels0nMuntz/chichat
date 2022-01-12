@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,12 +11,17 @@ import {
     resetMessageTextAction,
     changeSelectModeAction,
 } from '../store';
-import { isEmptyString, wsManager } from 'shared';
+import { isEmptyString, wsManager, uploadFiles } from 'shared';
+
+
 
 
 const MessageInputContainer: React.FC = React.memo(() => {
 
     const dispatch = useDispatch();
+    
+    const inputMediaRef = React.useRef<HTMLInputElement>(null);
+    const inputDocumentRef = React.useRef<HTMLInputElement>(null);
 
     const [popups, setPopups] = React.useState({
         emoji: false,
@@ -55,12 +60,21 @@ const MessageInputContainer: React.FC = React.memo(() => {
         // dispatch(deleteMessagesInDBAction({ payload: selectedMessages.map(msg => msg.messageId) }));
         // dispatch(disableMessagesSelectModeAction({ payload: null }));
     }, []);
-    const handleClickMediaUploadButton = React.useCallback(() => )
-    const handleChangeMediaInput = React.useCallback(() => {
-        // console.log(e);        
+    const handleClickMediaUploadButton = React.useCallback(() => {       
+        inputMediaRef.current?.click();
+    }, [inputMediaRef]);
+    const handleClickDocumentUploadButton = React.useCallback(() => {
+        inputDocumentRef.current?.click();
+    }, [inputDocumentRef]);
+    const handleChangeMediaInput = React.useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        if(event.target.files?.length) {
+            uploadFiles(event.target.files);
+        };
     }, []);
-    const handleChangeDocumentInput = React.useCallback(() => {
-        // console.log(e);        
+    const handleChangeDocumentInput = React.useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        if(event.target.files?.length) {
+            uploadFiles(event.target.files);
+        };       
     }, []);
 
     if (!selectedMessages.length) disableSelectMode();
@@ -84,8 +98,8 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 handleSelectEmoji={handleSelectEmoji}
                 disableSelectMode={disableSelectMode}
                 handleDeleteMessages={handleDeleteMessages}
-                handleChangeMediaInput={handleChangeMediaInput}
-                handleChangeDocumentInput={handleChangeDocumentInput}
+                handleClickMediaUpload={handleClickMediaUploadButton}
+                handleClickDocumentUpload={handleClickDocumentUploadButton}
             />
             <input
                 id="upload-media-file"
