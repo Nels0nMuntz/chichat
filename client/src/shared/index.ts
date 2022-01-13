@@ -50,6 +50,7 @@ export * from './utils/isEmptyString';
 export * from './utils/getUserFullname';
 export * from './utils/uploadFiles';
 export * from './utils/recordAudio';
+export * from './utils/audioRecorder';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

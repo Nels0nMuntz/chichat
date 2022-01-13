@@ -24,7 +24,7 @@ import {
     wsManager,
     Status,
     uploadFiles,
-    recordAudio,
+    audioRecorder,
 } from 'shared';
 
 const sleep = (time: number) => new Promise(resolve => setTimeout(resolve, time));
@@ -41,7 +41,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         emoji: false,
         menu: false,
     });
-    const [recordMode, setRecordMode] = React.useState(true);
+    const [recordMode, setRecordMode] = React.useState(false);
 
     const user = useSelector(selectUserData);
     const activeDialog = useSelector(selectActiveDialog);
@@ -106,23 +106,15 @@ const MessageInputContainer: React.FC = React.memo(() => {
             };
         };
     }, []);
-    const handleRecordAudio = React.useCallback(async () => {
-        const recorder = await recordAudio();
-        recorder.start();
-        await sleep(3000);
-        const audio = await recorder.stop();
-        audio.play()
-        try {
-            const recorder = await recordAudio();
-            recorder.start();
-            await sleep(3000);
-            const audio = await recorder.stop();
-            audio.play()
-        } catch (error: any) {
-            console.log(error);
-            dispatch(setNotification({ payload: { status: Status.Error, message: error.message } }));
-        }
-    }, [recordAudio]);
+    const handleStartRecordAudio = React.useCallback(async () => {
+        setRecordMode(true);
+    }, []);
+    const handleStopRecordAudio = React.useCallback(async () => {
+        setRecordMode(false);
+    }, []);
+    const handleCancelRecordAudio = React.useCallback(async () => {
+        setRecordMode(false);
+    }, []);
 
     if (!selectedMessages.length) disableSelectMode();
 
@@ -148,7 +140,8 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 handleDeleteMessages={handleDeleteMessages}
                 handleClickMediaUpload={handleClickMediaUploadButton}
                 handleClickDocumentUpload={handleClickDocumentUploadButton}
-                handleRecordAudio={handleRecordAudio}
+                handleStartRecordAudio={handleStartRecordAudio}
+                handleStopRecordAudio={handleStopRecordAudio}
             />
             <input
                 id="upload-media-file"

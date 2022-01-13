@@ -48,7 +48,8 @@ type MessageInputProps = {
     handleDeleteMessages: () => void;
     handleClickMediaUpload: () => void;
     handleClickDocumentUpload: () => void;
-    handleRecordAudio: () => void;
+    handleStartRecordAudio: () => Promise<void>
+    handleStopRecordAudio: () => Promise<void>
 }
 
 const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
@@ -71,7 +72,8 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
         handleDeleteMessages,
         handleClickMediaUpload,
         handleClickDocumentUpload,
-        handleRecordAudio,
+        handleStartRecordAudio,
+        handleStopRecordAudio,
     } = props;
 
     return (
@@ -152,14 +154,14 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                 </div>
                 {recordMode && (
                     <StopRecordButton
-                        handleClick={() => console.log('log')}
+                        handleClick={handleStopRecordAudio}
                     />
                 )}
                 <SubmitButton
                     visible={!selectedMessages}
                     mode={Boolean(value) ? "text" : "voice"}
                     handleSendTextMessage={handleSendTextMessage}
-                    handleRecordAudio={handleRecordAudio}
+                    handleRecordAudio={handleStartRecordAudio}
                 />
             </div>
         </div >
