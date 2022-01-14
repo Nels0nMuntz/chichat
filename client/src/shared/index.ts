@@ -21,7 +21,7 @@ export { default as Loader } from './components/Loader/Loader';
 export { default as MessageItem } from './components/MessageList/MessageItem/MessageItem';
 export { default as MessageDateGroup } from './components/MessageList/MessageDateGroup/MessageDateGroup';
 export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
-// export * from './components/UserDataProvider/UserDataProvider';
+export { default as CloseIconButton } from './components/CloseIconButton/CloseIconButton';
 
 // models
 export * from './models/appTheme.model';
@@ -49,6 +49,7 @@ export * from './utils/generateAvatar';
 export * from './utils/isEmptyString';
 export * from './utils/getUserFullname';
 export * from './utils/uploadFiles';
+export * from './utils/recordAudio';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

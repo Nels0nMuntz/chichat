@@ -1,6 +1,6 @@
 import { defineAction } from "rd-redux-utils";
 import { Status, UniqueId, PaginationLimit } from "shared";
-import { ICreateDialogRequest, IDialog, IMessage } from "features/home/models";
+import { ICreateDialogRequest, IDialog, IDialogAttach, IMessage } from "features/home/models";
 
 
 // dialogs
@@ -38,3 +38,16 @@ export const toggleSelectMessageAction = defineAction<{ payload: IMessage }>("TO
 export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
 
 export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");
+
+// upload modal
+export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");
+
+export const setUploadModalUploadStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_UPLOAD_STATUS");
+
+export const setUploadModalOpenAction = defineAction<{ payload: boolean }>("SET_UPLOAD_MODAL_OPEN");
+
+export const setUploadModalMessageTextAction = defineAction<{ payload: string }>("SET_UPLOAD_MODAL_MESSAGE_TEXT");
+
+export const setUploadModalAttachAction = defineAction<{ payload: Array<IDialogAttach> }>("SET_UPLOAD_MODAL_ATTACH");
+
+export const uploadFilesAction = defineAction<{ payload: FileList }>("UPLOAD_FILES");

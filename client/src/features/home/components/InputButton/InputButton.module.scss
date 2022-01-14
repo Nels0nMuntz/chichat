@@ -1,4 +1,4 @@
-.submit_button {
+:global(.input-button){
     width: 54px;
     height: 54px;
     display: flex;
@@ -8,9 +8,11 @@
     margin-left: 8px;
     font-size: 30px;
     border-radius: 50%;
-    background-color: var(--color-bg);
     transform-origin: center center;
     transition: background-color 0.1s linear, transform 0.1s linear;
+}
+.submit_button {
+    background-color: var(--color-bg);
 
     &:hover {
         background-color: var(--color-primary);
@@ -34,5 +36,20 @@
 
     &.hidden{
         transform: scale(0);
+    }
+}
+
+.stop_button{
+    background-color: var(--color-stop-button);
+    &:hover{
+        background-color: var(--color-error);
+
+        .stop_icon{
+            color: var(--color-stop-button-hover);
+        }
+    }
+
+    .stop_icon {
+        color: var(--color-text-200);
     }
 }

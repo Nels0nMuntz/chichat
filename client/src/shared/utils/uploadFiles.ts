@@ -1,6 +1,8 @@
+import { compose } from 'ts-compose';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { storage } from "core";
+import { IDialogAttach } from "features/home/models";
 
 
 const imageTypes = [
@@ -14,6 +16,7 @@ const imageTypes = [
     "image/webp",
 ];
 const videoTypes = [
+    "video/avi",
     "video/mpeg",
     "video/mp4",
     "video/ogg",
@@ -40,25 +43,91 @@ const audioTypes = [
     "audio/webm",
 ];
 
-export const uploadFiles = (files: FileList) => {
-    Array.from(files).forEach(file => {
-        const type = file.type;
-        if (imageTypes.includes(type) && validateImage(file)) {
-            storeFile(file);
-        };
-        if(videoTypes.includes(type)) {
-            storeFile(file);
-        }
-    });
+
+export const uploadFiles = (files: FileList): Array<IDialogAttach> | Error => {
+    try {
+        const response = Array.from(files).reduce<Array<IDialogAttach>>((acc, file): Array<IDialogAttach> => {
+            const type = file.type.split('/')[0];
+            console.log(file);
+            console.log(URL.createObjectURL(file));
+            
+            switch (type) {
+                case 'image':
+                    const getImageSrc = compose(readMediaFile, validateImageSize, validateImageType);
+                    const imageSrc = getImageSrc(file);
+                    return [
+                        ...acc, 
+                        { file, previewLink: imageSrc },
+                    ];
+                case 'video':
+                    const getVideoSrc = compose(readMediaFile, validateVideoSize, validateVideoType);
+                    const videoSrc = getVideoSrc(file);
+                    return [
+                        ...acc, 
+                        { file, previewLink: videoSrc },
+                    ];
+                default:
+                    const otherFile = validateOtherFilesSize(file);
+                    if(!otherFile) return acc;
+                    return [
+                        ...acc,
+                        { file: otherFile },
+                    ];
+            };
+        }, []);
+        return response
+    } catch (error: any) {
+        return error as Error;
+    }
 };
 
-const validateImage = (file: File) => {
-    var maxSizeInBytes = 10e6; // 10MB
+const validateImageType = (file: File) => {
+    if (!imageTypes.includes(file.type)) {
+        throw new Error(`Invalid '${file.name}' file type`);
+    }
+    return file;
+};
+
+const validateVideoType = (file: File) => {
+    if (!videoTypes.includes(file.type)) {
+        throw new Error(`Invalid '${file.name}' file type`);
+    }
+    return file;
+};
+
+const validateAudioType = (file: File) => {
+    if (!audioTypes.includes(file.type)) {
+        throw new Error(`Invalid '${file.name}' file type`);
+    }
+    return file;
+};
+
+const validateImageSize = (file: File): File => {
+    const maxSizeInBytes = 10e6; // 10MB
     if (file.size > maxSizeInBytes) {
-        alert("File too large");
-        return false;
+        throw new Error(`File '${file.name}' is too large`);
     };
-    return true;
+    return file;
+};
+
+const validateVideoSize = (file: File): File => {
+    const maxSizeInBytes = 200e6; // 200MB
+    if (file.size > maxSizeInBytes) {
+        throw new Error(`File '${file.name}' is too large`);
+    };
+    return file;
+};
+
+const validateOtherFilesSize = (file: File): File => {
+    const maxSizeInBytes = 1500e6; // 1500MB
+    if (file.size > maxSizeInBytes) {
+        throw new Error(`File '${file.name}' is too large`);
+    };
+    return file;
+};
+
+const readMediaFile = (file: File) => {
+    return URL.createObjectURL(file);
 };
 
 const storeFile = (file: File): string | null => {

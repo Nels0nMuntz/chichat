@@ -6,10 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ReplyIcon from '@material-ui/icons/Reply';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-
 import EmojiPickerPopup from '../Popups/EmojiPickerPopup';
 import AttachMenuPopup from '../Popups/AttachMenuPopup';
-import SubmitButton from '../SubmitButton/SubmitButton';
+import SubmitButton from '../InputButton/SubmitButton';
+import StopRecordButton from '../InputButton/StopRecordButton';
 import MessageTextarea from '../MessageTextarea/MessageTextarea';
 
 import style from './MessageInput.module.scss';
@@ -36,6 +36,7 @@ type MessageInputProps = {
     emojiPopup: boolean;
     selectedMessages: number;
     selectMode: boolean;
+    recordMode: boolean;
     handleValueChange: React.ChangeEventHandler<HTMLTextAreaElement>;
     handleOpenEmojiPopup: () => void;
     handleCloseEmojiPopup: () => void;
@@ -47,6 +48,7 @@ type MessageInputProps = {
     handleDeleteMessages: () => void;
     handleClickMediaUpload: () => void;
     handleClickDocumentUpload: () => void;
+    handleRecordAudio: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
@@ -57,6 +59,7 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
         emojiPopup,
         selectedMessages,
         selectMode,
+        recordMode,
         handleValueChange,
         handleOpenEmojiPopup,
         handleCloseEmojiPopup,
@@ -68,6 +71,7 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
         handleDeleteMessages,
         handleClickMediaUpload,
         handleClickDocumentUpload,
+        handleRecordAudio,
     } = props;
 
     return (
@@ -146,10 +150,16 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                         </svg>
                     </div>
                 </div>
+                {recordMode && (
+                    <StopRecordButton
+                        handleClick={() => console.log('log')}
+                    />
+                )}
                 <SubmitButton
                     visible={!selectedMessages}
                     mode={Boolean(value) ? "text" : "voice"}
                     handleSendTextMessage={handleSendTextMessage}
+                    handleRecordAudio={handleRecordAudio}
                 />
             </div>
         </div >

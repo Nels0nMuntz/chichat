@@ -3,7 +3,8 @@
     --color-text-100: #AAAAAA;
     --color-text-200: #B4B4B4;
     --color-primary: #8378DB;
-    --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-primary-hover: #7B71C6;
+    --color-primary-shade: rgba(131,120,219, 0.5);
     --color-attent: var(--color-primary);
     --color-bg: #212121;
     --color-bg-100: #0F0F0F;
@@ -19,13 +20,16 @@
     --color-stiky-date: #0a0a0a8c;
     --color-message-content-meta: var(--color-text-200);
     --color-icon-button-hover: rgba(255, 255, 255, 0.04);
+    --color-stop-button: var(--color-bg);
+    --color-stop-button-hover: #fff;
 }
 .theme-light{
     --color-text: #2d2d2d;
     --color-text-100: #5d5e5f;
     --color-text-200: #B4B4B4;
     --color-primary: #50A2E9;
-    --color-primary-shade: rgba(var(--color-primary), 0.5);
+    --color-primary-hover: #4A95D6;
+    --color-primary-shade: rgba(80, 162, 233, 0.5);
     --color-attent: var(--color-green);
     --color-bg: #FFFFFF;
     --color-bg-100: #FFFFFF;
@@ -41,4 +45,6 @@
     --color-stiky-date: rgba(90, 110, 70, 0.6);
     --color-message-content-meta: #50ae4e;
     --color-icon-button-hover: rgba(0, 0, 0, 0.04);
+    --color-stop-button: #fff;
+    --color-stop-button-hover: #fff;
 }

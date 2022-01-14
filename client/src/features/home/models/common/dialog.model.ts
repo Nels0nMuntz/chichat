@@ -14,20 +14,13 @@ export interface IDialogMessages extends IPaginationOptions {
 export interface IDialogForm {
     status: Status;
     text?: string;   
-    media?: Array<IDialogFormMedia>;
-    docs?: Array<IDialogFormDoc>;
+    media?: Array<IDialogAttach>;
+    docs?: Array<IDialogAttach>;
 };
 
-export interface IDialogFormMedia {
-    name: string;
-    type: string;
-    link: string;
-};
-
-export interface IDialogFormDoc {
-    name: string;
-    type: string;
-    link: string;
+export interface IDialogAttach {
+    file: File;
+    previewLink?: string;
 };
 
 export interface IDialog {

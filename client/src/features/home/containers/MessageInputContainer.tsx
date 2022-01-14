@@ -2,7 +2,9 @@ import React, { ChangeEvent } from 'react';
 import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 import MessageInput from '../components/MessageInput/MessageInput';
+import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
 import {
     selectActiveDialog,
     selectUserData,
@@ -10,16 +12,28 @@ import {
     setMessageTextAction,
     resetMessageTextAction,
     changeSelectModeAction,
+    setUploadModalOpenAction,
+    setUploadModalMessageTextAction,
+    uploadFilesAction,
+    setUploadModalAttachAction,
+    selectUploadModal,
 } from '../store';
-import { isEmptyString, wsManager, uploadFiles } from 'shared';
+import { setNotification } from 'features/notification/store';
+import {
+    isEmptyString,
+    wsManager,
+    Status,
+    uploadFiles,
+    recordAudio,
+} from 'shared';
 
-
+const sleep = (time: number) => new Promise(resolve => setTimeout(resolve, time));
 
 
 const MessageInputContainer: React.FC = React.memo(() => {
 
     const dispatch = useDispatch();
-    
+
     const inputMediaRef = React.useRef<HTMLInputElement>(null);
     const inputDocumentRef = React.useRef<HTMLInputElement>(null);
 
@@ -27,9 +41,17 @@ const MessageInputContainer: React.FC = React.memo(() => {
         emoji: false,
         menu: false,
     });
+    const [recordMode, setRecordMode] = React.useState(true);
 
     const user = useSelector(selectUserData);
     const activeDialog = useSelector(selectActiveDialog);
+    const {
+        open,
+        sendStatus,
+        uploadStatus,
+        text: uploadText,
+        attach,
+    } = useSelector(selectUploadModal);
     const dialogId = activeDialog?.dialogId;
     const messageText = activeDialog?.form.text || '';
     const selectMode = activeDialog?.messages.selectMode || false;
@@ -60,22 +82,47 @@ const MessageInputContainer: React.FC = React.memo(() => {
         // dispatch(deleteMessagesInDBAction({ payload: selectedMessages.map(msg => msg.messageId) }));
         // dispatch(disableMessagesSelectModeAction({ payload: null }));
     }, []);
-    const handleClickMediaUploadButton = React.useCallback(() => {       
+    const handleCloseModal = React.useCallback(() => {
+        dispatch(setUploadModalOpenAction({ payload: false }));
+        dispatch(setUploadModalAttachAction({ payload: [] }));
+    }, []);
+    const handleSubmitModal = React.useCallback(() => { console.log('submitting modal') }, []);
+    const handleClickMediaUploadButton = React.useCallback(() => {
         inputMediaRef.current?.click();
     }, [inputMediaRef]);
     const handleClickDocumentUploadButton = React.useCallback(() => {
         inputDocumentRef.current?.click();
     }, [inputDocumentRef]);
-    const handleChangeMediaInput = React.useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        if(event.target.files?.length) {
-            uploadFiles(event.target.files);
+    const handleChangeMediaInput = React.useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files?.length) {
+            const attach = uploadFiles(files);
+            if (attach instanceof Error) {
+                dispatch(setNotification({ payload: { status: Status.Error, message: attach.message } }));
+                return;
+            } else {
+                dispatch(setUploadModalOpenAction({ payload: true }));
+                dispatch(setUploadModalAttachAction({ payload: attach }));
+            };
         };
     }, []);
-    const handleChangeDocumentInput = React.useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        if(event.target.files?.length) {
-            uploadFiles(event.target.files);
-        };       
-    }, []);
+    const handleRecordAudio = React.useCallback(async () => {
+        const recorder = await recordAudio();
+        recorder.start();
+        await sleep(3000);
+        const audio = await recorder.stop();
+        audio.play()
+        try {
+            const recorder = await recordAudio();
+            recorder.start();
+            await sleep(3000);
+            const audio = await recorder.stop();
+            audio.play()
+        } catch (error: any) {
+            console.log(error);
+            dispatch(setNotification({ payload: { status: Status.Error, message: error.message } }));
+        }
+    }, [recordAudio]);
 
     if (!selectedMessages.length) disableSelectMode();
 
@@ -89,6 +136,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 emojiPopup={popups.emoji}
                 selectedMessages={selectedMessages.length}
                 selectMode={selectMode}
+                recordMode={recordMode}
                 handleValueChange={handleValueChange}
                 handleOpenEmojiPopup={handleOpenEmojiPopup}
                 handleCloseEmojiPopup={handleCloseEmojiPopup}
@@ -100,6 +148,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 handleDeleteMessages={handleDeleteMessages}
                 handleClickMediaUpload={handleClickMediaUploadButton}
                 handleClickDocumentUpload={handleClickDocumentUploadButton}
+                handleRecordAudio={handleRecordAudio}
             />
             <input
                 id="upload-media-file"
@@ -119,7 +168,18 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 accept="*"
                 multiple
                 ref={inputDocumentRef}
-                onChange={handleChangeDocumentInput}
+                onChange={handleChangeMediaInput}
+            />
+            <UploadFileModal
+                // status={uploadStatus}
+                open={open}
+                valid={uploadStatus !== Status.Error}
+                loading={sendStatus === Status.Running}
+                messageValue={uploadText}
+                attach={attach}
+                handleClose={handleCloseModal}
+                handleSubmit={handleSubmitModal}
+                handleChangeMessage={handleValueChange}
             />
         </React.Fragment>
     )

@@ -1,6 +1,6 @@
 import { Action } from "redux";
 import { Status } from "shared";
-import { IDialog, IMessage } from "features/home/models";
+import { IDialog, IDialogAttach, IMessage } from "features/home/models";
 import {
     setDialogsListAction,
     setDialogStatusAction,
@@ -15,17 +15,35 @@ import {
     addNewMessageAction,
     setDialogMessagesAction,
     setDialogMessagesStatusAction,
+    setUploadModalSendStatusAction,
+    setUploadModalUploadStatusAction,
+    setUploadModalOpenAction,
+    setUploadModalMessageTextAction,
+    setUploadModalAttachAction,
 } from '../';
 
 
 interface IDialogsState {
     status: Status;
     list: Array<IDialog>;
+    uploadModal: {
+        sendStatus: Status;
+        uploadStatus: Status;
+        open: boolean;
+        text: string;
+        attach?: Array<IDialogAttach>;
+    };
 };
 
 const initialState: IDialogsState = {
     status: Status.Initial,
     list: [],
+    uploadModal: {
+        sendStatus: Status.Initial,
+        uploadStatus: Status.Initial,
+        open: false,
+        text: '',
+    },
 };
 
 export const dialogsReducer = (state: IDialogsState = initialState, action: Action): IDialogsState => {
@@ -37,7 +55,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setDialogStatusAction.is(action)){
+    if (setDialogStatusAction.is(action)) {
         return {
             ...state,
             list: state.list.map<IDialog>((dialog) => {
@@ -46,12 +64,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         }
     };
 
-    if(setDialogMessagesStatusAction.is(action)){
+    if (setDialogMessagesStatusAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.dialogId === action.payload.dialogId){
+                    if (dialog.dialogId === action.payload.dialogId) {
                         return {
                             ...dialog,
                             messages: {
@@ -70,7 +88,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         return {
             ...state,
             list: action.payload,
-        }; 
+        };
     };
 
     if (setActiveDialogAction.is(action)) {
@@ -78,11 +96,11 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.isActive){
+                    if (dialog.isActive) {
                         return { ...dialog, isActive: false }
                     }
-                    if(dialog.dialogId === action.payload) {
-                        return  { ...dialog, isActive: true };
+                    if (dialog.dialogId === action.payload) {
+                        return { ...dialog, isActive: true };
                     };
                     return dialog;
                 }),
@@ -100,14 +118,14 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(incrementPaginationPageAction.is(action)) {
+    if (incrementPaginationPageAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
                     return dialog.dialogId === action.payload.dialogId
-                        ? { 
-                            ...dialog, 
+                        ? {
+                            ...dialog,
                             messages: {
                                 ...dialog.messages,
                                 page: dialog.messages.page + 1,
@@ -119,12 +137,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setMessageTextAction.is(action)){
+    if (setMessageTextAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.isActive){
+                    if (dialog.isActive) {
                         return {
                             ...dialog,
                             form: { ...dialog.form, text: action.payload },
@@ -136,12 +154,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(resetMessageTextAction.is(action)){
+    if (resetMessageTextAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.isActive){
+                    if (dialog.isActive) {
                         return {
                             ...dialog,
                             form: { ...dialog.form, text: '' }
@@ -153,20 +171,20 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(changeSelectModeAction.is(action)){
+    if (changeSelectModeAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.isActive){
+                    if (dialog.isActive) {
                         return {
                             ...dialog,
                             messages: {
                                 ...dialog.messages,
                                 selectMode: action.payload,
-                                list: action.payload 
-                                    ? dialog.messages.list 
-                                    : dialog.messages.list.map<IMessage>(message => message.selected 
+                                list: action.payload
+                                    ? dialog.messages.list
+                                    : dialog.messages.list.map<IMessage>(message => message.selected
                                         ? { ...message, selected: false }
                                         : message),
                             },
@@ -178,19 +196,19 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(toggleSelectMessageAction.is(action)){
+    if (toggleSelectMessageAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.isActive){
+                    if (dialog.isActive) {
                         return {
                             ...dialog,
                             messages: {
                                 ...dialog.messages,
                                 list: [
                                     ...dialog.messages.list.map(message => {
-                                        if(message.messageId === action.payload.messageId) return { ...message, selected: !message.selected }
+                                        if (message.messageId === action.payload.messageId) return { ...message, selected: !message.selected }
                                         return message;
                                     })
                                 ]
@@ -203,12 +221,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setDialogMessagesAction.is(action)){
+    if (setDialogMessagesAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.dialogId === action.payload.dialogId){
+                    if (dialog.dialogId === action.payload.dialogId) {
                         return {
                             ...dialog,
                             messages: {
@@ -227,12 +245,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(addNewMessageAction.is(action)){
+    if (addNewMessageAction.is(action)) {
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if(dialog.dialogId === action.payload.dialogId){
+                    if (dialog.dialogId === action.payload.dialogId) {
                         return {
                             ...dialog,
                             messages: {
@@ -248,6 +266,56 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                     return dialog;
                 }),
             ],
+        };
+    };
+
+    if (setUploadModalSendStatusAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...state.uploadModal,
+                sendStatus: action.payload,
+            }
+        };
+    };
+
+    if (setUploadModalUploadStatusAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...state.uploadModal,
+                uploadStatus: action.payload,
+            }
+        };
+    };
+
+    if (setUploadModalOpenAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...state.uploadModal,
+                open: action.payload,
+            }
+        };
+    };
+
+    if (setUploadModalMessageTextAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...state.uploadModal,
+                text: action.payload,
+            }
+        };
+    };
+
+    if (setUploadModalAttachAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...state.uploadModal,
+                attach: [...action.payload],
+            },
         };
     };
 

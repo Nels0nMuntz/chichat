@@ -5,6 +5,8 @@ interface CssExports {
   'hidden': string;
   'micro_icon': string;
   'send_icon': string;
+  'stop_button': string;
+  'stop_icon': string;
   'submit_button': string;
 }
 export const cssExports: CssExports;
