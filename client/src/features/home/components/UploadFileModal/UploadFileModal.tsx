@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
 import { IDialogAttach } from './../../models/common/dialog.model';
-import { CloseIconButton, SubmitButton } from 'shared';
+import { CloseIconButton, SubmitButton, LoadingBackdrop } from 'shared';
 
 import style from './UploadFileModal.module.scss';
 
@@ -74,27 +74,39 @@ const useStyles = makeStyles({
 type UploadFileModalProps = {
     open: boolean;
     valid: boolean;
-    loading: boolean;
+    uploading: boolean;
+    sending: boolean;
     messageValue: string;
     attach?: Array<IDialogAttach>;
     handleClose: () => void;
     handleSubmit: () => void;
-    handleChangeMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    handleChangeText: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
 
     const {
         open,
-        loading,
+        uploading,
+        sending,
         messageValue,
         attach,
         handleClose,
         handleSubmit,
-        handleChangeMessage,
+        handleChangeText,
     } = props;
 
     const classes = useStyles();
+
+    const textareaEl = React.useRef<HTMLTextAreaElement>(null);
+
+    React.useEffect(() => textareaEl.current?.focus());
+
+    if (uploading) {
+        return (
+            <LoadingBackdrop open={true} />
+        );
+    };
 
     return (
         <Dialog
@@ -120,7 +132,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                 </DialogTitle>
                 <SubmitButton
                     text='Send'
-                    isSubmitting={loading}
+                    isSubmitting={sending}
                     isValid={true}
                 />
             </DialogActions>
@@ -134,7 +146,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                         );
                         if (file.type.includes('video')) return (
                             <div className={`${style.contentItem} ${style.contentItemMedia}`} key={i}>
-                                <video autoPlay controls>
+                                <video autoPlay>
                                     <source src={previewLink} type={file.type} />
                                 </video>
                             </div>
@@ -159,7 +171,8 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                         className={style.contentInput}
                         placeholder="Caption"
                         value={messageValue}
-                        onChange={handleChangeMessage}
+                        onChange={handleChangeText}
+                        ref={textareaEl}
                     />
                 </div>
             </DialogContent>

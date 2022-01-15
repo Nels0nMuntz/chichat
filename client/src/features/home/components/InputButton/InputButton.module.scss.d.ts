@@ -3,7 +3,9 @@
 interface CssExports {
   'adornment_icon': string;
   'hidden': string;
+  'input_button': string;
   'micro_icon': string;
+  'pause_icon': string;
   'send_icon': string;
   'stop_button': string;
   'stop_icon': string;

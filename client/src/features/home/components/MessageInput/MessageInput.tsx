@@ -10,7 +10,11 @@ import EmojiPickerPopup from '../Popups/EmojiPickerPopup';
 import AttachMenuPopup from '../Popups/AttachMenuPopup';
 import SubmitButton from '../InputButton/SubmitButton';
 import StopRecordButton from '../InputButton/StopRecordButton';
+import PauseRecordButton from '../InputButton/PauseRecordButton';
 import MessageTextarea from '../MessageTextarea/MessageTextarea';
+
+import RecordRunner from './../RecordRunner/RecordRunner';
+import { RecordState } from '../../models';
 
 import style from './MessageInput.module.scss';
 
@@ -35,46 +39,52 @@ type MessageInputProps = {
     menuPopup: boolean;
     emojiPopup: boolean;
     selectedMessages: number;
+    editMode: boolean;
     selectMode: boolean;
-    recordMode: boolean;
+    recordState: RecordState;
     handleValueChange: React.ChangeEventHandler<HTMLTextAreaElement>;
     handleOpenEmojiPopup: () => void;
     handleCloseEmojiPopup: () => void;
     handleOpenMenuPopup: () => void;
     handleCloseMenuPopup: () => void;
-    handleSendTextMessage: () => void;
+    handleClickSubmitButton: () => void;
     handleSelectEmoji: (emoji: BaseEmoji) => void;
     disableSelectMode: () => void;
     handleDeleteMessages: () => void;
     handleClickMediaUpload: () => void;
     handleClickDocumentUpload: () => void;
-    handleStartRecordAudio: () => Promise<void>
-    handleStopRecordAudio: () => Promise<void>
+    handlePauseRecordAudio: () => Promise<void>;
+    handleResumeRecordAudio: () => Promise<void>;
+    handleCancelRecordAudio: () => Promise<void>;
 }
 
-const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
+const MessageInput: React.FC<MessageInputProps> = (props) => {
 
     const {
         value,
         menuPopup,
         emojiPopup,
         selectedMessages,
+        editMode,
         selectMode,
-        recordMode,
+        recordState,
         handleValueChange,
         handleOpenEmojiPopup,
         handleCloseEmojiPopup,
         handleOpenMenuPopup,
         handleCloseMenuPopup,
-        handleSendTextMessage,
+        handleClickSubmitButton,
         handleSelectEmoji,
         disableSelectMode,
         handleDeleteMessages,
         handleClickMediaUpload,
         handleClickDocumentUpload,
-        handleStartRecordAudio,
-        handleStopRecordAudio,
+        handlePauseRecordAudio,
+        handleResumeRecordAudio,
+        handleCancelRecordAudio,
     } = props;
+
+    const isRecording = recordState === 'recording' || recordState === 'paused';
 
     return (
         <div className={classNames(
@@ -135,13 +145,19 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                         </React.Fragment>
                     ) : (
                         <div className={style.input_action_wrapper}>
-                            <AttachMenuPopup
-                                open={menuPopup}
-                                handleOpen={handleOpenMenuPopup}
-                                handleClose={handleCloseMenuPopup}
-                                handleClickMediaUpload={handleClickMediaUpload}
-                                handleClickDocumentUpload={handleClickDocumentUpload}
-                            />
+                            {!isRecording ? (
+                                <AttachMenuPopup
+                                    open={menuPopup}
+                                    handleOpen={handleOpenMenuPopup}
+                                    handleClose={handleCloseMenuPopup}
+                                    handleClickMediaUpload={handleClickMediaUpload}
+                                    handleClickDocumentUpload={handleClickDocumentUpload}
+                                />
+                            ) : (
+                                <RecordRunner
+                                    recordState={recordState}
+                                />
+                            )}
                         </div>
                     )}
                     <div className={style.input_wrapper_appendex}>
@@ -152,20 +168,26 @@ const MessageInput: React.FC<MessageInputProps> = React.memo((props) => {
                         </svg>
                     </div>
                 </div>
-                {recordMode && (
-                    <StopRecordButton
-                        handleClick={handleStopRecordAudio}
-                    />
+                {isRecording && (
+                    <React.Fragment>
+                        <StopRecordButton
+                            handleClick={handleCancelRecordAudio}
+                        />
+                        <PauseRecordButton
+                            recordState={recordState}
+                            handleResumeRecord={handleResumeRecordAudio}
+                            handlePauseRecord={handlePauseRecordAudio}
+                        />
+                    </React.Fragment>
                 )}
                 <SubmitButton
                     visible={!selectedMessages}
-                    mode={Boolean(value) ? "text" : "voice"}
-                    handleSendTextMessage={handleSendTextMessage}
-                    handleRecordAudio={handleStartRecordAudio}
+                    editMode={editMode}
+                    handleClick={handleClickSubmitButton}
                 />
             </div>
         </div >
     )
-});
+};
 
 export default MessageInput;

@@ -67,7 +67,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         };
         const options = {
             root,
-            rootMargin: '10px',
+            rootMargin: '100px',
             threshold: 0,
         };
         const observer = new IntersectionObserver(handleObserver, options);

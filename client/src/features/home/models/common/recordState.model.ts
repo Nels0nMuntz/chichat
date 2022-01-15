@@ -1,0 +1,1 @@
+export type RecordState = "inactive" | 'recording' | 'paused';

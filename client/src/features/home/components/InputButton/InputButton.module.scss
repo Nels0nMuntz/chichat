@@ -1,4 +1,4 @@
-:global(.input-button){
+.input_button{
     width: 54px;
     height: 54px;
     display: flex;
@@ -52,4 +52,7 @@
     .stop_icon {
         color: var(--color-text-200);
     }
+}
+.pause_icon{
+    color: var(--color-text-200);
 }

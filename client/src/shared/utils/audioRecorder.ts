@@ -18,7 +18,7 @@ class AudioRecorder {
             })
     }
 
-    stop = () => {
+    stop = (): Promise<Blob> => {
         return new Promise(resolve => {
             const mimeType = this.mediaRecorder?.mimeType;
             this.mediaRecorder?.addEventListener('stop', () => {
@@ -27,6 +27,14 @@ class AudioRecorder {
             });
             this.cancel();
         });
+    }
+
+    pause = () => {
+        this.mediaRecorder?.pause();
+    }
+
+    resume = () => {
+        this.mediaRecorder?.resume();
     }
 
     cancel = () => {

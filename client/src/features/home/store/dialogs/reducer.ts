@@ -20,6 +20,7 @@ import {
     setUploadModalOpenAction,
     setUploadModalMessageTextAction,
     setUploadModalAttachAction,
+    resetUploadModalAction,
 } from '../';
 
 
@@ -43,6 +44,7 @@ const initialState: IDialogsState = {
         uploadStatus: Status.Initial,
         open: false,
         text: '',
+        attach: [],
     },
 };
 
@@ -315,6 +317,15 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             uploadModal: {
                 ...state.uploadModal,
                 attach: [...action.payload],
+            },
+        };
+    };
+
+    if(resetUploadModalAction.is(action)) {
+        return {
+            ...state,
+            uploadModal: {
+                ...initialState.uploadModal,
             },
         };
     };

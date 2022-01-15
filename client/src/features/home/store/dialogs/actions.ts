@@ -51,3 +51,5 @@ export const setUploadModalMessageTextAction = defineAction<{ payload: string }>
 export const setUploadModalAttachAction = defineAction<{ payload: Array<IDialogAttach> }>("SET_UPLOAD_MODAL_ATTACH");
 
 export const uploadFilesAction = defineAction<{ payload: FileList }>("UPLOAD_FILES");
+
+export const resetUploadModalAction = defineAction<{ payload: null }>("RESET_UPLOAD_MODAL");

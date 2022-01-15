@@ -1,0 +1,34 @@
+.runner{
+    position: relative;
+    padding-right: 30px;
+    font-weight: 400;
+    color: var(--color-text-100);
+
+    &::after{
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 12px;
+        height: 12px;
+        margin-top: -6px;
+        border-radius: 50%;
+        background-color: #e53935;
+        opacity: 1;
+        animation: 1.25s infinite alternate record-blink ;
+    }
+
+    &.paused::after{
+        background-color: transparent;
+        animation: none;
+    }
+}
+
+@keyframes record-blink{
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0.3;
+    }
+}

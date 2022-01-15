@@ -21,7 +21,7 @@ const StopRecordButton: React.FC<StopRecordButtonProps> = ({ handleClick }) => {
         <button
             type="button"
             className={classNames(
-                'input-button',
+                style.input_button,
                 style.stop_button,
             )}
             onClick={handleClick}

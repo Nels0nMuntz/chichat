@@ -6,6 +6,7 @@ export * from './common/messageContent.model';
 export * from './common/messageTypes.model';
 export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';
+export * from './common/recordState.model';
 
 // response
 export * from './response/dialogResponse.model';
