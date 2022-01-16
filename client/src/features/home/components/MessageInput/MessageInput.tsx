@@ -53,9 +53,9 @@ type MessageInputProps = {
     handleDeleteMessages: () => void;
     handleClickMediaUpload: () => void;
     handleClickDocumentUpload: () => void;
-    handlePauseRecordAudio: () => Promise<void>;
-    handleResumeRecordAudio: () => Promise<void>;
-    handleCancelRecordAudio: () => Promise<void>;
+    handlePauseRecordAudio: () => void;
+    handleResumeRecordAudio: () => void;
+    handleCancelRecordAudio: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = (props) => {

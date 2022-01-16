@@ -1,4 +1,4 @@
-import { IMessageBase } from "features/home/models";
+import { IMessageBase, IMessageContent } from "features/home/models";
 import { WSMessageTypes, UniqueId, IWSMessage } from "shared";
 
 
@@ -10,9 +10,19 @@ class WSManager {
                 dialogId,
                 createdBy: userId,
                 content: {
-                    type: "text",
-                    text: message,
+                    text: message, 
                 }
+            }
+        }
+    }
+
+    public createMessage = (dialogId: UniqueId, userId: UniqueId, content: IMessageContent ): IWSMessage<IMessageBase> => {
+        return {
+            type: WSMessageTypes.CREATE_MESSAGE,
+            payload: {
+                dialogId,
+                createdBy: userId,
+                content,
             }
         }
     }

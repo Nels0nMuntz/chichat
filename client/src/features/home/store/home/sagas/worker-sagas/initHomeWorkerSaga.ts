@@ -17,14 +17,14 @@ import {
     dialogService, 
     userService 
 } from "services";
-import { wsRecieverSaga } from "../watcher-sagas";
+import { wsRecieveSaga } from "../watcher-sagas";
 import { DialogDto } from "features/home/store/dialogs/dtos/dialog.dto";
 
 
 export function* initHomeWorkerSaga() {
     yield call(fetchAllDialogs);
     yield call(fetchUserData);
-    yield call(wsRecieverSaga);
+    yield call(wsRecieveSaga);
 };
 
 function* fetchAllDialogs() {

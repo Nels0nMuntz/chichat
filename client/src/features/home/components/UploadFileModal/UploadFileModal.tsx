@@ -112,7 +112,6 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
         <Dialog
             open={open}
             onClose={handleClose}
-            keepMounted
             aria-labelledby='alert-dialog-slide-label'
             classes={{ paper: classes.paper }}
             disablePortal
@@ -146,7 +145,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                         );
                         if (file.type.includes('video')) return (
                             <div className={`${style.contentItem} ${style.contentItemMedia}`} key={i}>
-                                <video autoPlay>
+                                <video autoPlay loop muted={!open}>
                                     <source src={previewLink} type={file.type} />
                                 </video>
                             </div>

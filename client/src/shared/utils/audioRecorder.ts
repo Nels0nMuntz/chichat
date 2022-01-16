@@ -18,12 +18,18 @@ class AudioRecorder {
             })
     }
 
-    stop = (): Promise<Blob> => {
+    stop = (): Promise<File> => {
         return new Promise(resolve => {
             const mimeType = this.mediaRecorder?.mimeType;
             this.mediaRecorder?.addEventListener('stop', () => {
-                const audioBlob = new Blob(this.audioBlobs, { type: mimeType });
-                resolve(audioBlob);
+                const file = new File(
+                    this.audioBlobs, 
+                    'audiofile', 
+                    {
+                        type: mimeType,
+                        lastModified: +new Date(),
+                    });
+                resolve(file);
             });
             this.cancel();
         });

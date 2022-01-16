@@ -53,15 +53,13 @@ export const uploadFiles = (files: FileList): Array<IDialogAttach> | Error => {
             
             switch (type) {
                 case 'image':
-                    const getImageSrc = compose(readMediaFile, validateImageSize, validateImageType);
-                    const imageSrc = getImageSrc(file);
+                    const imageSrc = compose(readMediaFile, validateImageSize, validateImageType)(file);
                     return [
                         ...acc, 
                         { file, previewLink: imageSrc },
                     ];
                 case 'video':
-                    const getVideoSrc = compose(readMediaFile, validateVideoSize, validateVideoType);
-                    const videoSrc = getVideoSrc(file);
+                    const videoSrc = compose(readMediaFile, validateVideoSize, validateVideoType)(file);
                     return [
                         ...acc, 
                         { file, previewLink: videoSrc },
@@ -95,13 +93,6 @@ const validateVideoType = (file: File) => {
     return file;
 };
 
-const validateAudioType = (file: File) => {
-    if (!audioTypes.includes(file.type)) {
-        throw new Error(`Invalid '${file.name}' file type`);
-    }
-    return file;
-};
-
 const validateImageSize = (file: File): File => {
     const maxSizeInBytes = 10e6; // 10MB
     if (file.size > maxSizeInBytes) {
@@ -130,16 +121,26 @@ const readMediaFile = (file: File) => {
     return URL.createObjectURL(file);
 };
 
-const storeFile = (file: File): string | null => {
-    let link = null;
-    try {
-        const reference = ref(storage, file.name);
-        uploadBytes(reference, file)
-            .then(() => {
-                getDownloadURL(reference).then(url => link = url);
-            })
-    } catch (e) {
-        console.error("Error adding document: ", e);
-    }
-    return link;
+export const storeFile = (file: File): Promise<string> => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const reference = ref(storage, file.name);
+            const uploadResult = await uploadBytes(reference, file);
+            const dowloadURL = await getDownloadURL(reference);
+            resolve(dowloadURL); 
+        } catch (error) {
+            reject(error);
+        };
+    })
+    // let link = null;
+    // try {
+    //     const reference = ref(storage, file.name);
+    //     uploadBytes(reference, file)
+    //         .then(() => {
+    //             getDownloadURL(reference).then(url => link = url);
+    //         })
+    // } catch (e) {
+    //     console.error("Error adding document: ", e);
+    // }
+    // return link;
 };

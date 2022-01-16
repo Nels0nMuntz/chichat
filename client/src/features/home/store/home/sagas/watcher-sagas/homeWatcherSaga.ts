@@ -5,11 +5,11 @@ import {
     sendWSMessageAction,
 } from "../../actions"
 import { initHomeWorkerSaga } from "../worker-sagas/initHomeWorkerSaga";
-import { wsSenderSaga } from "./wsSenderSaga";
+import { wsSendSaga } from "./wsSendSaga";
 
 
 export function* homeWatcherSaga() {
     yield takeEvery(initHomeAction.TYPE, initHomeWorkerSaga);
-    yield takeEvery(sendWSMessageAction.TYPE, wsSenderSaga);
+    yield takeEvery(sendWSMessageAction.TYPE, wsSendSaga);
 };
 

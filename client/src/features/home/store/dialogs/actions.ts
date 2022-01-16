@@ -1,6 +1,7 @@
 import { defineAction } from "rd-redux-utils";
 import { Status, UniqueId, PaginationLimit } from "shared";
 import { ICreateDialogRequest, IDialog, IDialogAttach, IMessage } from "features/home/models";
+import { BaseEmoji } from "emoji-mart";
 
 
 // dialogs
@@ -28,6 +29,8 @@ export const incrementPaginationPageAction = defineAction<{ payload: { dialogId:
 
 // messages
 export const setMessageTextAction = defineAction<{ payload: string }>("SET_MESSAGE_TEXT");
+
+export const setMessageEmojiAction = defineAction<{ payload: BaseEmoji }>("SET_MESSAGE_EMOJI");
 
 export const resetMessageTextAction = defineAction<{ payload: null }>("RESET_MESSAGE_TEXT");
 

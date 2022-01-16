@@ -31,7 +31,7 @@ export class WebSocketManager {
     onMessageHandler = (event: MessageEvent) => {
         const actionData = this.getMessageActionData(event);
         switch (actionData.parsedData.type) {
-            case WSMessageTypes.INIT_CONNECTED_CLIENT:
+            case WSMessageTypes.INIT_CLIENT_CONNECTION:
                 this.WSService.initClient(actionData);
                 break;
             case WSMessageTypes.CREATE_MESSAGE:

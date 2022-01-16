@@ -12,7 +12,7 @@ import { IInitWSClientRequest, IMessageResponse } from "../../../../models";
 import { MessageDto } from "features/home/store";
 
 
-export function* wsRecieverSaga() {
+export function* wsRecieveSaga() {
     const socket: WebSocket = yield call(createWebSocket);   
     yield put(setWebSocketAction({ payload: socket }));
     const user: IUser = yield select(selectUserData)
@@ -22,7 +22,7 @@ export function* wsRecieverSaga() {
         const message: IWSMessage = yield take(channel);
         
         switch (message.type) {
-            case WSMessageTypes.INIT_CONNECTED_CLIENT: {
+            case WSMessageTypes.INIT_CLIENT_CONNECTION: {
                 const _message = message as IInitWSClientRequest;
                 yield put(sendWSMessageAction({ payload: _message }));
                 break;
@@ -46,7 +46,7 @@ function createWebSocketEventChanel(userId: string, socket: WebSocket) {
         socket.onopen = () => {
             console.log('Client socket is opened');
             const message: IInitWSClientRequest = {
-                type: WSMessageTypes.INIT_CONNECTED_CLIENT,
+                type: WSMessageTypes.INIT_CLIENT_CONNECTION,
                 payload: { userId },
             };
             emitter(message);

@@ -1,2 +1,2 @@
 export * from './homeWatcherSaga';
-export * from './wsRecieverSaga';
+export * from './wsRecieveSaga';

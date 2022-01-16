@@ -18,23 +18,23 @@ type PopoverProps = {
     children: React.ReactChild
     open: boolean
     hover?: boolean
-    container?: React.ReactInstance | (() => React.ReactInstance | null) | null 
+    container?: React.ReactInstance | (() => React.ReactInstance | null) | null
     placement?: PopperPlacementType
     transformOrigin?: string
-    onOpen:() => void
-    onClose:() => void
+    onOpen: () => void
+    onClose: () => void
 };
 
-const Popover: React.FC<PopoverProps> = ({ 
-    component, 
-    children, 
-    open, 
-    hover, 
-    container, 
-    placement, 
-    transformOrigin, 
-    onOpen, 
-    onClose 
+const Popover: React.FC<PopoverProps> = ({
+    component,
+    children,
+    open,
+    hover,
+    container,
+    placement,
+    transformOrigin,
+    onOpen,
+    onClose
 }) => {
 
     const classes = useSatyles();
@@ -50,28 +50,30 @@ const Popover: React.FC<PopoverProps> = ({
             >
                 {children}
             </div>
-            <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                placement={placement}
-                transition
-                container={container}                
-            >
-                {({ TransitionProps }) => (
-                    <Grow
-                        {...TransitionProps}
-                        style={{ transformOrigin: `${transformOrigin}` }}
-                    >
-                        <Paper className={classes.paper} elevation={3}>
-                            <ClickAwayListener onClickAway={onClose}>
-                                <div onMouseLeave={hover ? onClose : undefined}>
-                                    {component}
-                                </div>
-                            </ClickAwayListener>
-                        </Paper>
-                    </Grow>
-                )}
-            </Popper>
+            {anchorRef.current && (
+                <Popper
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    placement={placement}
+                    transition
+                    container={container}
+                >
+                    {({ TransitionProps }) => (
+                        <Grow
+                            {...TransitionProps}
+                            style={{ transformOrigin: `${transformOrigin}` }}
+                        >
+                            <Paper className={classes.paper} elevation={3}>
+                                <ClickAwayListener onClickAway={onClose}>
+                                    <div onMouseLeave={hover ? onClose : undefined}>
+                                        {component}
+                                    </div>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                    )}
+                </Popper>
+            )}
         </div>
     );
 }

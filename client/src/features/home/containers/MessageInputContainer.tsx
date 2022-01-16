@@ -17,6 +17,7 @@ import {
     setUploadModalOpenAction,
     setUploadModalMessageTextAction,
     uploadFilesAction,
+    setMessageEmojiAction,
     selectUploadModal,
 } from '../store';
 import {
@@ -24,6 +25,7 @@ import {
     wsManager,
     Status,
     audioRecorder,
+    storeFile,
 } from 'shared';
 import { setNotification } from 'features/notification/store';
 
@@ -60,12 +62,15 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const value = e.target.value;
         dispatch(setMessageTextAction({ payload: value }));
         isEmptyString(value) ? setEditMode(false) : setEditMode(true);
-    }, [setMessageTextAction, setEditMode]);
+    }, [setEditMode]);
     const handleOpenEmojiPopup = React.useCallback(() => setPopups({ emoji: true, menu: false }), []);
     const handleCloseEmojiPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
     const handleOpenMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: true }), []);
     const handleCloseMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);    
-    const handleSelectEmoji = React.useCallback((emoji: BaseEmoji) => { dispatch(setMessageTextAction({ payload: emoji.native })); }, []);
+    const handleSelectEmoji = React.useCallback((emoji: BaseEmoji) => { 
+        dispatch(setMessageEmojiAction({ payload: emoji })); 
+        !editMode && setEditMode(true);
+    }, []);
     const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
     const handleDeleteMessages = React.useCallback(() => {
         console.log('Deleting message will go here'); // TODO   Deleting message implementation         
@@ -89,19 +94,19 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const handleChangeUploadModalText = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         dispatch(setUploadModalMessageTextAction({ payload: e.target.value }));
     }, [])
-    const handleStartRecordAudio = React.useCallback(async () => {
+    const handleStartRecordAudio = React.useCallback(() => {
         setRecordState('recording');
         setEditMode(true);
         audioRecorder.start()
             .then(() => console.log('Recording...'))
             .catch(error => dispatch(setNotification({ payload: { status: Status.Error, message: error.message } })));
     }, []);
-    const handlePauseRecordAudio = React.useCallback(async () => {
+    const handlePauseRecordAudio = React.useCallback(() => {
         setRecordState('paused');
         audioRecorder.pause();
         console.log('Paused')
     }, []);
-    const handleResumeRecordAudio = React.useCallback(async () => {
+    const handleResumeRecordAudio = React.useCallback(() => {
         setRecordState('recording');
         audioRecorder.resume();
         console.log('Resumed')
@@ -109,15 +114,17 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const handleStopRecordAudio = React.useCallback(async () => {
         setRecordState('inactive');
         setEditMode(false);
-        let blob: Blob;
         try {
-            blob = await audioRecorder.stop();
-            console.log(blob);
+            const file = await audioRecorder.stop();
+            const fileUrl = await storeFile(file)
+            console.log({file, fileUrl});
         } catch (error) {
+            console.log(error);
             dispatch(setNotification({ payload: { status: Status.Error, message: "An error has occured" } }));
-        }
+        };
     }, []);
-    const handleCancelRecordAudio = React.useCallback(async () => {
+    const handleCancelRecordAudio = React.useCallback(() => {
+        audioRecorder.cancel();
         setRecordState('inactive');
         setEditMode(false);
         console.log('Canceled');
@@ -131,7 +138,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const isEditMode = getCheckConditionFn(editMode);
         const isNotEditMode = getCheckConditionFn(!editMode);
         const isRecordInactive = getCheckConditionFn(recordState === 'inactive');
-        const isRecording = getCheckConditionFn(recordState === 'recording');
+        const isRecording = getCheckConditionFn(recordState === 'recording' || recordState === 'paused');
         const isTextMessageNotEmpty = getCheckConditionFn(!isEmptyString(messageText));
 
         const shouldSendTextMessage = compose(isTextMessageNotEmpty, isRecordInactive, isEditMode)();
@@ -139,21 +146,21 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const shouldSendAudioMessage = compose(isRecording, isEditMode)();
 
         if (shouldSendTextMessage) {
-            const message = wsManager.createTextMessage(dialogId, user.userId, messageText);
+            const message = wsManager.createMessage(dialogId, user.userId, { text: messageText });
             dispatch(sendWSMessageAction({ payload: message }));
             dispatch(resetMessageTextAction({ payload: null }));
             setEditMode(false);            
-        };
-
-        if(shouldSendAudioMessage){
-            handleStopRecordAudio();
         };
 
         if(shouldStartRecordAudio){
             handleStartRecordAudio();
         };
 
-    }, [editMode, recordState, messageText, compose, isEmptyString]);
+        if(shouldSendAudioMessage){
+            handleStopRecordAudio();
+        };
+
+    }, [dialogId, editMode, recordState, messageText, compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio]);
 
     if (!selectedMessages.length) disableSelectMode();
 

@@ -21,6 +21,7 @@ import {
     setUploadModalMessageTextAction,
     setUploadModalAttachAction,
     resetUploadModalAction,
+    setMessageEmojiAction,
 } from '../';
 
 
@@ -148,6 +149,23 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                         return {
                             ...dialog,
                             form: { ...dialog.form, text: action.payload },
+                        };
+                    };
+                    return dialog;
+                }),
+            ],
+        };
+    };
+
+    if (setMessageEmojiAction.is(action)) {
+        return {
+            ...state,
+            list: [
+                ...state.list.map<IDialog>(dialog => {
+                    if (dialog.isActive) {
+                        return {
+                            ...dialog,
+                            form: { ...dialog.form, text: dialog.form.text + action.payload.native },
                         };
                     };
                     return dialog;

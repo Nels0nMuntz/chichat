@@ -1,14 +1,6 @@
-import { MessagaType } from "./messageTypes.model";
+import { IMessageAttach } from "./messageAttach.model";
 
-export interface IMessageContentBase {
-    type: MessagaType;
-}
-
-export interface IMessageContent extends IMessageContentBase {
+export interface IMessageContent {
     text?: string;
-    images?: Array<string>;
+    attach?: IMessageAttach;
 };
-
-export interface ITextMessageContent extends IMessageContentBase {
-    text: string;
-}
