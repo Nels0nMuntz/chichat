@@ -51,11 +51,12 @@
         background-color: var(--color-bg);
         border-radius: var(--message-border-radius);
         box-shadow: 0 1px 2px var(--color-default-shadow);
+        cursor: auto;
     }
 
-    .message-item__content--text {
+    // text
+    .message-item__content_text {
         padding: 5px 8px 6px;
-        cursor: auto;
     }
 
     .message-text-content__text {
@@ -63,6 +64,15 @@
         word-break: break-all;
         font-weight: 400;
         color: var(--color-text);
+    }
+
+    // audio
+    .message-item__content_audio{
+        padding: 8px;
+    }
+    .audio-control{
+        width: 100%;
+        display: flex;
     }
 
     .message-text-content__meta {

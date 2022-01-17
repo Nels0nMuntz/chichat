@@ -11,7 +11,6 @@ import {
 } from "../models";
 import { CreateMessageRequestDto, MessageResponseDto } from "../dtos";
 import { WSClientsMap } from '../shared';
-import { IDialogPopulated, IMessagePopulated } from "../schemas";
 
 
 export class WSService {

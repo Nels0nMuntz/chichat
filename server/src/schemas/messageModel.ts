@@ -45,7 +45,21 @@ const messageSchema = new Schema<IMessageSchema>(
             required: true,
         },
         content: {
-            text: String
+            text: {
+                type: String,
+                required: false,
+            },
+            attach: {
+                type: [
+                    {
+                        image: [String],
+                        audio: [String],
+                        video: [String],
+                    }
+                ],
+                required: false,
+                default: [],
+            }
         },
     },
     {

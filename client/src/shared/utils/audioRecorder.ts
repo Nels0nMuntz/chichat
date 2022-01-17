@@ -20,14 +20,15 @@ class AudioRecorder {
 
     stop = (): Promise<File> => {
         return new Promise(resolve => {
+            const timestamp = +new Date();
             const mimeType = this.mediaRecorder?.mimeType;
             this.mediaRecorder?.addEventListener('stop', () => {
                 const file = new File(
                     this.audioBlobs, 
-                    'audiofile', 
+                    `audiofile_${timestamp}`, 
                     {
-                        type: mimeType,
-                        lastModified: +new Date(),
+                        type: mimeType?.split(';')[0],
+                        lastModified: timestamp,
                     });
                 resolve(file);
             });

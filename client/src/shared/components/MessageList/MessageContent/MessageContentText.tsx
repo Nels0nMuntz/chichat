@@ -13,7 +13,7 @@ const MessageContentText : React.FC<MessageContentTextProps> = ({ children, sele
     const onClickMessage = () => !selectMode && handleMessageClick();
 
     return (
-        <div className="message-item__content message-item__content--text message-text-content">
+        <div className="message-item__content message-item__content_text message-text-content">
             <p className="message-text-content__text">
                 {children || null}
                 {

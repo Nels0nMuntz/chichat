@@ -6,7 +6,7 @@ import { compose } from 'ts-compose';
 
 import MessageInput from '../components/MessageInput/MessageInput';
 import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
-import { RecordState } from '../models';
+import { IMessageContent, RecordState } from '../models';
 import {
     selectActiveDialog,
     selectUserData,
@@ -66,9 +66,9 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const handleOpenEmojiPopup = React.useCallback(() => setPopups({ emoji: true, menu: false }), []);
     const handleCloseEmojiPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
     const handleOpenMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: true }), []);
-    const handleCloseMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);    
-    const handleSelectEmoji = React.useCallback((emoji: BaseEmoji) => { 
-        dispatch(setMessageEmojiAction({ payload: emoji })); 
+    const handleCloseMenuPopup = React.useCallback(() => setPopups({ emoji: false, menu: false }), []);
+    const handleSelectEmoji = React.useCallback((emoji: BaseEmoji) => {
+        dispatch(setMessageEmojiAction({ payload: emoji }));
         !editMode && setEditMode(true);
     }, []);
     const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
@@ -98,40 +98,41 @@ const MessageInputContainer: React.FC = React.memo(() => {
         setRecordState('recording');
         setEditMode(true);
         audioRecorder.start()
-            .then(() => console.log('Recording...'))
             .catch(error => dispatch(setNotification({ payload: { status: Status.Error, message: error.message } })));
-    }, []);
+    }, [audioRecorder, setEditMode, setRecordState]);
     const handlePauseRecordAudio = React.useCallback(() => {
         setRecordState('paused');
         audioRecorder.pause();
-        console.log('Paused')
-    }, []);
+    }, [audioRecorder, setRecordState]);
     const handleResumeRecordAudio = React.useCallback(() => {
         setRecordState('recording');
         audioRecorder.resume();
-        console.log('Resumed')
-    }, []);
-    const handleStopRecordAudio = React.useCallback(async () => {
-        setRecordState('inactive');
+    }, [audioRecorder, setRecordState]);
+    const handleStopRecordAudio = React.useCallback((): Promise<File> => {
+        return new Promise(async(resolve, reject) => {
+            setRecordState('inactive');
+            setEditMode(false);
+            try {
+                const file = await audioRecorder.stop();
+                resolve(file);
+            } catch (error: any) {
+                reject(error);
+            }
+        });
+    }, [audioRecorder, setEditMode, setRecordState]);
+    const sendMessage = React.useCallback((content: IMessageContent) => {
+        if (!dialogId) return;
+        const message = wsManager.createMessage(dialogId, user.userId, content);
+        dispatch(sendWSMessageAction({ payload: message }));
+        dispatch(resetMessageTextAction({ payload: null }));
         setEditMode(false);
-        try {
-            const file = await audioRecorder.stop();
-            const fileUrl = await storeFile(file)
-            console.log({file, fileUrl});
-        } catch (error) {
-            console.log(error);
-            dispatch(setNotification({ payload: { status: Status.Error, message: "An error has occured" } }));
-        };
-    }, []);
+    }, [dialogId, wsManager, setEditMode]);
     const handleCancelRecordAudio = React.useCallback(() => {
         audioRecorder.cancel();
         setRecordState('inactive');
         setEditMode(false);
-        console.log('Canceled');
-    }, []);
-    const handleClickSubmitButton = React.useCallback(() => {
-
-        if(!dialogId) return;
+    }, [audioRecorder, setEditMode, setRecordState]);
+    const handleClickSubmitButton = React.useCallback(async() => {
 
         const getCheckConditionFn = (condition: boolean) => (prev: boolean = true) => !prev ? prev : Boolean(condition);
 
@@ -146,21 +147,33 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const shouldSendAudioMessage = compose(isRecording, isEditMode)();
 
         if (shouldSendTextMessage) {
-            const message = wsManager.createMessage(dialogId, user.userId, { text: messageText });
-            dispatch(sendWSMessageAction({ payload: message }));
-            dispatch(resetMessageTextAction({ payload: null }));
-            setEditMode(false);            
+            sendMessage({ text: messageText });
         };
 
-        if(shouldStartRecordAudio){
+        if (shouldStartRecordAudio) {
             handleStartRecordAudio();
         };
 
-        if(shouldSendAudioMessage){
-            handleStopRecordAudio();
+        if (shouldSendAudioMessage) {
+            try {
+                const file = await handleStopRecordAudio();
+                const fileURL = await storeFile(file);
+                const messageContent: IMessageContent = {
+                    text: !isEmptyString(messageText) ? messageText : undefined,
+                    attach: {
+                        audio: [fileURL],
+                    },
+                };
+                sendMessage(messageContent);
+            } catch (error: any) {
+                console.log(error);                
+            };
         };
 
-    }, [dialogId, editMode, recordState, messageText, compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio]);
+    }, [
+        dialogId, editMode, recordState, messageText, 
+        compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio, storeFile, sendMessage
+    ]);
 
     if (!selectedMessages.length) disableSelectMode();
 

@@ -1,3 +1,6 @@
+import { IMessageAttach } from "./messageAttach.model";
+
 export interface IMessageContent {
-    text?: string
+    text?: string;
+    attach?: IMessageAttach;
 };

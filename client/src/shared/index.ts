@@ -52,6 +52,7 @@ export * from './utils/getUserFullname';
 export * from './utils/uploadFiles';
 export * from './utils/recordAudio';
 export * from './utils/audioRecorder';
+export * from './utils/storeFile';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

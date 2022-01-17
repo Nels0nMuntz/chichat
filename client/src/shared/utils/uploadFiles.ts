@@ -1,7 +1,5 @@
 import { compose } from 'ts-compose';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { storage } from "core";
 import { IDialogAttach } from "features/home/models";
 
 
@@ -119,28 +117,4 @@ const validateOtherFilesSize = (file: File): File => {
 
 const readMediaFile = (file: File) => {
     return URL.createObjectURL(file);
-};
-
-export const storeFile = (file: File): Promise<string> => {
-    return new Promise(async(resolve, reject) => {
-        try {
-            const reference = ref(storage, file.name);
-            const uploadResult = await uploadBytes(reference, file);
-            const dowloadURL = await getDownloadURL(reference);
-            resolve(dowloadURL); 
-        } catch (error) {
-            reject(error);
-        };
-    })
-    // let link = null;
-    // try {
-    //     const reference = ref(storage, file.name);
-    //     uploadBytes(reference, file)
-    //         .then(() => {
-    //             getDownloadURL(reference).then(url => link = url);
-    //         })
-    // } catch (e) {
-    //     console.error("Error adding document: ", e);
-    // }
-    // return link;
 };

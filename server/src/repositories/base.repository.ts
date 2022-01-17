@@ -49,9 +49,9 @@ export class BaseRepository<T extends Document> implements IReadable<T>, IWritab
         }
     }
 
-    createOne = async (doc?: T | Object): Promise<T> => {
+    createOne = async (doc: {}): Promise<T> => {
         try {
-            return await this.model.create(doc || {});
+            return await this.model.create(doc);
         } catch (error) {
             throw ErrorException.ServerError("Can not create document in DB");
         }
