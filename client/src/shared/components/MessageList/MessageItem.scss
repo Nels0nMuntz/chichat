@@ -67,12 +67,52 @@
     }
 
     // audio
-    .message-item__content_audio{
+    .audio-message-item{
         padding: 8px;
     }
     .audio-control{
         width: 100%;
         display: flex;
+    }
+    .audio-control__btn{
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px;
+        border-radius: 50%;
+        background-color: var(--color-primary);
+
+        &:hover{
+            background-color: var(--color-primary-hover);
+        }
+    }
+    .audio-control__content{
+        flex-grow: 1;
+    }
+    .audio-control__waveform{
+        width: 180px;
+        height: 30px;
+    }
+    .audio-control__duration{
+        position: relative;
+        padding-left: 11px;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--color-text-200);
+
+        &::before{
+            content: '';
+            width: 7px;
+            height: 7px;
+            position: absolute;
+            bottom: 4px;
+            right: 0;
+            background-color: var(--color-primary);
+            border-radius: 50%;
+        }
     }
 
     .message-text-content__meta {
