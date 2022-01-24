@@ -41,25 +41,34 @@
         cursor: pointer;
     }
 
-    .message-item__content-wrapper {
-        max-width: 576px;
-        transform: translateX(-24px);
-        transition: transform 0.1s linear;
-    }
-
     .message-item__content {
+        max-width: 576px;
+        padding: 6px 8px;
+        transition: transform 0.1s linear;
         background-color: var(--color-bg);
         border-radius: var(--message-border-radius);
         box-shadow: 0 1px 2px var(--color-default-shadow);
         cursor: auto;
     }
-
-    // text
-    .message-item__content_text {
-        padding: 5px 8px 6px;
+    &:not(.own) .message-item__content{
+        transform: translateX(-24px);
     }
 
-    .message-text-content__text {
+    .message-item__meta {
+        position: relative;
+        margin-left: 0.75rem;
+        padding: 3px;
+        top: 6px;
+        bottom: auto;
+        float: right;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--color-text-200);
+        cursor: pointer;
+    }
+
+    // text
+    .message-content-text {
         display: inline-block;
         word-break: break-all;
         font-weight: 400;
@@ -67,9 +76,6 @@
     }
 
     // audio
-    .audio-message-item{
-        padding: 8px;
-    }
     .audio-control{
         width: 100%;
         display: flex;
@@ -84,9 +90,14 @@
         margin-right: 12px;
         border-radius: 50%;
         background-color: var(--color-primary);
+        transition: background-color 0.1s linear;
 
         &:hover{
             background-color: var(--color-primary-hover);
+        }
+
+        .MuiSvgIcon-root{
+            fill: #fff;
         }
     }
     .audio-control__content{
@@ -98,7 +109,8 @@
     }
     .audio-control__duration{
         position: relative;
-        padding-left: 11px;
+        display: inline-block;
+        padding-right: 10px;
         font-size: 14px;
         font-weight: 400;
         color: var(--color-text-200);
@@ -108,23 +120,11 @@
             width: 7px;
             height: 7px;
             position: absolute;
-            bottom: 4px;
+            bottom: 5px;
             right: 0;
             background-color: var(--color-primary);
             border-radius: 50%;
         }
-    }
-
-    .message-text-content__meta {
-        position: relative;
-        margin-left: 0.75rem;
-        padding: 3px;
-        top: 6px;
-        bottom: auto;
-        float: right;
-        font-size: 12px;
-        color: var(--color-text-200);
-        cursor: pointer;
     }
 }
 
@@ -140,7 +140,10 @@
         .message-item__select-control {
             opacity: 1;
         }
-        .message-item__content-wrapper {
+        .message-item__meta{
+            pointer-events: none;
+        }
+        &:not(.own) .message-item__content {
             transform: translateX(16px);
         }
     }

@@ -5,7 +5,7 @@ class AudioRecorder {
     mediaRecorder: MediaRecorder | null = null;
 
     start = () => {
-        if(!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+        if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
             return Promise.reject(new Error('Audio recording is not supported in browser'));
         };
 
@@ -22,14 +22,17 @@ class AudioRecorder {
         return new Promise(resolve => {
             const timestamp = +new Date();
             const mimeType = this.mediaRecorder?.mimeType;
+
+
             this.mediaRecorder?.addEventListener('stop', () => {
                 const file = new File(
-                    this.audioBlobs, 
-                    `audiofile_${timestamp}`, 
+                    this.audioBlobs,
+                    `audiofile_${timestamp}`,
                     {
                         type: mimeType?.split(';')[0],
                         lastModified: timestamp,
-                    });
+                    }
+                );
                 resolve(file);
             });
             this.cancel();

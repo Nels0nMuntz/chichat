@@ -1,5 +1,5 @@
 import { Schema, model, Document, Model } from "mongoose";
-import { IMessageContent } from "../models/messageModels";
+import { IMessageContent, IMessageAttach } from "../models";
 import { IDialogDocument } from "./dialogModel";
 import { IUserDocument } from "./userModel";
 import { Modify } from "../shared";
@@ -27,6 +27,23 @@ export type IMessagePopulated = Modify<IMessageDocument, {
 
 export interface IMessageModel extends Model<IMessageDocument> { };
 
+const messageAttachSchema = new Schema<IMessageAttach>(
+    {
+        image: {
+            type: [String],
+            required: false,
+        },
+        audio: {
+            type: [String],
+            required: false,
+        },
+        video: {
+            type: [String],
+            required: false,
+        },
+    }
+);
+
 const messageSchema = new Schema<IMessageSchema>(
     {
         dialogId: {
@@ -50,15 +67,8 @@ const messageSchema = new Schema<IMessageSchema>(
                 required: false,
             },
             attach: {
-                type: [
-                    {
-                        image: [String],
-                        audio: [String],
-                        video: [String],
-                    }
-                ],
+                type: messageAttachSchema,
                 required: false,
-                default: [],
             }
         },
     },

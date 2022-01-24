@@ -10,15 +10,25 @@ type MessageItemProps = ChildrenProps & {
     isOwn: boolean;
     selected: boolean;
     selectMode: boolean;
+    meta?: string | JSX.Element;
     handleSelectMessage: () => void;
 };
 
-const MessageItem: React.FC<MessageItemProps> = ({ children, isOwn, selected, selectMode, handleSelectMessage }) => {
+const MessageItem: React.FC<MessageItemProps> = (props) => {
+
+    const {
+        children,
+        isOwn,
+        selected,
+        selectMode,
+        meta,
+        handleSelectMessage
+    } = props;
 
     const onClickMessage = () => selectMode && handleSelectMessage();
 
     return (
-        <div 
+        <div
             className={classNames(
                 "message-list-item",
                 selected && "selected",
@@ -34,8 +44,17 @@ const MessageItem: React.FC<MessageItemProps> = ({ children, isOwn, selected, se
                 )}
             >
                 <div className="message-item__select-control"></div>
-                <div className="message-item__content-wrapper">
+                <div className="message-item__content">
                     {children}
+                    {meta
+                        ? <span
+                            className="message-item__meta"
+                            onClick={handleSelectMessage}
+                        >
+                            {meta}
+                        </span>
+                        : null
+                    }
                 </div>
             </div>
         </div>

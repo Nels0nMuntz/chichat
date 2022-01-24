@@ -51,7 +51,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
         return () => {
             window.document.body.removeEventListener("keydown", handleKeydown);
         }
-    }, [selectMode]);
+    }, [selectMode]);    
 
     return (
         <MessagesTrack

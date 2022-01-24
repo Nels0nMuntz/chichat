@@ -1,5 +1,6 @@
 // common
 export * from './common/messageContent.model';
+export * from './common/messageAttach.model';
 
 // request
 export * from './request/createMessageRequest.model';

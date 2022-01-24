@@ -157,14 +157,14 @@ const MessageInputContainer: React.FC = React.memo(() => {
         if (shouldSendAudioMessage) {
             try {
                 const file = await handleStopRecordAudio();
-                const fileURL = await storeFile(file);
-                const messageContent: IMessageContent = {
-                    text: !isEmptyString(messageText) ? messageText : undefined,
-                    attach: {
-                        audio: [fileURL],
-                    },
-                };
-                sendMessage(messageContent);
+                // const fileURL = await storeFile(file);
+                // const messageContent: IMessageContent = {
+                //     text: !isEmptyString(messageText) ? messageText : undefined,
+                //     attach: {
+                //         audio: [fileURL],
+                //     },
+                // };
+                // sendMessage(messageContent);
             } catch (error: any) {
                 console.log(error);                
             };

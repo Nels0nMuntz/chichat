@@ -5,7 +5,7 @@ import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 
-import TextMessageItem from './Messages/TextMessageItem';
+import TextMessageItem from '../Messages/PlainMessageItem';
 import { IMessage } from '../../models';
 import { MessageDateGroup, Status, UniqueId } from 'shared';
 

@@ -21,6 +21,7 @@ export { default as Loader } from './components/Loader/Loader';
 export { default as MessageItem } from './components/MessageList/MessageItem/MessageItem';
 export { default as MessageDateGroup } from './components/MessageList/MessageDateGroup/MessageDateGroup';
 export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
+export { default as MessageContentAudio } from './components/MessageList/MessageContent/MessageContentAudio';
 export { default as CloseIconButton } from './components/CloseIconButton/CloseIconButton';
 export { default as LoadingBackdrop } from './components/LoadingBackdrop/LoadingBackdrop';
 
