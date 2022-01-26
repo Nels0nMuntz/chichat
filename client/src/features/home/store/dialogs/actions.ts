@@ -1,6 +1,12 @@
 import { defineAction } from "rd-redux-utils";
 import { Status, UniqueId, PaginationLimit } from "shared";
-import { ICreateDialogRequest, IDialog, IDialogAttach, IMessage } from "features/home/models";
+import { 
+    ICreateDialogRequest, 
+    IDialog, 
+    IDialogAttach, 
+    IMessage, 
+    MessageAttachType,
+} from "features/home/models";
 import { BaseEmoji } from "emoji-mart";
 
 
@@ -41,6 +47,16 @@ export const toggleSelectMessageAction = defineAction<{ payload: IMessage }>("TO
 export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
 
 export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");
+
+export const createDialogMessageAction = defineAction<{ payload: {
+    userId: UniqueId,
+    dialogId: UniqueId,
+    text?: string,
+    attach?: Array<{
+        file: File,
+        type: MessageAttachType
+    }>,
+} }>("CREATE_DIALOG_MESSAGE");
 
 // upload modal
 export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");

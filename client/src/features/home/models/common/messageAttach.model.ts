@@ -1,5 +1,10 @@
+import { DateISOString } from "shared";
+import { MessageAttachType } from "./messageAttachType.model";
+
 export interface IMessageAttach {
-    image?: Array<string>;
-    audio?: Array<string>;
-    video?: Array<string>;
+    url: string;
+    name: string;
+    type: MessageAttachType;
+    createdAt: DateISOString;
+    updatedAt: DateISOString;
 };

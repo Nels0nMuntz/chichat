@@ -18,6 +18,7 @@ import {
     setUploadModalMessageTextAction,
     uploadFilesAction,
     setMessageEmojiAction,
+    createDialogMessageAction,
     selectUploadModal,
 } from '../store';
 import {
@@ -25,7 +26,6 @@ import {
     wsManager,
     Status,
     audioRecorder,
-    storeFile,
 } from 'shared';
 import { setNotification } from 'features/notification/store';
 
@@ -109,7 +109,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         audioRecorder.resume();
     }, [audioRecorder, setRecordState]);
     const handleStopRecordAudio = React.useCallback((): Promise<File> => {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             setRecordState('inactive');
             setEditMode(false);
             try {
@@ -132,7 +132,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         setRecordState('inactive');
         setEditMode(false);
     }, [audioRecorder, setEditMode, setRecordState]);
-    const handleClickSubmitButton = React.useCallback(async() => {
+    const handleClickSubmitButton = React.useCallback(async () => {
 
         const getCheckConditionFn = (condition: boolean) => (prev: boolean = true) => !prev ? prev : Boolean(condition);
 
@@ -157,22 +157,39 @@ const MessageInputContainer: React.FC = React.memo(() => {
         if (shouldSendAudioMessage) {
             try {
                 const file = await handleStopRecordAudio();
+                if (!dialogId) {
+                    dispatch(resetMessageTextAction({ payload: null }));
+                    setEditMode(false);
+                    return;
+                };
+                dispatch(createDialogMessageAction({
+                    payload: {
+                        userId: user.userId,
+                        dialogId,
+                        text: !isEmptyString(messageText) ? messageText : undefined,
+                        attach: [
+                            {
+                                file,
+                                type: 'file',
+                            }
+                        ],
+                    }
+                }));
                 // const fileURL = await storeFile(file);
                 // const messageContent: IMessageContent = {
                 //     text: !isEmptyString(messageText) ? messageText : undefined,
-                //     attach: {
-                //         audio: [fileURL],
-                //     },
+                //     attach: [],
                 // };
                 // sendMessage(messageContent);
             } catch (error: any) {
-                console.log(error);                
+                console.log(error);
+                dispatch(setNotification({ payload : { status: Status.Error, message: error.message } }));
             };
         };
 
     }, [
-        dialogId, editMode, recordState, messageText, 
-        compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio, storeFile, sendMessage
+        dialogId, editMode, recordState, messageText,
+        compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio, sendMessage
     ]);
 
     if (!selectedMessages.length) disableSelectMode();

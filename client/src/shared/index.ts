@@ -41,6 +41,7 @@ export * from './models/WS/WSMessageTypes.model';
 export * from './models/WS/WSManager';
 export * from './models/searchParams.model';
 export * from './models/uniqueId.model';
+export * from './models/dateISOString.model';
 
 // validation schemas
 export * from './validators/signInFormValidationSchema';
@@ -53,7 +54,6 @@ export * from './utils/getUserFullname';
 export * from './utils/uploadFiles';
 export * from './utils/recordAudio';
 export * from './utils/audioRecorder';
-export * from './utils/storeFile';
 export * from './utils/audioPlayer';
 
 // hocs
