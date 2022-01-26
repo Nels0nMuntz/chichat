@@ -33,7 +33,7 @@ const PlainMessageItem: React.FC<PlainMessageItemProps> = React.memo((props) => 
     }, [message, enableSelectMode, toggleSelectMessage]);
 
     const isAudioMessage = !!message.content.attach?.audio?.length;
-    const src = message.content.attach?.audio && message.content.attach?.audio[0] || undefined
+    const url = message.content.attach?.audio && message.content.attach?.audio[0];
 
     return (
         <Wrapper
@@ -44,10 +44,10 @@ const PlainMessageItem: React.FC<PlainMessageItemProps> = React.memo((props) => 
             handleSelectMessage={handleMessageClick}
         >
             <React.Fragment>
-                {isAudioMessage && (
+                {isAudioMessage && url && (
                     <div className={style.audioWrap}>
                         <MessageContentAudio
-                            src={src}
+                            url={url}
                         />
                     </div>
                 )}

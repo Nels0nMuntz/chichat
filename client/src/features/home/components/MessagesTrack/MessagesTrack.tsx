@@ -5,7 +5,7 @@ import isThisWeek from 'date-fns/isThisWeek';
 import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 
-import TextMessageItem from '../Messages/PlainMessageItem';
+import PlainMessageItem from '../Messages/PlainMessageItem';
 import { IMessage } from '../../models';
 import { MessageDateGroup, Status, UniqueId } from 'shared';
 
@@ -140,7 +140,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
                         {list.map((message, messageIndex) => {
                             if (messages.length === groupIndex + 1 && messageIndex === 0) return (
                                 <div key={message.messageId} ref={loader} className="last-item">
-                                    <TextMessageItem
+                                    <PlainMessageItem
                                         userId={userId}
                                         message={message}
                                         selectMode={selectMode}
@@ -150,7 +150,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
                                 </div>
                             )
                             return (
-                                <TextMessageItem
+                                <PlainMessageItem
                                     key={message.messageId}
                                     userId={userId}
                                     message={message}
