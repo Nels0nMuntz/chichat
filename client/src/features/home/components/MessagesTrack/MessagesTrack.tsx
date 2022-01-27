@@ -37,7 +37,7 @@ type MessagesTrackProps = {
 };
 
 const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
-
+    
     const [hasScrollToBottom, setHasScrollToBottom] = React.useState(true);
 
     const {
