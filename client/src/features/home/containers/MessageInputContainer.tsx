@@ -3,7 +3,6 @@ import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'ts-compose';
 
-
 import MessageInput from '../components/MessageInput/MessageInput';
 import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
 import { IMessageContent, RecordState } from '../models';
@@ -161,7 +160,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                     dispatch(resetMessageTextAction({ payload: null }));
                     setEditMode(false);
                     return;
-                };
+                };                
                 dispatch(createDialogMessageAction({
                     payload: {
                         userId: user.userId,
@@ -175,6 +174,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                         ],
                     }
                 }));
+                setEditMode(false);
                 // const fileURL = await storeFile(file);
                 // const messageContent: IMessageContent = {
                 //     text: !isEmptyString(messageText) ? messageText : undefined,
@@ -183,7 +183,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 // sendMessage(messageContent);
             } catch (error: any) {
                 console.log(error);
-                dispatch(setNotification({ payload : { status: Status.Error, message: error.message } }));
+                dispatch(setNotification({ payload: { status: Status.Error, message: error.message } }));
             };
         };
 

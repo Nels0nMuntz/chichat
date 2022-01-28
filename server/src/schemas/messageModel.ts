@@ -29,18 +29,15 @@ export interface IMessageModel extends Model<IMessageDocument> { };
 
 const messageAttachSchema = new Schema<IMessageAttach>(
     {
-        image: {
-            type: [String],
-            required: false,
+        name: String,
+        url: String,
+        fileType: {
+            type: {
+                ext: String,
+                mime: String,
+            },
         },
-        audio: {
-            type: [String],
-            required: false,
-        },
-        video: {
-            type: [String],
-            required: false,
-        },
+        attachType: String,
     }
 );
 
@@ -67,7 +64,7 @@ const messageSchema = new Schema<IMessageSchema>(
                 required: false,
             },
             attach: {
-                type: messageAttachSchema,
+                type: [messageAttachSchema],
                 required: false,
             }
         },

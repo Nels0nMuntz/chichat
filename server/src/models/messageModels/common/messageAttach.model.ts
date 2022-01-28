@@ -1,5 +1,13 @@
+import { MessageAttachType } from "./messageAttachType.model";
+
 export interface IMessageAttach {
-    image?: Array<string>;
-    audio?: Array<string>;
-    video?: Array<string>;
+    url: string;
+    name: string;
+    fileType: {
+        ext: string;
+        mime: string;
+    };
+    attachType: MessageAttachType;
+    createdAt: string;
+    updatedAt: string;
 };

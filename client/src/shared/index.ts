@@ -55,6 +55,7 @@ export * from './utils/uploadFiles';
 export * from './utils/recordAudio';
 export * from './utils/audioRecorder';
 export * from './utils/audioPlayer';
+export * from './utils/checkAttachType';
 
 // hocs
 export { default as withNotification } from './HOC/withNotification';

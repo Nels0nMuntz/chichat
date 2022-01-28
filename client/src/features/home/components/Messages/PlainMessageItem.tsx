@@ -32,8 +32,8 @@ const PlainMessageItem: React.FC<PlainMessageItemProps> = React.memo((props) => 
         toggleSelectMessage(message);
     }, [message, enableSelectMode, toggleSelectMessage]);
 
-    const isAudioMessage = !!message.content.attach?.audio?.length;
-    const url = message.content.attach?.audio && message.content.attach?.audio[0];
+    const isAudioMessage = !!message.content.attach?.length && message.content.attach[0].fileType.mime.startsWith('audio');
+    const url = !!message.content.attach?.length && message.content.attach[0].url;
 
     return (
         <Wrapper

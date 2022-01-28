@@ -4,7 +4,11 @@ import { MessageAttachType } from "./messageAttachType.model";
 export interface IMessageAttach {
     url: string;
     name: string;
-    type: MessageAttachType;
+    fileType: {
+        ext: string;
+        mime: string;
+    };
+    attachType: MessageAttachType;
     createdAt: DateISOString;
     updatedAt: DateISOString;
 };
