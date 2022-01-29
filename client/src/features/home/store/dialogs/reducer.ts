@@ -22,6 +22,7 @@ import {
     setUploadModalAttachAction,
     resetUploadModalAction,
     setMessageEmojiAction,
+    setMessageInputEditModeAction,
 } from '../';
 
 
@@ -280,6 +281,26 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                     ...dialog.messages.list,
                                 ],
                                 lastMessage: action.payload.message
+                            },
+                        };
+                    };
+                    return dialog;
+                }),
+            ],
+        };
+    };
+
+    if(setMessageInputEditModeAction.is(action)) {
+        return {
+            ...state,
+            list: [
+                ...state.list.map<IDialog>(dialog => {
+                    if (dialog.isActive) {
+                        return {
+                            ...dialog,
+                            form: {
+                                ...dialog.form,
+                                editMode: action.payload,
                             },
                         };
                     };

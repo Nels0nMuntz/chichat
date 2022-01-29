@@ -13,6 +13,7 @@ export interface IDialogMessages extends IPaginationOptions {
 
 export interface IDialogForm {
     status: Status;
+    editMode: boolean;
     text?: string;   
     media?: Array<IDialogAttach>;
     docs?: Array<IDialogAttach>;

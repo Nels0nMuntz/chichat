@@ -58,6 +58,8 @@ export const createDialogMessageAction = defineAction<{ payload: {
     }>,
 } }>("CREATE_DIALOG_MESSAGE");
 
+export const setMessageInputEditModeAction = defineAction<{ payload: boolean }>("SET_INPUT_MESSAGE_EDIT_MODE");
+
 // upload modal
 export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");
 

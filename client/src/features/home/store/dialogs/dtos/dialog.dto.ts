@@ -28,6 +28,7 @@ export class DialogDto implements IDialog {
         this.form = {
             status: Status.Initial,
             text: '',
+            editMode: false,
         };
     }
 }

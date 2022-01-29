@@ -8,6 +8,7 @@ export * from './common/messageAttachType.model';
 export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';
 export * from './common/recordState.model';
+export * from './common/messageProps.model';
 
 // response
 export * from './response/dialogResponse.model';

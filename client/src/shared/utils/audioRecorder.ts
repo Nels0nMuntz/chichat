@@ -14,6 +14,7 @@ class AudioRecorder {
                 this.mediaStream = stream;
                 this.mediaRecorder = new MediaRecorder(this.mediaStream);
                 this.mediaRecorder.addEventListener('dataavailable', event => this.audioBlobs.push(event.data));
+                this.mediaRecorder.addEventListener('start', e => console.log(e));
                 this.mediaRecorder.start();
             })
     }
@@ -24,7 +25,9 @@ class AudioRecorder {
             const mimeType = this.mediaRecorder?.mimeType;
 
 
-            this.mediaRecorder?.addEventListener('stop', () => {
+            this.mediaRecorder?.addEventListener('stop', (e) => {
+                console.log(e);
+                
                 const file = new File(
                     this.audioBlobs,
                     `audiofile_${timestamp}`,

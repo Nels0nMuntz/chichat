@@ -3,7 +3,12 @@ import { put, call, all, CallEffect } from "@redux-saga/core/effects";
 import { firebaseSorage } from "services";
 import { setNotification } from 'features/notification/store/actions';
 import { IMessageContent } from 'features/home/models';
-import { createDialogMessageAction, sendWSMessageAction, resetMessageTextAction } from "features/home/store";
+import { 
+    createDialogMessageAction, 
+    sendWSMessageAction, 
+    resetMessageTextAction,
+    setMessageInputEditModeAction,
+} from "features/home/store";
 import { Status, checkAttachType, isEmptyString, wsManager } from 'shared';
 
 
@@ -16,14 +21,14 @@ interface IUploadedFile {
 
 export function* createDialogMessageWorkerSaga(action: typeof createDialogMessageAction.typeOf.action){
     const { text, attach, userId, dialogId } = action.payload;
+    const newMessageContent: IMessageContent = {
+        text,
+        attach: [],
+    };
     try {
         if(attach?.length) {
             const response: Array<IUploadedFile> = yield all(attach.map(({ file }) => call(uploadFile, file)));
-            const newMessageContent: IMessageContent = {
-                text,
-                attach: [],
-            };
-            response.forEach(({ file, fileURL, status }) => {
+            response.forEach(({ file, fileURL, status }, i) => {
                 if(status === Status.Error){
                     throw new Error(`Can't upload file ${file.name}`);                
                 };
@@ -34,21 +39,22 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
                         ext: file.type.split('/')[1],
                         mime: file.type,
                     },
-                    attachType: checkAttachType(file.type),
+                    attachType: attach[i].type,
                     createdAt: new Date(file.lastModified).toISOString(),
                     updatedAt: new Date(file.lastModified).toISOString(),
                 });
             });
-            
-            if(isMessageEmpty(newMessageContent)) return;
-
-            const newMessage = wsManager.createMessage(dialogId, userId, newMessageContent);
-            yield put(sendWSMessageAction({ payload: newMessage }));
-            yield put(resetMessageTextAction({ payload: null }));
         };
+            
+        if(isMessageEmpty(newMessageContent)) return;
+
+        const newMessage = wsManager.createMessage(dialogId, userId, newMessageContent);
+        yield put(sendWSMessageAction({ payload: newMessage }));
+        yield put(setMessageInputEditModeAction({ payload: false }));
+        yield put(resetMessageTextAction({ payload: null }));
     } catch (error: any) {
         console.log(error);   
-        put(setNotification({ payload: { status: Status.Error, message: error.message } }));
+        yield put(setNotification({ payload: { status: Status.Error, message: error.message } }));
     };
 };
 

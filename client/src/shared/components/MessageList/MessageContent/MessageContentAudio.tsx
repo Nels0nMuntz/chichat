@@ -4,23 +4,13 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 
 
 type MessageContentAudioProps = {
-    url: string;
-    // selectMode: boolean;
-    // meta?: string | JSX.Element;
-    // handlePlay: () => void;
-    // handleStop: () => void;
-    // handleMessageClick: () => void;
+    // url: string;
 };
 
 const MessageContentAudio: React.FC<MessageContentAudioProps> = (props) => {
 
     const {
         // url,
-        // selectMode,
-        // meta,
-        // handlePlay,
-        // handleStop,
-        // handleMessageClick,
     } = props;
 
     return (
@@ -30,6 +20,7 @@ const MessageContentAudio: React.FC<MessageContentAudioProps> = (props) => {
                     <span className="visually-hidden">Play audio</span>
                     <PlayIcon fontSize="large" />
                 </button>
+                    {/* <audio src={url} controls></audio> */}
                 <div className="audio-control__content audio-control__content_unread">
                     <div className="audio-control__waveform"></div>
                     <div className="audio-control__duration">0:03</div>

@@ -1,0 +1,15 @@
+.voice-message{
+    &.voice-message_no-text{
+        .message-content-audio{
+            display: inline-block;
+        }
+        .message-item__meta{
+            float: unset;
+        }
+    }
+    &:not(.voice-message_no-text){
+        .message-content-audio{
+            margin-bottom: 6px;
+        }
+    }
+}

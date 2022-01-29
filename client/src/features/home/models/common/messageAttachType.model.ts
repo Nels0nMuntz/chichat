@@ -1,1 +1,1 @@
-export type MessageAttachType = 'image' | 'video' | 'file';
+export type MessageAttachType = 'image' | 'video' | 'file' | 'voice';

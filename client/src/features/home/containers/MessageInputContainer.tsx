@@ -5,7 +5,7 @@ import { compose } from 'ts-compose';
 
 import MessageInput from '../components/MessageInput/MessageInput';
 import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
-import { IMessageContent, RecordState } from '../models';
+import { IMessageContent, RecordState, MessageAttachType } from '../models';
 import {
     selectActiveDialog,
     selectUserData,
@@ -19,6 +19,7 @@ import {
     setMessageEmojiAction,
     createDialogMessageAction,
     selectUploadModal,
+    setMessageInputEditModeAction,
 } from '../store';
 import {
     isEmptyString,
@@ -28,6 +29,7 @@ import {
 } from 'shared';
 import { setNotification } from 'features/notification/store';
 
+const isEmptyMessage = (text?: string, attach?: Array<object>) => isEmptyString(text) && (!attach || !attach.length);
 
 const MessageInputContainer: React.FC = React.memo(() => {
 
@@ -36,7 +38,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const inputMediaRef = React.useRef<HTMLInputElement>(null);
     const inputDocumentRef = React.useRef<HTMLInputElement>(null);
 
-    const [editMode, setEditMode] = React.useState(false);
+    // const [editMode, setEditMode] = React.useState(false);
     const [recordState, setRecordState] = React.useState<RecordState>('inactive');
     const [popups, setPopups] = React.useState({
         emoji: false,
@@ -56,7 +58,9 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const messageText = activeDialog?.form.text || '';
     const selectMode = activeDialog?.messages.selectMode || false;
     const selectedMessages = activeDialog?.messages.list.filter(({ selected }) => selected) || [];
+    const editMode = !!activeDialog?.form.editMode;
 
+    const setEditMode = React.useCallback((value: boolean) => { dispatch(setMessageInputEditModeAction({ payload: value })) }, [])
     const handleMessageTextChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const value = e.target.value;
         dispatch(setMessageTextAction({ payload: value }));
@@ -119,13 +123,19 @@ const MessageInputContainer: React.FC = React.memo(() => {
             }
         });
     }, [audioRecorder, setEditMode, setRecordState]);
-    const sendMessage = React.useCallback((content: IMessageContent) => {
-        if (!dialogId) return;
-        const message = wsManager.createMessage(dialogId, user.userId, content);
-        dispatch(sendWSMessageAction({ payload: message }));
-        dispatch(resetMessageTextAction({ payload: null }));
-        setEditMode(false);
-    }, [dialogId, wsManager, setEditMode]);
+    const sendMessage = React.useCallback((text?: string, attach?: Array<{ file: File, type: MessageAttachType }>) => {
+        if (!dialogId || isEmptyMessage(text, attach)) {
+            dispatch(resetMessageTextAction({ payload: null }));
+            setEditMode(false);
+            return;
+        }; 
+        dispatch(createDialogMessageAction({ payload: {
+            dialogId, 
+            userId: user.userId,
+            text: !isEmptyString(text) ? text : undefined,
+            attach,
+        } }));
+    }, [dialogId, user, resetMessageTextAction, createDialogMessageAction, setEditMode]);
     const handleCancelRecordAudio = React.useCallback(() => {
         audioRecorder.cancel();
         setRecordState('inactive');
@@ -146,7 +156,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const shouldSendAudioMessage = compose(isRecording, isEditMode)();
 
         if (shouldSendTextMessage) {
-            sendMessage({ text: messageText });
+            sendMessage(messageText);
         };
 
         if (shouldStartRecordAudio) {
@@ -160,27 +170,11 @@ const MessageInputContainer: React.FC = React.memo(() => {
                     dispatch(resetMessageTextAction({ payload: null }));
                     setEditMode(false);
                     return;
-                };                
-                dispatch(createDialogMessageAction({
-                    payload: {
-                        userId: user.userId,
-                        dialogId,
-                        text: !isEmptyString(messageText) ? messageText : undefined,
-                        attach: [
-                            {
-                                file,
-                                type: 'file',
-                            }
-                        ],
-                    }
-                }));
-                setEditMode(false);
-                // const fileURL = await storeFile(file);
-                // const messageContent: IMessageContent = {
-                //     text: !isEmptyString(messageText) ? messageText : undefined,
-                //     attach: [],
-                // };
-                // sendMessage(messageContent);
+                };        
+                sendMessage(
+                    messageText,
+                    [{ file, type: 'voice' }],
+                );       
             } catch (error: any) {
                 console.log(error);
                 dispatch(setNotification({ payload: { status: Status.Error, message: error.message } }));
