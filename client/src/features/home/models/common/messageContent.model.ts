@@ -1,6 +1,6 @@
-import { IMessageAttach } from "./messageAttach.model";
+import { IMessageAttachBase } from "./messageAttachBase.model";
 
-export interface IMessageContent {
+export interface IMessageContent<T extends IMessageAttachBase> {
     text?: string;
-    attach?: Array<IMessageAttach>;
+    attach?: Array<T>;
 };

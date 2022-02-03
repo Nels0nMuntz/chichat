@@ -1,14 +1,9 @@
-import { DateISOString } from "shared";
-import { MessageAttachType } from "./messageAttachType.model";
+import { Status } from 'shared';
+import { IMessageAttachResponse } from './../response/messageAttachResponse.model';
 
-export interface IMessageAttach {
-    url: string;
-    name: string;
-    fileType: {
-        ext: string;
-        mime: string;
+export interface IMessageAttach extends IMessageAttachResponse {
+    file: {
+        status: Status;
+        buffer?: ArrayBuffer;
     };
-    attachType: MessageAttachType;
-    createdAt: DateISOString;
-    updatedAt: DateISOString;
 };

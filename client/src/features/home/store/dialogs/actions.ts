@@ -1,21 +1,25 @@
 import { defineAction } from "rd-redux-utils";
 import { Status, UniqueId, PaginationLimit } from "shared";
-import { 
-    ICreateDialogRequest, 
-    IDialog, 
-    IDialogAttach, 
-    IMessage, 
+import {
+    ICreateDialogRequest,
+    IDialog,
+    IDialogAttach,
+    IMessage,
     MessageAttachType,
+    IFetchMessageAttachRequest,
+    IFetchMessageAttachResponse,
 } from "features/home/models";
 import { BaseEmoji } from "emoji-mart";
 
 
 // dialogs
-export const fetchDialogMessagesAction = defineAction<{ payload: {
-    dialogId: UniqueId,
-    page: number,
-    limit: PaginationLimit,
-} }>("FETCH_DIALOG_MESSAGES");
+export const fetchDialogMessagesAction = defineAction<{
+    payload: {
+        dialogId: UniqueId,
+        page: number,
+        limit: PaginationLimit,
+    }
+}>("FETCH_DIALOG_MESSAGES");
 
 export const createDialogAction = defineAction<{ payload: ICreateDialogRequest }>("CREATE_DIALOG");
 
@@ -48,17 +52,25 @@ export const setDialogMessagesAction = defineAction<{ payload: { dialogId: Uniqu
 
 export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");
 
-export const createDialogMessageAction = defineAction<{ payload: {
-    userId: UniqueId,
-    dialogId: UniqueId,
-    text?: string,
-    attach?: Array<{
-        file: File,
-        type: MessageAttachType
-    }>,
-} }>("CREATE_DIALOG_MESSAGE");
+export const createDialogMessageAction = defineAction<{
+    payload: {
+        userId: UniqueId,
+        dialogId: UniqueId,
+        text?: string,
+        attach?: Array<{
+            file: File,
+            type: MessageAttachType
+        }>,
+    }
+}>("CREATE_DIALOG_MESSAGE");
 
 export const setMessageInputEditModeAction = defineAction<{ payload: boolean }>("SET_INPUT_MESSAGE_EDIT_MODE");
+
+export const fetchMessageAttachAction = defineAction<{ payload: IFetchMessageAttachRequest }>("FETCH_MESSAGE_ATTACH");
+
+export const setMessageAttachFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: ArrayBuffer } }>("SET_MESSAGE_ATTACH_FILE");
+
+export const setMessageAttachStatusAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, status: Status } }>("SET_MESSAGE_ATTACH_STATUS");
 
 // upload modal
 export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");

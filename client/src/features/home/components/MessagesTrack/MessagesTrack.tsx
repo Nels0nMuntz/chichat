@@ -36,7 +36,7 @@ type MessagesTrackProps = {
     handleLoading: (status: Status) => void;
 };
 
-const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
+const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
     
     const [hasScrollToBottom, setHasScrollToBottom] = React.useState(true);
 
@@ -57,7 +57,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
     // create IntersectionObserver instatnce
     React.useEffect(() => {
         const root = containerEl;
-        const handleObserver = (entries: IntersectionObserverEntry[]) => {
+        const handleObserver = (entries: IntersectionObserverEntry[]) => {            
             const entry = entries[0];
             if (entry.isIntersecting) {
                 setHasScrollToBottom(false);
@@ -74,7 +74,14 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
         if (loader.current) {
             observer.observe(loader.current);
         };
-    }, [list, containerEl]);
+
+        return () => {
+            if (loader.current) {
+                observer.unobserve(loader.current);
+                observer.disconnect();
+            };
+        }
+    }, [loader.current, containerEl]);
 
     // scroll to bottom
     React.useEffect(() => {
@@ -166,6 +173,6 @@ const MessagesTrack: React.FC<MessagesTrackProps> = React.memo((props) => {
             }
         </div>
     );
-});
+};
 
 export default MessagesTrack;

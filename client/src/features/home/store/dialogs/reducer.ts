@@ -1,6 +1,6 @@
 import { Action } from "redux";
 import { Status } from "shared";
-import { IDialog, IDialogAttach, IMessage } from "features/home/models";
+import { IDialog, IDialogAttach, IMessage, IMessageAttach } from "features/home/models";
 import {
     setDialogsListAction,
     setDialogStatusAction,
@@ -23,6 +23,8 @@ import {
     resetUploadModalAction,
     setMessageEmojiAction,
     setMessageInputEditModeAction,
+    setMessageAttachFileAction,
+    setMessageAttachStatusAction,
 } from '../';
 
 
@@ -366,6 +368,80 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
             uploadModal: {
                 ...initialState.uploadModal,
             },
+        };
+    };
+
+    if(setMessageAttachFileAction.is(action)) {
+        const { messageId, attachId, file } = action.payload;
+        return {
+            ...state,
+            list: [
+                ...state.list.map<IDialog>(dialog => {
+                    if (dialog.isActive) {
+                        return {
+                            ...dialog,
+                            messages: {
+                                ...dialog.messages,
+                                list: dialog.messages.list.map<IMessage>(message => {
+                                    return message.messageId === messageId ? {
+                                        ...message,
+                                        content: {
+                                            ...message.content,
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                                return attach.attachId === attachId ? {
+                                                    ...attach,
+                                                    file: {
+                                                        ...attach.file,
+                                                        buffer: file,
+                                                    },
+                                                } : attach;
+                                            }),
+                                        },
+                                    } : message;
+                                }),
+                            },
+                        };
+                    };
+                    return dialog;
+                }),
+            ],
+        };
+    };
+
+    if(setMessageAttachStatusAction.is(action)) {
+        const { messageId, attachId, status } = action.payload;
+        return {
+            ...state,
+            list: [
+                ...state.list.map<IDialog>(dialog => {
+                    if (dialog.isActive) {
+                        return {
+                            ...dialog,
+                            messages: {
+                                ...dialog.messages,
+                                list: dialog.messages.list.map<IMessage>(message => {
+                                    return message.messageId === messageId ? {
+                                        ...message,
+                                        content: {
+                                            ...message.content,
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                                return attach.attachId === attachId ? {
+                                                    ...attach,
+                                                    file: {
+                                                        ...attach.file,
+                                                        status,
+                                                    },
+                                                } : attach;
+                                            }),
+                                        },
+                                    } : message;
+                                }),
+                            },
+                        };
+                    };
+                    return dialog;
+                }),
+            ],
         };
     };
 

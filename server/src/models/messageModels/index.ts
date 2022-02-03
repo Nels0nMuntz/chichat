@@ -11,3 +11,4 @@ export * from './request/getMessagesRequest.model';
 // response
 export * from './response/messageResponse.model';
 export * from './response/getMessagesResponse.model';
+export * from './response/messageAttachResponse.model';

@@ -1,50 +1,40 @@
 import React from 'react';
-import classNames from 'classnames';
+// import classNames from 'classnames';
+import { useDispatch } from 'react-redux';
 
-import MessageLayout from '../MessageLayout';
 import { IMessage } from 'features/home/models';
-import {
-    MessageContentAudio,
-} from 'shared'
+import { fetchMessageAttachAction } from 'features/home/store';
+import { MessageContentAudio } from 'shared'
 
 import './VoiceMessage.scss';
 
 
 type VoiceMessageProps = {
-    userId: string;
     message: IMessage;
-    selectMode: boolean;
-    enableSelectMode: () => void;
-    toggleSelectMessage: (message: IMessage) => void;
 };
 
 const VoiceMessage: React.FC<VoiceMessageProps> = React.memo((props) => {
 
+    const dispatch = useDispatch();
+
     const {
-        userId,
         message,
-        selectMode,
-        enableSelectMode,
-        toggleSelectMessage,
     } = props;
 
-    const hasText = !!message.content.text;
+    React.useEffect(() => {
+        if(!message.content.attach || !message.content.attach.length) return;
+        const preloadAttach = message.content.attach.filter(({ attachType }) => attachType === 'voice' || attachType === 'video');
+        if(!preloadAttach.length) return;
+        dispatch(fetchMessageAttachAction({ payload: { messageId: message.messageId, attach: preloadAttach } }));
+    }, []);
 
     return (
-        <div className={classNames(
-            'voice-message',
-            !hasText && 'voice-message_no-text'
-        )}>
-            <MessageLayout
-                userId={userId}
-                message={message}
-                selectMode={selectMode}
-                enableSelectMode={enableSelectMode}
-                toggleSelectMessage={toggleSelectMessage}
-            >
-                <MessageContentAudio />
-            </MessageLayout>
-        </div>
+        // <div className={classNames(
+        //     'voice-message',
+        //     !hasText && 'voice-message_no-text',
+        // )}>
+            <MessageContentAudio />
+        // </div>
     );
 });
 

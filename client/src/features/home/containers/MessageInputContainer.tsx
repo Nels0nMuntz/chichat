@@ -168,7 +168,6 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 const file = await handleStopRecordAudio();
                 if (!dialogId) {
                     dispatch(resetMessageTextAction({ payload: null }));
-                    setEditMode(false);
                     return;
                 };        
                 sendMessage(

@@ -25,12 +25,10 @@ class AudioRecorder {
             const mimeType = this.mediaRecorder?.mimeType;
 
 
-            this.mediaRecorder?.addEventListener('stop', (e) => {
-                console.log(e);
-                
+            this.mediaRecorder?.addEventListener('stop', () => {
                 const file = new File(
                     this.audioBlobs,
-                    `audiofile_${timestamp}`,
+                    timestamp.toString(),
                     {
                         type: mimeType?.split(';')[0],
                         lastModified: timestamp,

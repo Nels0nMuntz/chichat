@@ -4,7 +4,6 @@ import format from 'date-fns/format';
 import { MessageProps } from '../../models';
 import {
     MessageItem as Wrapper,
-    ChildrenProps,
     MessageContentText,
 } from 'shared';
 

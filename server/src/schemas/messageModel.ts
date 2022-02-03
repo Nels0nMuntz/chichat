@@ -9,7 +9,7 @@ interface IMessageSchema {
     dialogId: IDialogDocument["_id"];
     createdBy: IUserDocument["_id"];
     read: boolean;
-    content: IMessageContent;
+    content: IMessageContent<IMessageAttach>;
     createdAt: string;
     updatedAt: string;
 };
@@ -20,7 +20,7 @@ export type IMessagePopulated = Modify<IMessageDocument, {
     dialogId: IDialogDocument;
     createdBy: IUserDocument;
     read: boolean;
-    content: IMessageContent;
+    content: IMessageContent<IMessageAttach>;
     createdAt: string;
     updatedAt: string;
 }>;
@@ -38,6 +38,9 @@ const messageAttachSchema = new Schema<IMessageAttach>(
             },
         },
         attachType: String,
+    },
+    {
+        timestamps: true,
     }
 );
 

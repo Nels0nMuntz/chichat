@@ -1,9 +1,9 @@
-import { IMessageBase, IMessageContent } from "features/home/models";
+import { IMessageBase, IMessageContent, IMessageAttachBase } from "features/home/models";
 import { WSMessageTypes, UniqueId, IWSMessage } from "shared";
 
 
 class WSManager {
-    public createTextMessage = (dialogId: UniqueId, userId: UniqueId, message: string ): IWSMessage<IMessageBase> => {
+    public createTextMessage = (dialogId: UniqueId, userId: UniqueId, message: string ): IWSMessage<IMessageBase<IMessageAttachBase>> => {
         return {
             type: WSMessageTypes.CREATE_MESSAGE,
             payload:{
@@ -16,7 +16,7 @@ class WSManager {
         }
     }
 
-    public createMessage = (dialogId: UniqueId, userId: UniqueId, content: IMessageContent ): IWSMessage<IMessageBase> => {
+    public createMessage = (dialogId: UniqueId, userId: UniqueId, content: IMessageContent<IMessageAttachBase> ): IWSMessage<IMessageBase<IMessageAttachBase>> => {
         return {
             type: WSMessageTypes.CREATE_MESSAGE,
             payload: {

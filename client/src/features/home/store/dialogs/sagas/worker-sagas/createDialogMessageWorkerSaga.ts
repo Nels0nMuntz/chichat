@@ -2,7 +2,7 @@ import { put, call, all, CallEffect } from "@redux-saga/core/effects";
 
 import { firebaseSorage } from "services";
 import { setNotification } from 'features/notification/store/actions';
-import { IMessageContent } from 'features/home/models';
+import { IMessageContent, IMessageAttachBase } from 'features/home/models';
 import { 
     createDialogMessageAction, 
     sendWSMessageAction, 
@@ -21,7 +21,7 @@ interface IUploadedFile {
 
 export function* createDialogMessageWorkerSaga(action: typeof createDialogMessageAction.typeOf.action){
     const { text, attach, userId, dialogId } = action.payload;
-    const newMessageContent: IMessageContent = {
+    const newMessageContent: IMessageContent<IMessageAttachBase> = {
         text,
         attach: [],
     };
@@ -70,7 +70,7 @@ function* uploadFile(file: File): Generator<CallEffect<string>, IUploadedFile, s
     };
 };
 
-function isMessageEmpty(content: IMessageContent): boolean{
+function isMessageEmpty(content: IMessageContent<IMessageAttachBase>): boolean{
     if(isEmptyString(content.text) && !content.attach?.length) return true;
     return false;
 };

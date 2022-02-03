@@ -1,7 +1,6 @@
 import { defineAction } from "rd-redux-utils";
 import { IWSMessage, Status } from "shared";
 import { 
-    ISendTextMessageRequest,
     IFetchUserDataResponse,
 } from "../../models";
 
@@ -10,8 +9,6 @@ export const setHomeStateAction = defineAction<{ payload: Status }>("SET_HOME_ST
 
 // api
 export const initHomeAction = defineAction<{}>("HOME_INIT");
-
-export const sentTextMessageAction = defineAction<{ payload: ISendTextMessageRequest }>("SENT_TEXT_MESSAGE");
 
 // user
 export const setHomeUserDataAction = defineAction<{ payload: IFetchUserDataResponse }>("SET_HOME_USER_DATA");

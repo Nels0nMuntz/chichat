@@ -9,6 +9,7 @@ export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';
 export * from './common/recordState.model';
 export * from './common/messageProps.model';
+export * from './common/messageAttachBase.model';
 
 // response
 export * from './response/dialogResponse.model';
@@ -17,10 +18,12 @@ export * from './response/fetchMessagesResponse.model';
 export * from './response/fetchUserDataResponse.model';
 export * from './response/searchMessagesResponse.model';
 export * from './response/fetchAllDialogsResponse.model';
+export * from './response/messageAttachResponse.model';
+export * from './response/fetchMessageAttachResponse.model';
 
 // request
 export * from './request/fetchMessagesRequest.model';
-export * from './request/sendTextMessageRequest.model';
+export * from './request/fetchMessageAttachRequest.model';
 export * from './request/createDialogRequest.model';
 export * from './request/deleteMessagesRequest.model';
 
