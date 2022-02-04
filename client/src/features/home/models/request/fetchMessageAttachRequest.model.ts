@@ -3,5 +3,5 @@ import { IMessageAttach } from './../common/messageAttach.model';
 
 export interface IFetchMessageAttachRequest {
     messageId: UniqueId;
-    attach: Array<IMessageAttach>;
+    attach: IMessageAttach;
 };

@@ -44,7 +44,7 @@ const MessageItem: React.FC<MessageItemProps> = (props) => {
                 )}
             >
                 <div className="message-item__select-control"></div>
-                <div className="message-item__content">
+                <div className="message-item__content-wrap">
                     {children}
                     {meta
                         ? <span

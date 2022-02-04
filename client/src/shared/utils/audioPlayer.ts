@@ -1,8 +1,9 @@
 export class AudioPlayer {
+
+    public duration?: number;
     private arrayBuffer: ArrayBuffer;
     private source: AudioBufferSourceNode;
-    private audioContext: AudioContext;
-    public duration?: number;
+    private audioContext: AudioContext;    
 
     constructor(arrayBuffer: ArrayBuffer){
         this.arrayBuffer = arrayBuffer;
@@ -23,7 +24,8 @@ export class AudioPlayer {
         return instance;
     };
 
-    start = () => {
-        return this.source.start();
-    }
+    start = (when?: number | undefined, offset?: number | undefined, duration?: number | undefined) => this.source.start(when, offset, duration);
+
+    stop = (when?: number | undefined) => this.source.stop(when);
+
 };

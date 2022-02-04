@@ -7,10 +7,11 @@ import {
     toggleSelectMessageAction,
     fetchDialogMessagesAction,
     setDialogMessagesStatusAction,
+    fetchMessageAttachAction,
 } from '../store';
 import MessagesTrack from '../components/MessagesTrack/MessagesTrack';
 import { Status } from 'shared';
-import { IDialog, IMessage } from '../models';
+import { IDialog, IMessage, IMessageAttach } from '../models';
 
 
 type MessagesTrackContainerProps = {
@@ -43,6 +44,9 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
         if (e.code === "Escape") disableSelectMode();
     };
     const handleLoading = React.useCallback((status: Status) => { dispatch(setDialogMessagesStatusAction({ payload: { dialogId, status } })) }, [dialogId]);
+    const handleFetchAttach = React.useCallback((messageId: string, attach: IMessageAttach) => {
+        dispatch(fetchMessageAttachAction({ payload: { messageId, attach } }));
+    }, []);
 
     React.useEffect(() => {
         if (selectMode) {
@@ -61,11 +65,12 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
             list={messagesList}
             selectMode={selectMode}
             page={page}
+            containerEl={containerEl}
             enableSelectMode={enableSelectMode}
             toggleSelectMessage={toggleSelectMessage}
             handleFetchMessages={handleFetchMessages}
             handleLoading={handleLoading}
-            containerEl={containerEl}
+            handleFetchAttach={handleFetchAttach}
         />
     );
 };

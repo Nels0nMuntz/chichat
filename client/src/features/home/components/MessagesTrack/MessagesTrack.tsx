@@ -6,7 +6,7 @@ import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 
 import BaseMessage from '../Messages/BaseMessage/BaseMessage';
-import { IMessage } from '../../models';
+import { IMessage, IMessageAttach } from '../../models';
 import { MessageDateGroup, Status, UniqueId } from 'shared';
 
 import style from './MessagesTrack.module.scss';
@@ -34,6 +34,7 @@ type MessagesTrackProps = {
     toggleSelectMessage: (message: IMessage) => void;
     handleFetchMessages: () => void;
     handleLoading: (status: Status) => void;
+    handleFetchAttach: (messageId: string, attach: IMessageAttach) => void;
 };
 
 const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
@@ -50,6 +51,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
         enableSelectMode,
         toggleSelectMessage,
         handleFetchMessages,
+        handleFetchAttach,
     } = props;
 
     const loader = React.useRef<any>(null);
@@ -153,6 +155,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
                                         selectMode={selectMode}
                                         enableSelectMode={enableSelectMode}
                                         toggleSelectMessage={toggleSelectMessage}
+                                        handleFetchAttach={handleFetchAttach}
                                     />
                                 </div>
                             )
@@ -164,6 +167,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
                                     selectMode={selectMode}
                                     enableSelectMode={enableSelectMode}
                                     toggleSelectMessage={toggleSelectMessage}
+                                    handleFetchAttach={handleFetchAttach}
                                 />
                             )
                         })}

@@ -13,7 +13,7 @@ const MessageContentText: React.FC<MessageContentTextProps> = ({ children }) => 
     // const onClickMessage = () => !selectMode && handleMessageClick();
 
     return (
-        <div className="message-content-text">
+        <div className="message-item__content-item message-item__content-text">
             {children || null}
         </div>
     )
