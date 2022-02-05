@@ -14,7 +14,6 @@ class AudioRecorder {
                 this.mediaStream = stream;
                 this.mediaRecorder = new MediaRecorder(this.mediaStream);
                 this.mediaRecorder.addEventListener('dataavailable', event => this.audioBlobs.push(event.data));
-                this.mediaRecorder.addEventListener('start', e => console.log(e));
                 this.mediaRecorder.start();
             })
     }
