@@ -24,6 +24,7 @@ export { default as MessageContentText } from './components/MessageList/MessageC
 export { default as MessageContentAudio } from './components/MessageList/MessageContent/MessageContentAudio';
 export { default as CloseIconButton } from './components/CloseIconButton/CloseIconButton';
 export { default as LoadingBackdrop } from './components/LoadingBackdrop/LoadingBackdrop';
+export { MessageContentVoice } from './components/MessageList/MessageContent/MessageContentVoice';
 
 // models
 export * from './models/appTheme.model';

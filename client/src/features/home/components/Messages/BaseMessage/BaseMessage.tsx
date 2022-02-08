@@ -44,7 +44,7 @@ const BaseMessage: React.FC<BaseMessageProps> = (props) => {
             toggleSelectMessage={toggleSelectMessage}
         >
             {isVoiceMessage
-                ? <VoiceMessage attach={voiceAttach} onFetchAttach={onFetchAttach} />
+                ? <VoiceMessage messageId={messageId} attach={voiceAttach} onFetchAttach={onFetchAttach} />
                 : undefined}
         </MessageLayout>
     );

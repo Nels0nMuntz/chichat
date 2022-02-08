@@ -7,9 +7,9 @@ import {
     IMessage,
     MessageAttachType,
     IFetchMessageAttachRequest,
-    IFetchMessageAttachResponse,
 } from "features/home/models";
 import { BaseEmoji } from "emoji-mart";
+import { boolean } from "yup/lib/locale";
 
 
 // dialogs
@@ -71,6 +71,8 @@ export const fetchMessageAttachAction = defineAction<{ payload: IFetchMessageAtt
 export const setMessageAttachFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: ArrayBuffer } }>("SET_MESSAGE_ATTACH_FILE");
 
 export const setMessageAttachStatusAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, status: Status } }>("SET_MESSAGE_ATTACH_STATUS");
+
+export const setMessageAttachPlayingAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId } }>("SET_MESSAGE_ATTACH_PLAYING");
 
 // upload modal
 export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");

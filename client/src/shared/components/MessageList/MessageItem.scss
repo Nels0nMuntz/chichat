@@ -68,6 +68,7 @@
         font-size: 12px;
         font-weight: 400;
         color: var(--color-text-200);
+        white-space: nowrap;
         cursor: pointer;
     }
 
@@ -88,13 +89,13 @@
         }
     }
 
-    // audio
-    .audio-control {
-        width: 100%;
+    // audio-player
+    .audio-player {
+        min-width: 280px;
         min-height: 50px;
         display: flex;
     }
-    .audio-control__btn {
+    .audio-player__btn {
         width: 48px;
         height: 48px;
         display: flex;
@@ -114,19 +115,36 @@
             fill: #fff;
         }
     }
-    .audio-control__content {
+    .audio-player__progress {
+        display: flex;
         flex-grow: 1;
+        flex-wrap: wrap;
     }
-    .audio-control__waveform {
-        width: 180px;
-        height: 30px;
+    .audio-player__progress-slider {
+        width: 100%;
+        margin: 0 0 4px 0;
     }
-    .audio-control__duration {
-        display: inline-block;
+    .audio-player__current-time,
+    .audio-player__duration {
         font-size: 14px;
         font-weight: 400;
         color: var(--color-text-200);
     }
+
+    // audio
+    // .audio-control__content {
+    //     flex-grow: 1;
+    // }
+    // .audio-control__waveform {
+    //     width: 180px;
+    //     height: 30px;
+    // }
+    // .audio-control__duration {
+    //     display: inline-block;
+    //     font-size: 14px;
+    //     font-weight: 400;
+    //     color: var(--color-text-200);
+    // }
 }
 
 .message-list-item {

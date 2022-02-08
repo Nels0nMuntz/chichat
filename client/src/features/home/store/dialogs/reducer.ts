@@ -25,6 +25,7 @@ import {
     setMessageInputEditModeAction,
     setMessageAttachFileAction,
     setMessageAttachStatusAction,
+    setMessageAttachPlayingAction,
 } from '../';
 
 
@@ -442,6 +443,54 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                     return dialog;
                 }),
             ],
+        };
+    };
+
+    if(setMessageAttachPlayingAction.is(action)) {
+        const { messageId, attachId } = action.payload;
+        return {
+            ...state,
+            list: state.list.map<IDialog>(dialog => {
+                if(dialog.isActive) {
+                    return {
+                        ...dialog,
+                        messages: {
+                            ...dialog.messages,
+                            list: dialog.messages.list.map<IMessage>(message => {
+                                if(message.messageId === messageId) {
+                                    return {
+                                        ...message,
+                                        content: {
+                                            ...message.content,
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                                if(attach.attachId = attachId) {
+                                                    return {
+                                                        ...attach,
+                                                        file: {
+                                                            ...attach.file,
+                                                            playing: true,
+                                                        },
+                                                    }
+                                                } else {
+                                                    return {
+                                                        ...attach,
+                                                        file: {
+                                                            ...attach.file,
+                                                            playing: false,
+                                                        },
+                                                    }
+                                                }
+                                            }),
+                                        },
+                                    };
+                                };
+                                return message;
+                            }),
+                        },
+                    };
+                };
+                return dialog;
+            }),
         };
     };
 

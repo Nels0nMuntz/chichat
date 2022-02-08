@@ -6,5 +6,6 @@ export interface IMessageAttach extends IMessageAttachResponse {
         status: Status;
         buffer?: ArrayBuffer;
         player?: AudioPlayer;
+        playing?: boolean;
     };
 };
