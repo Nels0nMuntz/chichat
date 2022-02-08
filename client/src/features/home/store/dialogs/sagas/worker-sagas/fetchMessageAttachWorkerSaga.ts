@@ -21,6 +21,12 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
             }
         }));
         const buffer: ArrayBuffer = yield firebaseSorage.download(attach.url);
+        const blob: Blob = yield firebaseSorage.getBlob(attach.url);
+
+        const url = URL.createObjectURL(blob);
+        
+        // const audio = new Audio(url);
+        // audio.play();
 
         // const reader = new FileReader();
         // reader.onload = function () {
@@ -48,10 +54,11 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
                 attachId: attach.attachId,
                 file: {
                     buffer,
+                    localUrl: url,
+                    status: Status.Success,
                     // duration,
                     // analyser,
                     // audioContext,
-                    status: Status.Success,
                 },
             }
         }));

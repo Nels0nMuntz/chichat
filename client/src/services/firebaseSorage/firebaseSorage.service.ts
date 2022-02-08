@@ -21,6 +21,14 @@ class FirebaseSorage {
             throw error;
         }
     }
+    getBlob = async (url: string): Promise<Blob> => {
+        try {
+            const response: AxiosResponse<Blob> = await axios.get(url, { responseType: 'blob' });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 };
 
 export const firebaseSorage = new FirebaseSorage();

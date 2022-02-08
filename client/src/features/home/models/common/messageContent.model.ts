@@ -1,4 +1,4 @@
-import { IMessageAttachBase } from "./messageAttachBase.model";
+import { IMessageAttachBase } from "./messageAttach.model";
 
 export interface IMessageContent<T extends IMessageAttachBase> {
     text?: string;

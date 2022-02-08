@@ -32,16 +32,18 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
     const status = attach.file.status;
     const canPlay = attach.file.playing;
     const buffer = attach.file.buffer;
+    const localUrl = attach.file.localUrl;
     // const duration = attach.file.duration;
     // const analyser = attach.file.analyser;
     // const audioContext = attach.file.audioContext;
 
     const dispatch = useDispatch();
 
-    const audioRef = React.useRef(new Audio(attach.url));
+    const audioRef = React.useRef<HTMLAudioElement>(new Audio(localUrl));
     const intervalRef = React.useRef<NodeJS.Timer | null>(null);
-    const frequencyElRef = React.useRef<HTMLCanvasElement | null>(null)
-    // const sinewaveElRef = React.useRef<HTMLCanvasElement | null>(null)
+    const frequencyElRef = React.useRef<HTMLCanvasElement | null>(null);
+    const sinewaveElRef = React.useRef<HTMLCanvasElement | null>(null);
+
 
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [duration, setDuration] = React.useState<number>(0);
@@ -92,82 +94,129 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
             setTrackProgress(audioRef.current.currentTime);
         };
     }, [canPlay]);
-    // React.useEffect(() => {
-    //     if (analyser && frequencyElRef.current && sinewaveElRef.current) {
-    //         console.log('drawFrequency call');
-    //         analyser.fftSize = 2048;
-    //         drawFrequency(analyser, frequencyElRef.current);
-    //         drawSinewave(analyser, sinewaveElRef.current);
-    //     };
-    // }, [analyser, frequencyElRef.current, sinewaveElRef.current]);
     React.useEffect(() => {
-        console.log({
-            status,
-            buffer,
-            audioRef: audioRef.current,
-            frequencyElRef: frequencyElRef.current,
-        });
-        
-        if(status === Status.Success && buffer && audioRef.current && frequencyElRef.current) {
-            const frequencyEl = frequencyElRef.current;
+        if (localUrl) {
+            audioRef.current.src = localUrl;
+        };
+    }, [audioRef, localUrl])
+    React.useEffect(() => {
+        if (
+            status === Status.Success
+            && buffer
+            && audioRef.current
+            && frequencyElRef.current
+            && sinewaveElRef.current
+        ) {
+            const frequencyCanvasEl = frequencyElRef.current;
+            const sinewaveCanvasEl = sinewaveElRef.current;
             // @ts-ignore
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            // audioContext.decodeAudioData(buffer).then(audioBuffer => setDuration(audioBuffer.duration));
+            audioContext.decodeAudioData(buffer).then(audioBuffer => {
+                setDuration(audioBuffer.duration);
 
-            const gainNode = audioContext.createGain();
-            const analyser = audioContext.createAnalyser();
-            // analyser.connect(audioContext.destination);
-            
-            const source = audioContext.createMediaElementSource(audioRef.current);
-            // source.connect(analyser);
-            source
-                .connect(gainNode)
-                .connect(analyser)
-                .connect(audioContext.destination);
+                // const gainNode = audioContext.createGain();
+                const analyser = audioContext.createAnalyser();
+                analyser.connect(audioContext.destination);
 
-            analyser.fftSize = 2048;
-            const bufferLength = analyser.frequencyBinCount;
-            const frequencyArray = new Uint8Array(bufferLength);
+                const source = audioContext.createMediaElementSource(audioRef.current);
+                source.connect(analyser);
+                // source
+                //     .connect(gainNode)
+                //     .connect(analyser)
+                //     .connect(audioContext.destination);
 
-            const frequencyElWidth = frequencyEl.width;
-            const frequencyElHeight = frequencyEl.height;
-            const canvasContext = frequencyEl.getContext('2d');
-            
-            if(!canvasContext) {
-                console.log('canvasContext does not exist');                
-                return;
-            };
-            canvasContext.clearRect(0, 0, frequencyElWidth, frequencyElHeight);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const frequencyArray = new Uint8Array(bufferLength);
 
-            const draw = () => {
-                console.log('draw');
-                if(!canvasContext) {
-                    console.log('canvasContext does not exist');                
+                const frequencyElWidth = frequencyCanvasEl.width;
+                const frequencyElHeight = frequencyCanvasEl.height;
+                const canvasContext = frequencyCanvasEl.getContext('2d');
+
+                if (!canvasContext) {
+                    console.log('canvasContext does not exist');
                     return;
                 };
+                canvasContext.clearRect(0, 0, frequencyElWidth, frequencyElHeight);
 
-                const drawVisual = requestAnimationFrame(draw);
-                
-            
-                analyser.getByteFrequencyData(frequencyArray);                
+                const draw = () => {
+                    if (!canvasContext) {
+                        console.log('canvasContext does not exist');
+                        return;
+                    };
 
-                canvasContext.fillStyle = 'rgb(250, 250, 250)';
-                canvasContext.fillRect(0, 0, frequencyElWidth, frequencyElHeight);
+                    const drawVisual = requestAnimationFrame(draw);
 
-                let barWidth = (frequencyElWidth / bufferLength) * 2.5 -1;
-                let barHeright;
-                let x = 0;
 
-                for(let i = 0; i < bufferLength; i++) {
-                    barHeright = frequencyArray[i];
-                    canvasContext.fillStyle = `rgb(${barHeright + 100}, 50, 50)`;
-                    canvasContext.fillRect(x, frequencyElHeight - barHeright / 2, barWidth, barHeright / 2);
-                    x += barWidth;
-                }
-            }
-            draw();
+                    analyser.getByteFrequencyData(frequencyArray);
+                    // console.log(frequencyArray);
+
+
+                    canvasContext.fillStyle = 'rgb(250, 250, 250)';
+                    canvasContext.fillRect(0, 0, frequencyElWidth, frequencyElHeight);
+
+                    let barWidth = (frequencyElWidth / bufferLength) * 2;
+                    let barHeright;
+                    let x = 0;
+
+                    for (let i = 0; i < bufferLength; i++) {
+                        barHeright = frequencyArray[i];
+                        canvasContext.fillStyle = `rgb(${barHeright + 100}, 50, 50)`;
+                        canvasContext.fillRect(x, frequencyElHeight - barHeright / 2, barWidth, barHeright / 2);
+                        x += barWidth;
+                    }
+                };
+
+
+                const sinewaveElWidth = sinewaveCanvasEl.width;
+                const sinewaveElHeight = sinewaveCanvasEl.height;
+                const sinewaveCanvasContext = sinewaveCanvasEl.getContext('2d');
+
+                if (!sinewaveCanvasContext) return;
+                sinewaveCanvasContext.clearRect(0, 0, sinewaveElWidth, sinewaveElHeight);
+
+                let sinewaveDataArray = new Uint8Array(analyser.fftSize);
+
+                function drawSinewave() {
+                    if(!sinewaveCanvasContext) return;
+                    
+                    const drawVisual = requestAnimationFrame(drawSinewave);
+
+                    analyser.getByteTimeDomainData(sinewaveDataArray);
+                    // @ts-ignore
+
+                    sinewaveCanvasContext.fillStyle = 'rgb(250, 250, 250)';
+                    sinewaveCanvasContext.fillRect(0, 0, sinewaveElWidth, sinewaveElHeight);
+                    sinewaveCanvasContext.lineWidth = 1;
+                    sinewaveCanvasContext.strokeStyle = 'rgb(251, 89, 17)';
+                    sinewaveCanvasContext.beginPath();
+
+                    const sliceWidth = sinewaveElWidth * 1.0 / analyser.fftSize;
+                    let x = 0;
+
+                    for (let i = 0; i < analyser.fftSize; i++) {
+                        // console.log(sinewaveDataArray[i]);
+
+                        const v = sinewaveDataArray[i] / 128.0; // byte / 2 || 256 / 2
+                        const y = v * sinewaveElHeight / 2;
+
+                        if (i === 0) {
+                            sinewaveCanvasContext.moveTo(x, y);
+                        } else {
+                            sinewaveCanvasContext.lineTo(x, y);
+                        }
+                        x += sliceWidth;
+                    }
+
+                    sinewaveCanvasContext.lineTo(sinewaveElWidth, sinewaveElHeight / 2);
+                    sinewaveCanvasContext.stroke();
+                };
+                draw();
+                drawSinewave();
+            });
+
         };
-    }, [status, buffer, audioRef.current, frequencyElRef.current]);
+    }, [status, buffer, audioRef.current, frequencyElRef.current, sinewaveElRef.current]);
 
     return (
         <div className='message-item__content-item audio-player'>
@@ -208,8 +257,8 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
                 <div className="audio-player__duration">{' / ' + getTimeString(duration)}</div>
             </div>
             <div className="audio-player__visualization">
-                <canvas ref={frequencyElRef} className="audio-player__frequency" width="500" height="200"></canvas>
-                {/* <canvas ref={sinewaveElRef} className="audio-player__sinewave" width="1024" height="100"></canvas> */}
+                <canvas ref={frequencyElRef} className="audio-player__frequency" width="512" height="200"></canvas>
+                <canvas ref={sinewaveElRef} className="audio-player__sinewave" width="512" height="200"></canvas>
             </div>
         </div>
     );
@@ -307,10 +356,10 @@ function renderFrame(analyser: AnalyserNode, canvasEl: HTMLCanvasElement) {
     // @ts-ignore
     requestAnimationFrame(renderFrame);
 
-    if(!canvasEl) return;
+    if (!canvasEl) return;
 
     const ctx = canvasEl.getContext('2d');
-    if(!ctx) return;
+    if (!ctx) return;
     ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
 
     const bufferLength = analyser.frequencyBinCount;

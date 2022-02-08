@@ -18,11 +18,12 @@ export interface IMessageAttachBase {
 
 export interface IMessageAttachFile {
     status: Status;
-    buffer?: ArrayBuffer;
-    duration?: number;
     playing?: boolean;
+    duration?: number;
+    buffer?: ArrayBuffer;
     audioContext?: AudioContext;
     analyser?: AnalyserNode;
+    localUrl?: string;
 };
 
 export interface IMessageAttach extends IMessageAttachResponse {
