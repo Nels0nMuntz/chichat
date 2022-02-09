@@ -17,37 +17,59 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
             payload: {
                 messageId,
                 attachId: attach.attachId,
-                status: Status.Running
+                status: Status.Running,
             }
         }));
-        const data: ArrayBuffer = yield firebaseSorage.download(attach.url);
-        yield put(setMessageAttachStatusAction({
-            payload: {
-                messageId,
-                attachId: attach.attachId,
-                status: Status.Success
-            }
-        }));
+        const buffer: ArrayBuffer = yield firebaseSorage.download(attach.url);
+
+        // const reader = new FileReader();
+        // reader.onload = function () {
+        //     url = this.result;
+        // };
+        // yield reader.readAsDataURL(blob);
+        // if (!buffer) return;
+        // console.log(buffer);
+        // console.log(url);
+
+        // @ts-ignore
+        // const AudioContext = window.AudioContext || window.webkitAudioContext;
+        // const audioContext = new AudioContext();
+        // const analyser = audioContext.createAnalyser();
+        // const bufferSource = audioContext.createBufferSource();
+        // const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
+        // const duration = Number(audioBuffer.duration.toFixed(3));
+        // bufferSource.buffer = audioBuffer;
+        // bufferSource.connect(audioContext.destination);
+        // bufferSource.connect(analyser);
+        // analyser.connect(audioContext.destination);
         yield put(setMessageAttachFileAction({
             payload: {
                 messageId,
                 attachId: attach.attachId,
-                file: data
+                file: {
+                    buffer,
+                    // duration,
+                    // analyser,
+                    // audioContext,
+                    status: Status.Success,
+                },
             }
         }));
+
     } catch (error) {
         yield put(setMessageAttachStatusAction({
             payload: {
                 messageId,
                 attachId: attach.attachId,
-                status: Status.Error
+                status: Status.Error,
             }
         }));
         yield put(setNotification({
             payload: {
                 status: Status.Error,
-                message: `Can't load file ${attach.name}`
+                message: `Can't load file ${attach.name}`,
             }
         }));
+        console.log(error);
     };
 };

@@ -4,12 +4,10 @@ export * from './common/message.model';
 export * from './common/messageBase.model';
 export * from './common/messageContent.model';
 export * from './common/messageAttach.model';
-export * from './common/messageAttachType.model';
 export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';
 export * from './common/recordState.model';
 export * from './common/messageProps.model';
-export * from './common/messageAttachBase.model';
 
 // response
 export * from './response/dialogResponse.model';

@@ -7,6 +7,7 @@ import {
     IMessage,
     MessageAttachType,
     IFetchMessageAttachRequest,
+    IMessageAttachFile,
 } from "features/home/models";
 import { BaseEmoji } from "emoji-mart";
 import { boolean } from "yup/lib/locale";
@@ -68,7 +69,7 @@ export const setMessageInputEditModeAction = defineAction<{ payload: boolean }>(
 
 export const fetchMessageAttachAction = defineAction<{ payload: IFetchMessageAttachRequest }>("FETCH_MESSAGE_ATTACH");
 
-export const setMessageAttachFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: ArrayBuffer } }>("SET_MESSAGE_ATTACH_FILE");
+export const setMessageAttachFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: IMessageAttachFile } }>("SET_MESSAGE_ATTACH_FILE");
 
 export const setMessageAttachStatusAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, status: Status } }>("SET_MESSAGE_ATTACH_STATUS");
 

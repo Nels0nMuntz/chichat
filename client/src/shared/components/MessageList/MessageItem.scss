@@ -94,6 +94,7 @@
         min-width: 280px;
         min-height: 50px;
         display: flex;
+        flex-wrap: wrap;
     }
     .audio-player__btn {
         width: 48px;
@@ -130,6 +131,10 @@
         font-weight: 400;
         color: var(--color-text-200);
     }
+    // .audio-player__visualization{
+    //     canvas{
+    //     }
+    // }
 
     // audio
     // .audio-control__content {

@@ -393,7 +393,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                                     ...attach,
                                                     file: {
                                                         ...attach.file,
-                                                        buffer: file,
+                                                        ...file,
                                                     },
                                                 } : attach;
                                             }),
@@ -463,7 +463,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                         content: {
                                             ...message.content,
                                             attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
-                                                if(attach.attachId = attachId) {
+                                                if(attach.attachId === attachId) {
                                                     return {
                                                         ...attach,
                                                         file: {
@@ -484,7 +484,21 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                         },
                                     };
                                 };
-                                return message;
+                                return {
+                                    ...message,
+                                    content: {
+                                        ...message.content,
+                                        attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                            return {
+                                                ...attach,
+                                                file: {
+                                                    ...attach.file,
+                                                    playing: false,
+                                                },
+                                            }
+                                        }),
+                                    },
+                                };
                             }),
                         },
                     };
