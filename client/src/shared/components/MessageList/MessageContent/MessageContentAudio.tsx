@@ -35,49 +35,7 @@ const MessageContentAudio: React.FC<MessageContentAudioProps> = React.memo((prop
     } = props;
 
     const status = attach.file.status;
-    const audioBuffer = attach.file.buffer;
-
-    const [player, setPlayer] = React.useState<AudioPlayer | null>(null)
-    const [control, setControl] = React.useState<AudioControl>({
-        state: 'inactive',
-        // startedAt: 0,
-        // pausedAt: 0,
-    });
-    
-
-    React.useEffect(() => {
-        if (status === Status.Initial) {
-            onFetchAttach(attach);
-        };
-    }, [attach]);
-    React.useEffect(() => {
-        if (status === Status.Success && audioBuffer && !player) {
-            AudioPlayer.create(
-                audioBuffer,
-                () => setControl({ state: 'inactive' }),
-            )
-                .then(player => {
-                    setPlayer(player);
-                });
-        };
-    }, [player, status, attach]);
-
-    const onStart = () => {
-        player?.start();
-        setControl(prev => ({
-            ...prev,
-            state: 'started',
-            // startedAt: Date.now(),
-        }));
-    };
-    const onPause = () => {
-        player?.stop();
-        setControl(prev => ({
-            ...prev,
-            state: 'stopped',
-            // pausedAt: Date.now() - prev.startedAt,
-        }));
-    };
+    const audioBuffer = attach.file.audioBuffer;
 
     return (
         <div className="message-item__content-item">
@@ -86,24 +44,24 @@ const MessageContentAudio: React.FC<MessageContentAudioProps> = React.memo((prop
                     className="audio-control__btn"
                     type="button"
                     title="Play audio"
-                    onClick={control.state === 'started' ? onPause : onStart}
+                    // onClick={control.state === 'started' ? onPause : onStart}
                 >
                     <span className="visually-hidden">Play audio</span>
-                    {control.state === 'started' ? (
+                    {/* {control.state === 'started' ? (
                         <PauseIcon fontSize="large" />
                     ) : (
                         <PlayIcon fontSize="large" />
-                    )}
+                    )} */}
                 </button>
                 <audio id='audio' src={attach.url} style={{ display: 'none' }}></audio>
                 <div className="audio-control__content audio-control__content_unread">
                     <div className="audio-control__waveform"></div>
-                    {player && player.duration && (
+                    {/* {player && player.duration && (
                         <PlayerRunner
                             state={control.state}
                             duration={player.duration}
                         />
-                    )}
+                    )} */}
                 </div>
             </div>
         </div>

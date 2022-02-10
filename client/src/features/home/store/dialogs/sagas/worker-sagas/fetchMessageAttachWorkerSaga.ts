@@ -20,11 +20,32 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
                 status: Status.Running,
             }
         }));
-        const buffer: ArrayBuffer = yield firebaseSorage.download(attach.url);
-        const blob: Blob = yield firebaseSorage.getBlob(attach.url);
-
-        const url = URL.createObjectURL(blob);
         
+        const buffer: ArrayBuffer = yield firebaseSorage.getArrayBuffer(attach.url);
+        const blob: Blob = yield firebaseSorage.getBlob(attach.url);
+        
+        // @ts-ignore
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
+        const url = URL.createObjectURL(blob); 
+
+        yield put(setMessageAttachFileAction({
+            payload: {
+                messageId,
+                attachId: attach.attachId,
+                file: {
+                    url,
+                    audioBuffer,
+                    audioContext,
+                    status: Status.Success,
+                },
+            }
+        }));
+        // if(!buffer) {
+        //     throw new Error('ArrayBuffer does not exist');
+        // };
+        // const url = URL.createObjectURL(blob);
+
         // const audio = new Audio(url);
         // audio.play();
 
@@ -37,31 +58,29 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
         // console.log(buffer);
         // console.log(url);
 
+
         // @ts-ignore
-        // const AudioContext = window.AudioContext || window.webkitAudioContext;
-        // const audioContext = new AudioContext();
+        // const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
         // const analyser = audioContext.createAnalyser();
         // const bufferSource = audioContext.createBufferSource();
-        // const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
         // const duration = Number(audioBuffer.duration.toFixed(3));
         // bufferSource.buffer = audioBuffer;
         // bufferSource.connect(audioContext.destination);
         // bufferSource.connect(analyser);
         // analyser.connect(audioContext.destination);
-        yield put(setMessageAttachFileAction({
-            payload: {
-                messageId,
-                attachId: attach.attachId,
-                file: {
-                    buffer,
-                    localUrl: url,
-                    status: Status.Success,
-                    // duration,
-                    // analyser,
-                    // audioContext,
-                },
-            }
-        }));
+        // yield put(setMessageAttachFileAction({
+        //     payload: {
+        //         messageId,
+        //         attachId: attach.attachId,
+        //         file: {
+        //             url,
+        //             audioBuffer,
+        //             audioContext,
+        //             status: Status.Success,
+        //         },
+        //     }
+        // }));
 
     } catch (error) {
         yield put(setMessageAttachStatusAction({
@@ -80,3 +99,7 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
         console.log(error);
     };
 };
+
+function* onLoad() {
+
+}

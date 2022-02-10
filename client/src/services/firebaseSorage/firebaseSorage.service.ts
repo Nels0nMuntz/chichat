@@ -13,7 +13,7 @@ class FirebaseSorage {
             throw error;
         }
     }
-    download = async (url: string): Promise<ArrayBuffer> => {
+    getArrayBuffer = async (url: string): Promise<ArrayBuffer> => {
         try {
             const response: AxiosResponse<ArrayBuffer> = await axios.get(url, { responseType: 'arraybuffer' });
             return response.data;

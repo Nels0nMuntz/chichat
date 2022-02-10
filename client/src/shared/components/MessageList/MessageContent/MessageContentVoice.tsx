@@ -2,10 +2,11 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { IMessageAttach } from 'features/home/models';
 import { setMessageAttachPlayingAction } from 'features/home/store/dialogs/actions';
-import { Status, UniqueId } from 'shared';
+import { Status, UniqueId, ThemeContext, AppTheme } from 'shared';
 
 
 const getTimeString = (time: number | null | undefined) => {
@@ -29,32 +30,39 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
         onFetchAttach
     } = props;
 
+    const { theme } = React.useContext(ThemeContext);
+
     const status = attach.file.status;
     const canPlay = attach.file.playing;
-    const buffer = attach.file.buffer;
-    const localUrl = attach.file.localUrl;
-    // const duration = attach.file.duration;
-    // const analyser = attach.file.analyser;
-    // const audioContext = attach.file.audioContext;
+    const url = attach.file.url;
+    const audioBuffer = attach.file.audioBuffer;
+    const audioContext = attach.file.audioContext;
+    const loading = status === Status.Initial || status === Status.Running; 
 
     const dispatch = useDispatch();
 
-    const audioRef = React.useRef<HTMLAudioElement>(new Audio(localUrl));
+    const audioRef = React.useRef<HTMLAudioElement>(new Audio(url));
     const intervalRef = React.useRef<NodeJS.Timer | null>(null);
-    const frequencyElRef = React.useRef<HTMLCanvasElement | null>(null);
-    const sinewaveElRef = React.useRef<HTMLCanvasElement | null>(null);
-
+    const waveformElRef = React.useRef<HTMLCanvasElement | null>(null);
 
     const [playing, setPlaying] = React.useState<boolean>(false);
-    const [duration, setDuration] = React.useState<number>(0);
     const [trackProgress, setTrackProgress] = React.useState<number>(0);
+
+    // console.log({ 
+    //     duration: audioBuffer?.duration, 
+    //     trackProgress,
+    //     ended: audioRef.current.ended,
+    // });    
 
     const startTimer = () => {
         intervalRef.current && clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
-            if (audioRef.current.ended) {
+            console.log(audioRef.current.ended);
+            if (audioRef.current.ended && playing) {
+                console.log(audioRef.current.ended);
+                audioRef.current.currentTime = 0;
                 setPlaying(false);
-                setTrackProgress(0);
+                setTrackProgress(audioRef.current.currentTime);              
             } else {
                 setTrackProgress(audioRef.current.currentTime);
             };
@@ -85,6 +93,7 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
             startTimer();
         } else {
             audioRef.current.pause();
+            intervalRef.current && clearInterval(intervalRef.current);
         }
     }, [playing, audioRef, startTimer]);
     React.useEffect(() => {
@@ -95,128 +104,47 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
         };
     }, [canPlay]);
     React.useEffect(() => {
-        if (localUrl) {
-            audioRef.current.src = localUrl;
+        if (url) {
+            audioRef.current.src = url;
         };
-    }, [audioRef, localUrl])
+    }, [audioRef, url]);
     React.useEffect(() => {
         if (
             status === Status.Success
-            && buffer
+            && audioBuffer
+            && audioContext
             && audioRef.current
-            && frequencyElRef.current
-            && sinewaveElRef.current
+            && waveformElRef.current
         ) {
-            const frequencyCanvasEl = frequencyElRef.current;
-            const sinewaveCanvasEl = sinewaveElRef.current;
-            // @ts-ignore
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            audioContext.decodeAudioData(buffer).then(audioBuffer => {
-                setDuration(audioBuffer.duration);
+            const canvasEl = waveformElRef.current;
+            const canvasContext = getCanvasContext(canvasEl);
+            if (!canvasContext) return;
+            const filteredData = filterBuffer(audioBuffer);
+            const normalizedData = normalizeData(filteredData);
+            const segmentWidth = canvasEl.width / normalizedData.length;
+            const startOffset = segmentWidth / 4;
+            const strokeStyle = theme === AppTheme.Light ? '#3390EC' : '#FFF';
 
-                // const gainNode = audioContext.createGain();
-                const analyser = audioContext.createAnalyser();
-                analyser.connect(audioContext.destination);
-
-                const source = audioContext.createMediaElementSource(audioRef.current);
-                source.connect(analyser);
-                // source
-                //     .connect(gainNode)
-                //     .connect(analyser)
-                //     .connect(audioContext.destination);
-
-                analyser.fftSize = 256;
-                const bufferLength = analyser.frequencyBinCount;
-                const frequencyArray = new Uint8Array(bufferLength);
-
-                const frequencyElWidth = frequencyCanvasEl.width;
-                const frequencyElHeight = frequencyCanvasEl.height;
-                const canvasContext = frequencyCanvasEl.getContext('2d');
-
-                if (!canvasContext) {
-                    console.log('canvasContext does not exist');
-                    return;
+            for (let i = 0; i < normalizedData.length; i++) {
+                const x = segmentWidth * i + startOffset;
+                const minHeight = canvasEl.offsetHeight / 100 * 7;
+                let height = normalizedData[i] * canvasEl.offsetHeight;
+                if (height < 0 || height < minHeight) {
+                    height = minHeight;
+                } else if (height > canvasEl.offsetHeight) {
+                    height = canvasEl.offsetHeight;
                 };
-                canvasContext.clearRect(0, 0, frequencyElWidth, frequencyElHeight);
-
-                const draw = () => {
-                    if (!canvasContext) {
-                        console.log('canvasContext does not exist');
-                        return;
-                    };
-
-                    const drawVisual = requestAnimationFrame(draw);
-
-
-                    analyser.getByteFrequencyData(frequencyArray);
-                    // console.log(frequencyArray);
-
-
-                    canvasContext.fillStyle = 'rgb(250, 250, 250)';
-                    canvasContext.fillRect(0, 0, frequencyElWidth, frequencyElHeight);
-
-                    let barWidth = (frequencyElWidth / bufferLength) * 2;
-                    let barHeright;
-                    let x = 0;
-
-                    for (let i = 0; i < bufferLength; i++) {
-                        barHeright = frequencyArray[i];
-                        canvasContext.fillStyle = `rgb(${barHeright + 100}, 50, 50)`;
-                        canvasContext.fillRect(x, frequencyElHeight - barHeright / 2, barWidth, barHeright / 2);
-                        x += barWidth;
-                    }
-                };
-
-
-                const sinewaveElWidth = sinewaveCanvasEl.width;
-                const sinewaveElHeight = sinewaveCanvasEl.height;
-                const sinewaveCanvasContext = sinewaveCanvasEl.getContext('2d');
-
-                if (!sinewaveCanvasContext) return;
-                sinewaveCanvasContext.clearRect(0, 0, sinewaveElWidth, sinewaveElHeight);
-
-                let sinewaveDataArray = new Uint8Array(analyser.fftSize);
-
-                function drawSinewave() {
-                    if(!sinewaveCanvasContext) return;
-                    
-                    const drawVisual = requestAnimationFrame(drawSinewave);
-
-                    analyser.getByteTimeDomainData(sinewaveDataArray);
-                    // @ts-ignore
-
-                    sinewaveCanvasContext.fillStyle = 'rgb(250, 250, 250)';
-                    sinewaveCanvasContext.fillRect(0, 0, sinewaveElWidth, sinewaveElHeight);
-                    sinewaveCanvasContext.lineWidth = 1;
-                    sinewaveCanvasContext.strokeStyle = 'rgb(251, 89, 17)';
-                    sinewaveCanvasContext.beginPath();
-
-                    const sliceWidth = sinewaveElWidth * 1.0 / analyser.fftSize;
-                    let x = 0;
-
-                    for (let i = 0; i < analyser.fftSize; i++) {
-                        // console.log(sinewaveDataArray[i]);
-
-                        const v = sinewaveDataArray[i] / 128.0; // byte / 2 || 256 / 2
-                        const y = v * sinewaveElHeight / 2;
-
-                        if (i === 0) {
-                            sinewaveCanvasContext.moveTo(x, y);
-                        } else {
-                            sinewaveCanvasContext.lineTo(x, y);
-                        }
-                        x += sliceWidth;
-                    }
-
-                    sinewaveCanvasContext.lineTo(sinewaveElWidth, sinewaveElHeight / 2);
-                    sinewaveCanvasContext.stroke();
-                };
-                draw();
-                drawSinewave();
-            });
-
+                drawLineSegment(canvasContext, x, height, segmentWidth / 2, strokeStyle)
+            };
         };
-    }, [status, buffer, audioRef.current, frequencyElRef.current, sinewaveElRef.current]);
+    }, [
+        theme,
+        status,
+        audioBuffer,
+        audioContext,
+        audioRef.current,
+        waveformElRef.current
+    ]);
 
     return (
         <div className='message-item__content-item audio-player'>
@@ -242,149 +170,82 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
                 </button>
             )}
             <div className="audio-player__progress">
-                <input
-                    className='audio-player__progress-slider'
-                    type="range"
-                    step={0.01}
-                    min={0}
-                    max={duration || undefined}
-                    value={trackProgress}
-                    onChange={handleChange}
-                    onMouseDown={stopPlaying}
-                    onMouseUp={startPlaying}
-                />
-                <div className="audio-player__current-time">{getTimeString(audioRef.current.currentTime)}</div>
-                <div className="audio-player__duration">{' / ' + getTimeString(duration)}</div>
+                {loading && (
+                    <div className='audio-player__loader'>
+                        <CircularProgress size={25} color='inherit' />
+                    </div>                    
+                )}
+                {audioBuffer && (
+                    <React.Fragment>
+                        <div className="audio-player__visualization">
+                            <input
+                                className='audio-player__progress-slider'
+                                type="range"
+                                step={0.01}
+                                min={0}
+                                max={audioBuffer?.duration}
+                                value={trackProgress}
+                                onChange={handleChange}
+                                onMouseDown={stopPlaying}
+                                onMouseUp={startPlaying}
+                            />
+                            <canvas ref={waveformElRef} width="200" height="23"></canvas>
+                            <div
+                                className='audio-player__backdrop'
+                                style={{ width: trackProgress / audioBuffer.duration * 100 + '%' }}
+                            />
+                        </div>
+                        <div className="audio-player__meta">
+                            <span className="audio-player__current-time">{getTimeString(audioRef.current.currentTime)}</span>
+                            <span className="audio-player__duration">{' / ' + getTimeString(audioBuffer.duration)}</span>
+                        </div>
+                    </React.Fragment>
+                )}
             </div>
-            <div className="audio-player__visualization">
-                <canvas ref={frequencyElRef} className="audio-player__frequency" width="512" height="200"></canvas>
-                <canvas ref={sinewaveElRef} className="audio-player__sinewave" width="512" height="200"></canvas>
-            </div>
-        </div>
+        </div >
     );
 };
 
-
-
-const styles = {
-    fillStyle: 'rgb(250, 250, 250)', // background
-    strokeStyle: 'rgb(251, 89, 17)', // line color
-    lineWidth: 1,
-    fftSize: 16384 // delization of bars from 1024 to 32768
-}
-
-function drawFrequency(analyser: AnalyserNode, canvasEl: HTMLCanvasElement) {
-
-    if (!canvasEl) return;
-
-    const frequencyСanvasCtx = canvasEl.getContext("2d");
-    if (!frequencyСanvasCtx) return;
-    frequencyСanvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-
-    let frequencyDataArray = new Uint8Array(analyser.fftSize);
-    console.log(frequencyDataArray);
-    analyser.getByteFrequencyData(frequencyDataArray);
-    console.log(frequencyDataArray);
-    // @ts-ignore
-    requestAnimationFrame(drawFrequency);
-
-    frequencyСanvasCtx.fillStyle = styles.fillStyle;
-    frequencyСanvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-    frequencyСanvasCtx.beginPath();
-
-    const barWidth = (canvasEl.width / analyser.frequencyBinCount) * 2.5;
-    let barHeight;
-    let x = 0;
-
-    for (let i = 0; i < analyser.frequencyBinCount; i++) {
-        barHeight = frequencyDataArray[i];
-        // console.log(barHeight);
-
-
-        frequencyСanvasCtx.fillStyle = styles.strokeStyle;
-        frequencyСanvasCtx.fillRect(x, canvasEl.height - barHeight / 2, barWidth, barHeight / 2);
-
-        x += barWidth + 1;
-    }
+const filterBuffer = (audioBuffer: AudioBuffer) => {
+    const rowData = audioBuffer.getChannelData(0);
+    const samples = 40;
+    const blockSize = Math.floor(rowData.length / samples);
+    const filteredData = [];
+    for (let i = 0; i < samples; i++) {
+        let blockStart = blockSize * i;
+        let sum = 0;
+        for (let j = 0; j < blockSize; j++) {
+            sum = sum + Math.abs(rowData[blockStart + j])
+        };
+        filteredData.push(sum / blockSize);
+    };
+    return filteredData;
 };
 
-function drawSinewave(analyser: AnalyserNode, canvasEl: HTMLCanvasElement) {
-
-    if (!canvasEl) return;
-
-    const sinewaveСanvasCtx = canvasEl.getContext("2d");
-    if (!sinewaveСanvasCtx) return;
-    sinewaveСanvasCtx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-
-    let sinewaveDataArray = new Uint8Array(analyser.fftSize);
-    // console.log(sinewaveDataArray);
-    analyser.getByteTimeDomainData(sinewaveDataArray);
-    // console.log(sinewaveDataArray);
-    // @ts-ignore
-    requestAnimationFrame(drawSinewave);
-
-    sinewaveСanvasCtx.fillStyle = styles.fillStyle;
-    sinewaveСanvasCtx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-    sinewaveСanvasCtx.lineWidth = styles.lineWidth;
-    sinewaveСanvasCtx.strokeStyle = styles.strokeStyle;
-    sinewaveСanvasCtx.beginPath();
-
-    const sliceWidth = canvasEl.width * 1.0 / analyser.fftSize;
-    let x = 0;
-
-    for (let i = 0; i < analyser.fftSize; i++) {
-        // console.log(sinewaveDataArray[i]);
-
-        const v = sinewaveDataArray[i] / 128.0; // byte / 2 || 256 / 2
-        const y = v * canvasEl.height / 2;
-
-        if (i === 0) {
-            sinewaveСanvasCtx.moveTo(x, y);
-        } else {
-            sinewaveСanvasCtx.lineTo(x, y);
-        }
-        x += sliceWidth;
-    }
-
-    sinewaveСanvasCtx.lineTo(canvasEl.width, canvasEl.height / 2);
-    sinewaveСanvasCtx.stroke();
+const normalizeData = (filteredData: Array<number>) => {
+    const multiplier = Math.pow(Math.max(...filteredData), -1);
+    return filteredData.map(elem => elem * multiplier);
 };
 
+const getCanvasContext = (canvasEl: HTMLCanvasElement) => {
+    const dpr = window.devicePixelRatio || 1;
+    // const padding = 20;
+    canvasEl.width = canvasEl.offsetWidth * dpr;
+    canvasEl.height = canvasEl.offsetHeight * dpr;
+    const context = canvasEl.getContext('2d');
+    if (!context) return null;
+    context.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    context.scale(dpr, dpr);
+    context.translate(0, canvasEl.offsetHeight);
+    return context;
+};
 
-
-function renderFrame(analyser: AnalyserNode, canvasEl: HTMLCanvasElement) {
-    // @ts-ignore
-    requestAnimationFrame(renderFrame);
-
-    if (!canvasEl) return;
-
-    const ctx = canvasEl.getContext('2d');
-    if (!ctx) return;
-    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
-
-    const bufferLength = analyser.frequencyBinCount;
-    let dataArray = new Uint8Array(bufferLength);
-
-    let x = 0;
-    let barWidth = (canvasEl.width / bufferLength) * 2.5;
-    let barHeight;
-
-    analyser.getByteFrequencyData(dataArray);
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
-
-    for (var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i];
-        console.log(barHeight);
-
-        var r = barHeight + (25 * (i / bufferLength));
-        var g = 250 * (i / bufferLength);
-        var b = 50;
-
-        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        ctx.fillRect(x, canvasEl.height - barHeight, barWidth, barHeight);
-
-        x += barWidth + 1;
-    }
-}
+const drawLineSegment = (context: CanvasRenderingContext2D, x: number, y: number, width: number, strokeStyle: string) => {
+    context.globalAlpha = 0.5;
+    context.lineWidth = width;
+    context.strokeStyle = strokeStyle;
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, y * -1);
+    context.stroke();
+};

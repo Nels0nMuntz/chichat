@@ -91,7 +91,6 @@
 
     // audio-player
     .audio-player {
-        min-width: 280px;
         min-height: 50px;
         display: flex;
         flex-wrap: wrap;
@@ -105,51 +104,52 @@
         flex-shrink: 0;
         margin-right: 12px;
         border-radius: 50%;
-        background-color: var(--color-primary);
+        background-color: var(--color-primary-100);
         transition: background-color 0.1s linear;
 
         &:hover {
-            background-color: var(--color-primary-hover);
+            background-color: var(--color-primary-100-hover);
         }
 
         .MuiSvgIcon-root {
-            fill: #fff;
+            fill: var(--color-play-audio-button-icon);
         }
     }
     .audio-player__progress {
         display: flex;
-        flex-grow: 1;
-        flex-wrap: wrap;
+        flex-direction: column;
+        min-width: 200px;
+    }
+    .audio-player__loader{
+        text-align: center;
+        color: var(--color-primary-100);
+    }
+    .audio-player__visualization{
+        position: relative;
+        width: 100%;
+        display: flex;
     }
     .audio-player__progress-slider {
         width: 100%;
-        margin: 0 0 4px 0;
+        height: 23px;
+        position: absolute;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
     }
-    .audio-player__current-time,
-    .audio-player__duration {
+    .audio-player__backdrop{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    .audio-player__meta {
+        margin-top: 4px;
         font-size: 14px;
         font-weight: 400;
         color: var(--color-text-200);
     }
-    // .audio-player__visualization{
-    //     canvas{
-    //     }
-    // }
-
-    // audio
-    // .audio-control__content {
-    //     flex-grow: 1;
-    // }
-    // .audio-control__waveform {
-    //     width: 180px;
-    //     height: 30px;
-    // }
-    // .audio-control__duration {
-    //     display: inline-block;
-    //     font-size: 14px;
-    //     font-weight: 400;
-    //     color: var(--color-text-200);
-    // }
 }
 
 .message-list-item {
