@@ -1,10 +1,9 @@
-import { IMessageAttachResponse } from './../response/messageAttachResponse.model';
-import { Status, DateISOString } from 'shared';
+import { Status, UniqueId, DateISOString } from 'shared';
 
 
 export type MessageAttachType = 'image' | 'video' | 'file' | 'voice';
 
-export interface IMessageAttachBase {    
+export interface IMessageAttachBase {
     url: string;
     name: string;
     fileType: {
@@ -12,20 +11,22 @@ export interface IMessageAttachBase {
         mime: string;
     };
     attachType: MessageAttachType;
+    playable: boolean;
     createdAt: DateISOString;
     updatedAt: DateISOString;
 };
 
-export interface IMessageAttachFile {
+export interface IMessageAttach<T = {}> extends IMessageAttachBase {
+    attachId: UniqueId;
     status: Status;
-    url?: string;
-    playing?: boolean;
-    audioBuffer?: AudioBuffer;
-    audioContext?: AudioContext;
-    // duration?: number;
-    // analyser?: AnalyserNode;
+    file: T;
 };
 
-export interface IMessageAttach extends IMessageAttachResponse {
-    file: IMessageAttachFile;
+export interface IMessageAttachVoiceFile {
+    urlFromBlob?: string;
+    playing?: boolean;
+    duration?: number;
+    analyser?: AnalyserNode;
+    audioBuffer?: AudioBuffer;
+    audioContext?: AudioContext;
 };

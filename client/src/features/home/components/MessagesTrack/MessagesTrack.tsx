@@ -6,7 +6,7 @@ import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 
 import BaseMessage from '../Messages/BaseMessage/BaseMessage';
-import { IMessage, IMessageAttach } from '../../models';
+import { IMessage, IMessageAttachResponse } from '../../models';
 import { MessageDateGroup, Status, UniqueId } from 'shared';
 
 import style from './MessagesTrack.module.scss';
@@ -34,7 +34,7 @@ type MessagesTrackProps = {
     toggleSelectMessage: (message: IMessage) => void;
     handleFetchMessages: () => void;
     handleLoading: (status: Status) => void;
-    handleFetchAttach: (messageId: string, attach: IMessageAttach) => void;
+    handleFetchAttach: (messageId: string, attach: IMessageAttachResponse) => void;
 };
 
 const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {

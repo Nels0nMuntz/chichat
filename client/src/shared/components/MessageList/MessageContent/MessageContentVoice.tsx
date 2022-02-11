@@ -4,7 +4,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { IMessageAttach } from 'features/home/models';
+import { IMessageAttach, IMessageAttachVoiceFile } from 'features/home/models';
 import { setMessageAttachPlayingAction } from 'features/home/store/dialogs/actions';
 import { Status, UniqueId, ThemeContext, AppTheme } from 'shared';
 
@@ -18,8 +18,8 @@ const getTimeString = (time: number | null | undefined) => {
 
 type MessageContentVoiceProps = {
     messageId: UniqueId;
-    attach: IMessageAttach;
-    onFetchAttach: (attach: IMessageAttach) => void;
+    attach: IMessageAttach<IMessageAttachVoiceFile>;
+    onFetchAttach: (attach: IMessageAttach<IMessageAttachVoiceFile>) => void;
 };
 
 export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) => {
@@ -32,9 +32,9 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
 
     const { theme } = React.useContext(ThemeContext);
 
-    const status = attach.file.status;
+    const status = attach.status;
     const canPlay = attach.file.playing;
-    const url = attach.file.url;
+    const url = attach.file.urlFromBlob;
     const audioBuffer = attach.file.audioBuffer;
     const audioContext = attach.file.audioContext;
     const loading = status === Status.Initial || status === Status.Running; 
@@ -47,28 +47,21 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
 
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [trackProgress, setTrackProgress] = React.useState<number>(0);
-
-    // console.log({ 
-    //     duration: audioBuffer?.duration, 
-    //     trackProgress,
-    //     ended: audioRef.current.ended,
-    // });    
+    // const [duration, setDuration] = React.useState<number>(0);
 
     const startTimer = () => {
         intervalRef.current && clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
-            console.log(audioRef.current.ended);
-            if (audioRef.current.ended && playing) {
-                console.log(audioRef.current.ended);
-                audioRef.current.currentTime = 0;
-                setPlaying(false);
-                setTrackProgress(audioRef.current.currentTime);              
-            } else {
-                setTrackProgress(audioRef.current.currentTime);
-            };
+            setTrackProgress(audioRef.current.currentTime);
         }, 10);
     };
 
+    const stopTimer = () => {
+        intervalRef.current && clearInterval(intervalRef.current);
+        audioRef.current.currentTime = 0;
+        setTrackProgress(audioRef.current.currentTime); 
+        setPlaying(false);
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         intervalRef.current && clearInterval(intervalRef.current);
         audioRef.current.currentTime = +e.target.value;
@@ -80,7 +73,11 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
         };
         setPlaying(true);
     };
-    const stopPlaying = () => setPlaying(false);
+    const stopPlaying = () => setPlaying(false);   
+
+    audioRef.current.addEventListener("ended", () => {        
+        stopTimer();
+    });
 
     React.useEffect(() => {
         if (status === Status.Initial) {
@@ -93,7 +90,7 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
             startTimer();
         } else {
             audioRef.current.pause();
-            intervalRef.current && clearInterval(intervalRef.current);
+            stopTimer();
         }
     }, [playing, audioRef, startTimer]);
     React.useEffect(() => {
@@ -106,6 +103,7 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
     React.useEffect(() => {
         if (url) {
             audioRef.current.src = url;
+            audioRef.current.load();
         };
     }, [audioRef, url]);
     React.useEffect(() => {

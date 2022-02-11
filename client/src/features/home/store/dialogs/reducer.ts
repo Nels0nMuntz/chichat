@@ -23,9 +23,9 @@ import {
     resetUploadModalAction,
     setMessageEmojiAction,
     setMessageInputEditModeAction,
-    setMessageAttachFileAction,
     setMessageAttachStatusAction,
     setMessageAttachPlayingAction,
+    setMessageAttachVoiceFileAction,
 } from '../';
 
 
@@ -293,7 +293,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setMessageInputEditModeAction.is(action)) {
+    if (setMessageInputEditModeAction.is(action)) {
         return {
             ...state,
             list: [
@@ -363,7 +363,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(resetUploadModalAction.is(action)) {
+    if (resetUploadModalAction.is(action)) {
         return {
             ...state,
             uploadModal: {
@@ -372,7 +372,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setMessageAttachFileAction.is(action)) {
+    if (setMessageAttachVoiceFileAction.is(action)) {
         const { messageId, attachId, file } = action.payload;
         return {
             ...state,
@@ -409,7 +409,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setMessageAttachStatusAction.is(action)) {
+    if (setMessageAttachStatusAction.is(action)) {
         const { messageId, attachId, status } = action.payload;
         return {
             ...state,
@@ -426,13 +426,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                         content: {
                                             ...message.content,
                                             attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
-                                                return attach.attachId === attachId ? {
-                                                    ...attach,
-                                                    file: {
-                                                        ...attach.file,
+                                                return attach.attachId === attachId
+                                                    ? {
+                                                        ...attach,
                                                         status,
-                                                    },
-                                                } : attach;
+                                                    }
+                                                    : attach;
                                             }),
                                         },
                                     } : message;
@@ -446,40 +445,33 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if(setMessageAttachPlayingAction.is(action)) {
+    if (setMessageAttachPlayingAction.is(action)) {
         const { messageId, attachId } = action.payload;
         return {
             ...state,
             list: state.list.map<IDialog>(dialog => {
-                if(dialog.isActive) {
+                if (dialog.isActive) {
                     return {
                         ...dialog,
                         messages: {
                             ...dialog.messages,
                             list: dialog.messages.list.map<IMessage>(message => {
-                                if(message.messageId === messageId) {
+                                if (message.messageId === messageId) {
                                     return {
                                         ...message,
                                         content: {
                                             ...message.content,
                                             attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
-                                                if(attach.attachId === attachId) {
-                                                    return {
+                                                return attach.playable
+                                                    ? {
                                                         ...attach,
                                                         file: {
                                                             ...attach.file,
-                                                            playing: true,
-                                                        },
+                                                            playing: attach.attachId === attachId,
+                                                        }
                                                     }
-                                                } else {
-                                                    return {
-                                                        ...attach,
-                                                        file: {
-                                                            ...attach.file,
-                                                            playing: false,
-                                                        },
-                                                    }
-                                                }
+                                                    : attach
+                                                ;
                                             }),
                                         },
                                     };

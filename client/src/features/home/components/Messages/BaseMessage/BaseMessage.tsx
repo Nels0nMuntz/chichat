@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { IMessage, IMessageAttach } from 'features/home/models';
-import TextMessage from '../TextMessage/TextMessage';
-import VoiceMessage from '../VoiceMessage/VoiceMessage';
+import { IMessage, IMessageAttachResponse } from 'features/home/models';
 import MessageLayout from '../MessageLayout';
+import { MessageContentVoice } from 'shared';
 
 
 type BaseMessageProps = {
@@ -12,28 +11,42 @@ type BaseMessageProps = {
     selectMode: boolean;
     enableSelectMode: () => void;
     toggleSelectMessage: (message: IMessage) => void;
-    handleFetchAttach: (messageId: string, attach: IMessageAttach) => void;
+    handleFetchAttach: (messageId: string, attach: IMessageAttachResponse) => void;
 };
 
-const BaseMessage: React.FC<BaseMessageProps> = (props) => {
-    const { 
-        userId, 
-        message, 
-        selectMode, 
-        enableSelectMode, 
+const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
+    const {
+        userId,
+        message,
+        selectMode,
+        enableSelectMode,
         toggleSelectMessage,
         handleFetchAttach,
     } = props;
 
     const messageId = message.messageId;
-    const attach = message.content.attach;    
+    const attach = message.content.attach;
     const isAttachExist = !!attach?.length;
-    const voiceAttach = isAttachExist ? attach.filter(({ attachType }) => attachType === 'voice') : [];
+    // const voiceAttach = isAttachExist ? attach.filter(({ attachType }) => attachType === 'voice') : [];
     const isVoiceMessage = isAttachExist && attach.some(({ attachType }) => attachType === 'voice');
 
-    const onFetchAttach = React.useCallback((attach: IMessageAttach) => {
+    const onFetchAttach = React.useCallback((attach: IMessageAttachResponse) => {
         handleFetchAttach(messageId, attach);
     }, [messageId]);
+
+    const voiceAttachments = React.useMemo(() => {
+        return attach?.map((attachItem) => (
+            <MessageContentVoice
+                messageId={messageId}
+                key={attachItem.attachId}
+                attach={{
+                    ...attachItem,
+                    // file: attachItem
+                }}
+                onFetchAttach={onFetchAttach}
+            />
+        ))
+    }, [attach]);
 
     return (
         <MessageLayout
@@ -44,10 +57,14 @@ const BaseMessage: React.FC<BaseMessageProps> = (props) => {
             toggleSelectMessage={toggleSelectMessage}
         >
             {isVoiceMessage
-                ? <VoiceMessage messageId={messageId} attach={voiceAttach} onFetchAttach={onFetchAttach} />
+                ? (
+                    <React.Fragment>
+                        {}
+                    </React.Fragment>
+                )
                 : undefined}
         </MessageLayout>
     );
-};
+});
 
 export default BaseMessage;

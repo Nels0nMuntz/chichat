@@ -3,7 +3,7 @@ import { put } from "redux-saga/effects";
 import { firebaseSorage } from "services";
 import {
     fetchMessageAttachAction,
-    setMessageAttachFileAction,
+    setMessageAttachFileActio,
     setMessageAttachStatusAction
 } from "../../actions";
 import { Status } from "shared";
@@ -41,46 +41,6 @@ export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachA
                 },
             }
         }));
-        // if(!buffer) {
-        //     throw new Error('ArrayBuffer does not exist');
-        // };
-        // const url = URL.createObjectURL(blob);
-
-        // const audio = new Audio(url);
-        // audio.play();
-
-        // const reader = new FileReader();
-        // reader.onload = function () {
-        //     url = this.result;
-        // };
-        // yield reader.readAsDataURL(blob);
-        // if (!buffer) return;
-        // console.log(buffer);
-        // console.log(url);
-
-
-        // @ts-ignore
-        // const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        // const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
-        // const analyser = audioContext.createAnalyser();
-        // const bufferSource = audioContext.createBufferSource();
-        // const duration = Number(audioBuffer.duration.toFixed(3));
-        // bufferSource.buffer = audioBuffer;
-        // bufferSource.connect(audioContext.destination);
-        // bufferSource.connect(analyser);
-        // analyser.connect(audioContext.destination);
-        // yield put(setMessageAttachFileAction({
-        //     payload: {
-        //         messageId,
-        //         attachId: attach.attachId,
-        //         file: {
-        //             url,
-        //             audioBuffer,
-        //             audioContext,
-        //             status: Status.Success,
-        //         },
-        //     }
-        // }));
 
     } catch (error) {
         yield put(setMessageAttachStatusAction({

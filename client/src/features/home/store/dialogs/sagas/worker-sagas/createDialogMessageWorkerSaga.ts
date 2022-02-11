@@ -40,6 +40,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
                         mime: file.type,
                     },
                     attachType: attach[i].type,
+                    playable: attach[i].type === 'voice' || attach[i].type === 'video',
                     createdAt: new Date(file.lastModified).toISOString(),
                     updatedAt: new Date(file.lastModified).toISOString(),
                 });

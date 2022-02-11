@@ -3,6 +3,9 @@ class AudioRecorder {
     audioBlobs: Array<BlobPart> = [];
     mediaStream: MediaStream | null = null;
     mediaRecorder: MediaRecorder | null = null;
+    private duration: number = 0;
+    private startedAt: number = 0;
+    private pausedAt: number = 0;
 
     start = () => {
         if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
@@ -15,6 +18,7 @@ class AudioRecorder {
                 this.mediaRecorder = new MediaRecorder(this.mediaStream);
                 this.mediaRecorder.addEventListener('dataavailable', event => this.audioBlobs.push(event.data));
                 this.mediaRecorder.start();
+                this.startedAt = Date.now();
             })
     }
 
@@ -25,6 +29,9 @@ class AudioRecorder {
 
 
             this.mediaRecorder?.addEventListener('stop', () => {
+                this.pausedAt = Date.now();
+                this.duration = this.duration + (this.pausedAt - this.startedAt);
+                
                 const file = new File(
                     this.audioBlobs,
                     timestamp.toString(),
@@ -41,10 +48,13 @@ class AudioRecorder {
 
     pause = () => {
         this.mediaRecorder?.pause();
+        this.pausedAt = Date.now();
+        this.duration = this.duration + (this.pausedAt - this.startedAt);
     }
 
     resume = () => {
         this.mediaRecorder?.resume();
+        this.startedAt = Date.now();
     }
 
     cancel = () => {
