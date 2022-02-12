@@ -46,8 +46,6 @@ export const uploadFiles = (files: FileList): Array<IDialogAttach> | Error => {
     try {
         const response = Array.from(files).reduce<Array<IDialogAttach>>((acc, file): Array<IDialogAttach> => {
             const type = file.type.split('/')[0];
-            console.log(file);
-            console.log(URL.createObjectURL(file));
             
             switch (type) {
                 case 'image':

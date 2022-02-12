@@ -2,7 +2,7 @@ import React from 'react';
 
 import { IMessageStore, IMessageAttachStore } from 'features/home/models';
 import MessageLayout from '../MessageLayout';
-import { MessageContentVoice } from 'shared';
+import VoiceMessage from '../VoiceMessage/VoiceMessage';
 
 
 type BaseMessageProps = {
@@ -27,7 +27,6 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
     const messageId = message.messageId;
     const attach = message.content.attach;
     const isAttachExist = !!attach?.length;
-    // const voiceAttach = isAttachExist ? attach.filter(({ attachType }) => attachType === 'voice') : [];
     const isVoiceMessage = isAttachExist && attach.some(({ attachType }) => attachType === 'voice');
 
     const onFetchAttach = React.useCallback((attach: IMessageAttachStore) => {
@@ -36,7 +35,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
 
     const voiceAttachments = React.useMemo(() => {
         return attach?.map((attachItem) => (
-            <MessageContentVoice
+            <VoiceMessage
                 messageId={messageId}
                 key={attachItem.attachId}
                 attach={attachItem}
@@ -53,13 +52,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
             enableSelectMode={enableSelectMode}
             toggleSelectMessage={toggleSelectMessage}
         >
-            {isVoiceMessage
-                ? (
-                    <React.Fragment>
-                        {voiceAttachments}
-                    </React.Fragment>
-                )
-                : undefined}
+            {isVoiceMessage ? voiceAttachments : undefined}
         </MessageLayout>
     );
 });

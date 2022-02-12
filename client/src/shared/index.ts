@@ -23,7 +23,6 @@ export { default as MessageDateGroup } from './components/MessageList/MessageDat
 export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
 export { default as CloseIconButton } from './components/CloseIconButton/CloseIconButton';
 export { default as LoadingBackdrop } from './components/LoadingBackdrop/LoadingBackdrop';
-export { MessageContentVoice } from './components/MessageList/MessageContent/MessageContentVoice';
 
 // models
 export * from './models/appTheme.model';
@@ -54,7 +53,6 @@ export * from './utils/getUserFullname';
 export * from './utils/uploadFiles';
 export * from './utils/recordAudio';
 export * from './utils/audioRecorder';
-export * from './utils/audioPlayer';
 export * from './utils/checkAttachType';
 
 // hocs

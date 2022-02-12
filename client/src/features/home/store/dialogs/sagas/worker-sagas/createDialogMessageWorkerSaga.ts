@@ -1,4 +1,5 @@
 import { put, call, all, CallEffect } from "@redux-saga/core/effects";
+import { UploadMetadata } from "@firebase/storage";
 
 import { firebaseSorage } from "services";
 import { openNotification } from 'features/notification/store/actions';
@@ -9,7 +10,7 @@ import {
     resetMessageTextAction,
     setMessageInputEditModeAction,
 } from "features/home/store";
-import { Status, checkAttachType, isEmptyString, wsManager } from 'shared';
+import { Status, isEmptyString, wsManager } from 'shared';
 
 
 interface IUploadedFile {
@@ -27,7 +28,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
     };
     try {
         if(attach?.length) {
-            const response: Array<IUploadedFile> = yield all(attach.map(({ file }) => call(uploadFile, file)));
+            const response: Array<IUploadedFile> = yield all(attach.map(({ file, metadata }) => call(storeFileInFirebaseStorage, file, metadata)));
             response.forEach(({ file, fileURL, status }, i) => {
                 if(status === Status.Error){
                     throw new Error(`Can't upload file ${file.name}`);                
@@ -61,9 +62,9 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
 
 
 
-function* uploadFile(file: File): Generator<CallEffect<string>, IUploadedFile, string>{
+function* storeFileInFirebaseStorage(file: File, metadata?: UploadMetadata): Generator<CallEffect<string>, IUploadedFile, string>{
     try {
-        const fileURL: string = yield call(firebaseSorage.upload, file);
+        const fileURL: string = yield call(firebaseSorage.storeFile, file, metadata);
         return { status: Status.Success, file, fileURL };
     } catch (error: any) {
         console.log(error);  

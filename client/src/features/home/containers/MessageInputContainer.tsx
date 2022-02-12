@@ -2,14 +2,14 @@ import React, { ChangeEvent } from 'react';
 import { BaseEmoji } from 'emoji-mart';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'ts-compose';
+import { UploadMetadata } from '@firebase/storage';
 
 import MessageInput from '../components/MessageInput/MessageInput';
 import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
-import { IMessageContent, RecordState, MessageAttachType } from '../models';
+import { RecordState, MessageAttachType } from '../models';
 import {
     selectActiveDialog,
     selectUserData,
-    sendWSMessageAction,
     setMessageTextAction,
     resetMessageTextAction,
     changeSelectModeAction,
@@ -111,7 +111,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         setRecordState('recording');
         audioRecorder.resume();
     }, [audioRecorder, setRecordState]);
-    const handleStopRecordAudio = React.useCallback((): Promise<File> => {
+    const handleStopRecordAudio = React.useCallback((): Promise<{ file: File, metadata?: UploadMetadata}> => {
         return new Promise(async (resolve, reject) => {
             setRecordState('inactive');
             setEditMode(false);
@@ -123,7 +123,15 @@ const MessageInputContainer: React.FC = React.memo(() => {
             }
         });
     }, [audioRecorder, setEditMode, setRecordState]);
-    const sendMessage = React.useCallback((text?: string, attach?: Array<{ file: File, type: MessageAttachType }>) => {
+    const sendMessage = React.useCallback(
+        (
+            text?: string, 
+            attach?: Array<{ 
+                file: File, 
+                type: MessageAttachType,
+                metadata?: UploadMetadata,
+            }>
+        ) => {
         if (!dialogId || isEmptyMessage(text, attach)) {
             dispatch(resetMessageTextAction({ payload: null }));
             setEditMode(false);
@@ -165,14 +173,14 @@ const MessageInputContainer: React.FC = React.memo(() => {
 
         if (shouldSendAudioMessage) {
             try {
-                const file = await handleStopRecordAudio();
+                const { file, metadata } = await handleStopRecordAudio();
                 if (!dialogId) {
                     dispatch(resetMessageTextAction({ payload: null }));
                     return;
                 };        
                 sendMessage(
                     messageText,
-                    [{ file, type: 'voice' }],
+                    [{ file, type: 'voice', metadata }],
                 );       
             } catch (error: any) {
                 console.log(error);

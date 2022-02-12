@@ -1,3 +1,5 @@
+import { UploadMetadata } from "@firebase/storage";
+
 class AudioRecorder {
 
     audioBlobs: Array<BlobPart> = [];
@@ -22,7 +24,7 @@ class AudioRecorder {
             })
     }
 
-    stop = (): Promise<File> => {
+    stop = (): Promise<{ file: File, metadata: UploadMetadata }> => {
         return new Promise(resolve => {
             const timestamp = +new Date();
             const mimeType = this.mediaRecorder?.mimeType;
@@ -31,7 +33,7 @@ class AudioRecorder {
             this.mediaRecorder?.addEventListener('stop', () => {
                 this.pausedAt = Date.now();
                 this.duration = this.duration + (this.pausedAt - this.startedAt);
-                
+
                 const file = new File(
                     this.audioBlobs,
                     timestamp.toString(),
@@ -40,7 +42,15 @@ class AudioRecorder {
                         lastModified: timestamp,
                     }
                 );
-                resolve(file);
+                const durationsInSeconds = this.duration / 1000;
+                resolve({
+                    file,
+                    metadata: {
+                        customMetadata: {
+                            duration: durationsInSeconds.toString(),
+                        },
+                    },
+                });
             });
             this.cancel();
         });

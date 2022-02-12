@@ -1,13 +1,13 @@
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, UploadMetadata } from "firebase/storage";
 import { storage } from "core";
 import axios, { AxiosResponse } from 'axios';
 
 
 class FirebaseSorage {
-    upload = async (file: File): Promise<string> => {
+    storeFile = async (file: File, metadata?: UploadMetadata): Promise<string> => {
         try {
             const reference = ref(storage, file.name);
-            await uploadBytes(reference, file);
+            await uploadBytes(reference, file, metadata);
             return await getDownloadURL(reference);
         } catch (error: any) {
             throw error.response.data;

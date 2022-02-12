@@ -1,4 +1,7 @@
 import { defineAction } from "rd-redux-utils";
+import { BaseEmoji } from "emoji-mart";
+import { UploadMetadata } from "@firebase/storage";
+
 import { Status, UniqueId, PaginationLimit } from "shared";
 import {
     ICreateDialogRequest,
@@ -7,11 +10,8 @@ import {
     IMessageStore,
     IMessageResponse,
     MessageAttachType,
-    IFetchMessageAttachRequest,
     IMessageAttachVoiceFile,
-    IMessageAttachStore,
 } from "features/home/models";
-import { BaseEmoji } from "emoji-mart";
 
 
 // dialogs
@@ -62,6 +62,7 @@ export const createDialogMessageAction = defineAction<{
         attach?: Array<{
             file: File,
             type: MessageAttachType
+            metadata?: UploadMetadata;
         }>,
     }
 }>("CREATE_DIALOG_MESSAGE");
