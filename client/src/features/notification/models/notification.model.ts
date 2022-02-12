@@ -1,7 +1,11 @@
-import { Status } from "shared";
+import { VariantType } from "notistack";
+import { UniqueId } from "shared";
 
 export interface INotification {
-    status:Status
-    message: string | string[]
-    isOpen: boolean
+    key: UniqueId;
+    message: string;
+    dismissed: boolean;
+    options: {
+        variant: VariantType;
+    };
 };

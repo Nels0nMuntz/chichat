@@ -16,7 +16,7 @@ export interface IMessageAttachBase {
     updatedAt: DateISOString;
 };
 
-export interface IMessageAttach<T = {}> extends IMessageAttachBase {
+export interface IMessageAttachStore<T = {}> extends IMessageAttachBase {
     attachId: UniqueId;
     status: Status;
     file: T;
@@ -28,5 +28,5 @@ export interface IMessageAttachVoiceFile {
     duration?: number;
     analyser?: AnalyserNode;
     audioBuffer?: AudioBuffer;
-    audioContext?: AudioContext;
+    audioContext?: AudioContext; 
 };

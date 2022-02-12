@@ -4,8 +4,7 @@ import { authService, localStorageService } from "services";
 
 import { setIsAuthAction } from '../../actions';
 import { ISignInResponse } from "features/auth/models";
-import { setNotification } from "features/notification/store";
-import { Status } from "shared";
+import { openNotification } from "features/notification/store";
 
 
 export function* checkAuthWorkerSaga(){
@@ -20,9 +19,6 @@ export function* checkAuthWorkerSaga(){
         console.log(error);
              
         yield put(setIsAuthAction({ payload: false })); 
-        yield put(setNotification({ payload: {
-            status: Status.Error,
-            message: error.message,
-        } }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };

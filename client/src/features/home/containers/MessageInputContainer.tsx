@@ -27,7 +27,7 @@ import {
     Status,
     audioRecorder,
 } from 'shared';
-import { setNotification } from 'features/notification/store';
+import { openNotification } from 'features/notification/store';
 
 const isEmptyMessage = (text?: string, attach?: Array<object>) => isEmptyString(text) && (!attach || !attach.length);
 
@@ -101,7 +101,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         setRecordState('recording');
         setEditMode(true);
         audioRecorder.start()
-            .catch(error => dispatch(setNotification({ payload: { status: Status.Error, message: error.message } })));
+            .catch(error => dispatch(openNotification({ payload: { message: error.message, variant: 'error' } })));
     }, [audioRecorder, setEditMode, setRecordState]);
     const handlePauseRecordAudio = React.useCallback(() => {
         setRecordState('paused');
@@ -176,7 +176,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 );       
             } catch (error: any) {
                 console.log(error);
-                dispatch(setNotification({ payload: { status: Status.Error, message: error.message } }));
+                dispatch(openNotification({ payload: { message: error.message, variant: 'error' } }));
             };
         };
 

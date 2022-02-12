@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import MicIcon from '@material-ui/icons/Mic';
-import SendIcon from '@material-ui/icons/Send';
+import MicIcon from '@mui/icons-material/Mic';
+import SendIcon from '@mui/icons-material/Send';
 
 import style from './InputButton.module.scss';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import CloseIcon from '@mui/icons-material/Close';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import { CustomScroll } from 'shared';
 import SearchbarMessagesTrack from '../SearchbarMessagesTrack/SearchbarMessagesTrack';

@@ -1,9 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
-import CloseIcon from '@material-ui/icons/Close';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MoreActionsPopup from '../Popups/MoreActionsPopup';
 import { Avatar, IUser, getUserFullname } from 'shared';
 

@@ -1,12 +1,12 @@
 import { IUser, Status, UniqueId } from "shared";
-import { IMessage } from "../";
+import { IMessageStore } from "../";
 import { IPaginationOptions } from "./paginationOptions.model";
 
 
 export interface IDialogMessages extends IPaginationOptions {
     status: Status;
-    list: Array<IMessage>;
-    lastMessage: IMessage | null;
+    list: Array<IMessageStore>;
+    lastMessage: IMessageStore | null;
     selectMode: boolean;
     hasMore?: boolean;
 };

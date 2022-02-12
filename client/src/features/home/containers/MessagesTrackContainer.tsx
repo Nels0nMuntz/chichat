@@ -7,11 +7,11 @@ import {
     toggleSelectMessageAction,
     fetchDialogMessagesAction,
     setDialogMessagesStatusAction,
-    fetchMessageAttachAction,
+    fetchMessageAttachVoiceAction,
 } from '../store';
 import MessagesTrack from '../components/MessagesTrack/MessagesTrack';
 import { Status } from 'shared';
-import { IDialog, IMessage, IMessageAttach } from '../models';
+import { IDialog, IMessageStore, IMessageAttachStore } from '../models';
 
 
 type MessagesTrackContainerProps = {
@@ -34,7 +34,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
 
     const enableSelectMode = React.useCallback(() => { dispatch(changeSelectModeAction({ payload: true })) }, []);
     const disableSelectMode = React.useCallback(() => { dispatch(changeSelectModeAction({ payload: false })) }, []);
-    const toggleSelectMessage = React.useCallback((message: IMessage) => { dispatch(toggleSelectMessageAction({ payload: message })) }, []);
+    const toggleSelectMessage = React.useCallback((message: IMessageStore) => { dispatch(toggleSelectMessageAction({ payload: message })) }, []);
     const handleFetchMessages = React.useCallback(() => {
         if (hasMore) {
             dispatch(fetchDialogMessagesAction({ payload: { dialogId, page, limit } }));
@@ -44,8 +44,8 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
         if (e.code === "Escape") disableSelectMode();
     };
     const handleLoading = React.useCallback((status: Status) => { dispatch(setDialogMessagesStatusAction({ payload: { dialogId, status } })) }, [dialogId]);
-    const handleFetchAttach = React.useCallback((messageId: string, attach: IMessageAttach) => {
-        dispatch(fetchMessageAttachAction({ payload: { messageId, attach } }));
+    const handleFetchAttach = React.useCallback((messageId: string, attach: IMessageAttachStore) => {
+        dispatch(fetchMessageAttachVoiceAction({ payload: { messageId, attachId: attach.attachId, attachFileUrl: attach.url } }));
     }, []);
 
     React.useEffect(() => {

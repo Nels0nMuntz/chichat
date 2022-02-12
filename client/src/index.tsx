@@ -7,6 +7,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import App from './App';
 import { store } from './app-state';
 import { ThemeProvider } from 'shared';
+import { SnackbarProvider } from 'features/notification';
 import { history } from './history-instance';
 
 import 'assets/styles/index.scss';
@@ -17,7 +18,9 @@ render(
         <ConnectedRouter history={history}>
             <BrowserRouter>
                 <ThemeProvider>
-                    <App />
+                    <SnackbarProvider>
+                        <App />
+                    </SnackbarProvider>
                 </ThemeProvider>
             </BrowserRouter>
         </ConnectedRouter>

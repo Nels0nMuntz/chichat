@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { IMessage, IMessageAttachResponse } from 'features/home/models';
+import { IMessageStore, IMessageAttachStore } from 'features/home/models';
 import MessageLayout from '../MessageLayout';
 import { MessageContentVoice } from 'shared';
 
 
 type BaseMessageProps = {
     userId: string;
-    message: IMessage;
+    message: IMessageStore;
     selectMode: boolean;
     enableSelectMode: () => void;
-    toggleSelectMessage: (message: IMessage) => void;
-    handleFetchAttach: (messageId: string, attach: IMessageAttachResponse) => void;
+    toggleSelectMessage: (message: IMessageStore) => void;
+    handleFetchAttach: (messageId: string, attach: IMessageAttachStore) => void;
 };
 
 const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
@@ -30,7 +30,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
     // const voiceAttach = isAttachExist ? attach.filter(({ attachType }) => attachType === 'voice') : [];
     const isVoiceMessage = isAttachExist && attach.some(({ attachType }) => attachType === 'voice');
 
-    const onFetchAttach = React.useCallback((attach: IMessageAttachResponse) => {
+    const onFetchAttach = React.useCallback((attach: IMessageAttachStore) => {
         handleFetchAttach(messageId, attach);
     }, [messageId]);
 
@@ -39,10 +39,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
             <MessageContentVoice
                 messageId={messageId}
                 key={attachItem.attachId}
-                attach={{
-                    ...attachItem,
-                    // file: attachItem
-                }}
+                attach={attachItem}
                 onFetchAttach={onFetchAttach}
             />
         ))
@@ -59,7 +56,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
             {isVoiceMessage
                 ? (
                     <React.Fragment>
-                        {}
+                        {voiceAttachments}
                     </React.Fragment>
                 )
                 : undefined}

@@ -4,13 +4,14 @@ import {
     ICreateDialogRequest,
     IDialog,
     IDialogAttach,
-    IMessage,
+    IMessageStore,
+    IMessageResponse,
     MessageAttachType,
     IFetchMessageAttachRequest,
     IMessageAttachVoiceFile,
+    IMessageAttachStore,
 } from "features/home/models";
 import { BaseEmoji } from "emoji-mart";
-import { boolean } from "yup/lib/locale";
 
 
 // dialogs
@@ -47,11 +48,11 @@ export const resetMessageTextAction = defineAction<{ payload: null }>("RESET_MES
 
 export const changeSelectModeAction = defineAction<{ payload: boolean }>("CHANGE_SELECT_MODE");
 
-export const toggleSelectMessageAction = defineAction<{ payload: IMessage }>("TOGGLE_SELECT_MESSAGE");
+export const toggleSelectMessageAction = defineAction<{ payload: IMessageStore }>("TOGGLE_SELECT_MESSAGE");
 
-export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessage>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
+export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessageResponse>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
 
-export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessage } }>("ADD_NEW_MESSAGE");
+export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessageResponse } }>("ADD_NEW_MESSAGE");
 
 export const createDialogMessageAction = defineAction<{
     payload: {
@@ -66,10 +67,6 @@ export const createDialogMessageAction = defineAction<{
 }>("CREATE_DIALOG_MESSAGE");
 
 export const setMessageInputEditModeAction = defineAction<{ payload: boolean }>("SET_INPUT_MESSAGE_EDIT_MODE");
-
-export const fetchMessageAttachAction = defineAction<{ payload: IFetchMessageAttachRequest }>("FETCH_MESSAGE_ATTACH");
-
-// export const setMessageAttachFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: IMessageAttachFile } }>("SET_MESSAGE_ATTACH_FILE");
 
 export const setMessageAttachStatusAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, status: Status } }>("SET_MESSAGE_ATTACH_STATUS");
 
@@ -91,4 +88,14 @@ export const uploadFilesAction = defineAction<{ payload: FileList }>("UPLOAD_FIL
 export const resetUploadModalAction = defineAction<{ payload: null }>("RESET_UPLOAD_MODAL");
 
 // voice attachment
-export const setMessageAttachVoiceFileAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, file: IMessageAttachVoiceFile } }>("SET_MESSAGE_ATTACH_FILE");
+export const fetchMessageAttachVoiceAction = defineAction<{ payload: {
+    messageId: UniqueId,
+    attachId: UniqueId,
+    attachFileUrl: string,
+} }>("FETCH_MESSAGE_ATTACH_VOICE");
+
+export const setMessageAttachVoiceAction = defineAction<{ payload: { 
+    messageId: UniqueId, 
+    attachId: UniqueId,
+    attachFile: IMessageAttachVoiceFile, 
+} }>("SET_MESSAGE_ATTACH_VOICE");

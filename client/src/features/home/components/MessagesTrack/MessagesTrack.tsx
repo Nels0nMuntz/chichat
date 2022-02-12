@@ -6,7 +6,7 @@ import isThisYear from 'date-fns/isThisYear';
 import uk from 'date-fns/locale/uk';
 
 import BaseMessage from '../Messages/BaseMessage/BaseMessage';
-import { IMessage, IMessageAttachResponse } from '../../models';
+import { IMessageStore, IMessageAttachStore } from '../../models';
 import { MessageDateGroup, Status, UniqueId } from 'shared';
 
 import style from './MessagesTrack.module.scss';
@@ -19,22 +19,22 @@ const formatPeriod = (date: Date): string => {
 
 interface IGroupedMessages {
     period: Date;
-    list: Array<IMessage>;
+    list: Array<IMessageStore>;
 };
 
 type MessagesTrackProps = {
     status: Status;
     userId: UniqueId;
     dialogId: UniqueId;
-    list: Array<IMessage>;
+    list: Array<IMessageStore>;
     selectMode: boolean;
     page: number;
     containerEl: HTMLDivElement | null;
     enableSelectMode: () => void;
-    toggleSelectMessage: (message: IMessage) => void;
+    toggleSelectMessage: (message: IMessageStore) => void;
     handleFetchMessages: () => void;
     handleLoading: (status: Status) => void;
-    handleFetchAttach: (messageId: string, attach: IMessageAttachResponse) => void;
+    handleFetchAttach: (messageId: string, attach: IMessageAttachStore) => void;
 };
 
 const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {

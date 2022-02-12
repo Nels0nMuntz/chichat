@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import PauseIcon from '@material-ui/icons/Pause';
-import PlayIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 
 
 import { RecordState } from '../../models';

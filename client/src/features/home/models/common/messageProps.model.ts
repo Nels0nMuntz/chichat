@@ -1,9 +1,9 @@
-import { IMessage } from './message.model';
+import { IMessageStore } from './message.model';
 
 export type MessageProps = {
     userId: string;
-    message: IMessage;
+    message: IMessageStore;
     selectMode: boolean;
     enableSelectMode: () => void;
-    toggleSelectMessage: (message: IMessage) => void;
+    toggleSelectMessage: (message: IMessageStore) => void;
 };

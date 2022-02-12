@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { ISignInResponse, SignInFormErrors } from '../../../models';
 import { authService, localStorageService } from 'services';
 import { ResponseError, Status } from 'shared';
-import { setNotification } from 'features/notification/store';
+import { openNotification } from 'features/notification/store';
 import { HOME_PAGE_URL } from 'features/home/urls';
 import {
     signInAction,
@@ -35,9 +35,6 @@ export function* signInWorkerSaga(action: typeof signInAction.typeOf.action){
             Error.metaData.forEach(({ param, msg }) => errors[param] = msg);
             yield put(setSignInErrors({ payload: errors }));
         }
-        yield put(setNotification({ payload: {
-            status: Status.Error,
-            message: error.message,
-        } }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };

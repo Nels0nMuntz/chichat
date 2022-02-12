@@ -1,8 +1,6 @@
 // common
 export * from './common/dialog.model';
 export * from './common/message.model';
-export * from './common/messageBase.model';
-export * from './common/messageContent.model';
 export * from './common/messageAttach.model';
 export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';

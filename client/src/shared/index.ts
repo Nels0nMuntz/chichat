@@ -21,7 +21,6 @@ export { default as Loader } from './components/Loader/Loader';
 export { default as MessageItem } from './components/MessageList/MessageItem/MessageItem';
 export { default as MessageDateGroup } from './components/MessageList/MessageDateGroup/MessageDateGroup';
 export { default as MessageContentText } from './components/MessageList/MessageContent/MessageContentText';
-export { default as MessageContentAudio } from './components/MessageList/MessageContent/MessageContentAudio';
 export { default as CloseIconButton } from './components/CloseIconButton/CloseIconButton';
 export { default as LoadingBackdrop } from './components/LoadingBackdrop/LoadingBackdrop';
 export { MessageContentVoice } from './components/MessageList/MessageContent/MessageContentVoice';
@@ -59,7 +58,6 @@ export * from './utils/audioPlayer';
 export * from './utils/checkAttachType';
 
 // hocs
-export { default as withNotification } from './HOC/withNotification';
 export { default as withLoader } from './HOC/withLoader';
 
 //hooks

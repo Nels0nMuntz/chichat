@@ -1,28 +1,47 @@
 import { Action } from "redux";
-import { Status } from "shared";
+
 import { INotification } from "../models";
-import { setNotification, dropNotification } from "./actions";
+import { openNotification, closeNotification, removeNotification } from "./actions";
 
 
-const initialState: INotification = {
-    status: Status.Initial,
-    isOpen: false,
-    message: "",
+interface INotificationState {
+    notifications: Array<INotification>;
 };
 
-export const notificationReducer = (state: INotification = initialState, action: Action): INotification => {
+const initialState: INotificationState = {
+    notifications: [],
+};
 
-    if(setNotification.is(action)){
-        return {
-            ...action.payload,
-            isOpen: true,
-        };
-    };
+export const notificationReducer = (state: INotificationState = initialState, action: Action): INotificationState => {
 
-    if(dropNotification.is(action)){
+    if(openNotification.is(action)) {
         return {
             ...state,
-            isOpen: false,
+            notifications: [
+                ...state.notifications,
+                {
+                    key: Date.now().toString(),
+                    message: action.payload.message,
+                    dismissed: false,
+                    options: {
+                        variant: action.payload.variant,
+                    }
+                }
+            ]
+        }
+    };
+
+    if(closeNotification.is(action)) {
+        return {
+            ...state,
+            notifications: state.notifications.map<INotification>(n => n.key === action.payload.key ? { ...n, dismissed: true } : n),
+        }
+    };
+
+    if(removeNotification.is(action)) {
+        return {
+            ...state,
+            notifications: state.notifications.filter(({ key }) => key !== action.payload.key),
         };
     };
 

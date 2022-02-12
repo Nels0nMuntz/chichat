@@ -1,6 +1,7 @@
 import { Action } from "redux";
 import { Status } from "shared";
-import { IDialog, IDialogAttach, IMessage, IMessageAttach } from "features/home/models";
+import { IDialog, IDialogAttach, IMessageAttachStore, IMessageStore } from "features/home/models";
+import { MessageDto } from './dtos/message.dto';
 import {
     setDialogsListAction,
     setDialogStatusAction,
@@ -25,7 +26,7 @@ import {
     setMessageInputEditModeAction,
     setMessageAttachStatusAction,
     setMessageAttachPlayingAction,
-    setMessageAttachVoiceFileAction,
+    setMessageAttachVoiceAction,
 } from '../';
 
 
@@ -208,7 +209,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                 selectMode: action.payload,
                                 list: action.payload
                                     ? dialog.messages.list
-                                    : dialog.messages.list.map<IMessage>(message => message.selected
+                                    : dialog.messages.list.map<IMessageStore>(message => message.selected
                                         ? { ...message, selected: false }
                                         : message),
                             },
@@ -257,7 +258,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                 ...dialog.messages,
                                 list: [
                                     ...dialog.messages.list,
-                                    ...action.payload.messages,
+                                    ...action.payload.messages.map<IMessageStore>(message => new MessageDto(message)),
                                 ],
                                 hasMore: action.payload.hasMore,
                             },
@@ -280,10 +281,9 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                             messages: {
                                 ...dialog.messages,
                                 list: [
-                                    action.payload.message,
-                                    ...dialog.messages.list,
+                                    new MessageDto(action.payload.message),
+                                    ...dialog.messages.list
                                 ],
-                                lastMessage: action.payload.message
                             },
                         };
                     };
@@ -372,8 +372,8 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if (setMessageAttachVoiceFileAction.is(action)) {
-        const { messageId, attachId, file } = action.payload;
+    if (setMessageAttachVoiceAction.is(action)) {
+        const { messageId, attachId, attachFile } = action.payload;
         return {
             ...state,
             list: [
@@ -383,17 +383,17 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                             ...dialog,
                             messages: {
                                 ...dialog.messages,
-                                list: dialog.messages.list.map<IMessage>(message => {
+                                list: dialog.messages.list.map<IMessageStore>(message => {
                                     return message.messageId === messageId ? {
                                         ...message,
                                         content: {
                                             ...message.content,
-                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttachStore>(attach => {
                                                 return attach.attachId === attachId ? {
                                                     ...attach,
                                                     file: {
                                                         ...attach.file,
-                                                        ...file,
+                                                        ...attachFile,
                                                     },
                                                 } : attach;
                                             }),
@@ -420,12 +420,12 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                             ...dialog,
                             messages: {
                                 ...dialog.messages,
-                                list: dialog.messages.list.map<IMessage>(message => {
+                                list: dialog.messages.list.map<IMessageStore>(message => {
                                     return message.messageId === messageId ? {
                                         ...message,
                                         content: {
                                             ...message.content,
-                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttachStore>(attach => {
                                                 return attach.attachId === attachId
                                                     ? {
                                                         ...attach,
@@ -455,13 +455,13 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                         ...dialog,
                         messages: {
                             ...dialog.messages,
-                            list: dialog.messages.list.map<IMessage>(message => {
+                            list: dialog.messages.list.map<IMessageStore>(message => {
                                 if (message.messageId === messageId) {
                                     return {
                                         ...message,
                                         content: {
                                             ...message.content,
-                                            attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                            attach: message.content.attach && message.content.attach.map<IMessageAttachStore>(attach => {
                                                 return attach.playable
                                                     ? {
                                                         ...attach,
@@ -471,7 +471,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                                         }
                                                     }
                                                     : attach
-                                                ;
+                                                    ;
                                             }),
                                         },
                                     };
@@ -480,7 +480,7 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                                     ...message,
                                     content: {
                                         ...message.content,
-                                        attach: message.content.attach && message.content.attach.map<IMessageAttach>(attach => {
+                                        attach: message.content.attach && message.content.attach.map<IMessageAttachStore>(attach => {
                                             return {
                                                 ...attach,
                                                 file: {

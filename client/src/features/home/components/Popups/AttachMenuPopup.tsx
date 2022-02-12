@@ -1,8 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
-import PhotoIcon from '@material-ui/icons/Photo';
-import AttachFileIcon from '@material-ui/icons/AttachFileOutlined';
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import PhotoIcon from '@mui/icons-material/Photo';
+import AttachFileIcon from '@mui/icons-material/AttachFileOutlined';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import { PopupMenu } from 'shared';
 import { Popover } from 'shared';

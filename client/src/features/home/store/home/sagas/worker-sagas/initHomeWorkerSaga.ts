@@ -8,7 +8,7 @@ import {
     setDialogsListAction,
     setDialogsListStatusAction,
 } from "features/home/store";
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 import { 
     IFetchAllDialogsResponse,
     IFetchUserDataResponse,
@@ -44,12 +44,7 @@ function* fetchAllDialogs() {
     } catch (error: any) {
         yield put(setHomeStateAction({ payload: Status.Error }));
         yield put(setDialogsListStatusAction({ payload: Status.Error }));
-        yield put(setNotification({
-            payload: {
-                status: Status.Error,
-                message: error.message,
-            }
-        }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     }
 };
 
@@ -60,11 +55,6 @@ function* fetchUserData() {
             yield put(setHomeUserDataAction({ payload: data }));
         }
     } catch (error: any) {
-        yield put(setNotification({
-            payload: {
-                status: Status.Error,
-                message: error.message,
-            }
-        }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     }
 }

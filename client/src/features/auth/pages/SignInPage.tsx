@@ -4,7 +4,7 @@ import { AuthLayout } from 'layouts';
 import SignInContainer from '../containers/SignInContainer';
 
 
-const SignInPage: React.FC = () => {
+const SignInPage: React.FC = React.memo(() => {
     return (
         <AuthLayout
             title="Войти в аккаунт"
@@ -13,6 +13,6 @@ const SignInPage: React.FC = () => {
             <SignInContainer />
         </AuthLayout>
     )
-}
+});
 
 export default SignInPage;

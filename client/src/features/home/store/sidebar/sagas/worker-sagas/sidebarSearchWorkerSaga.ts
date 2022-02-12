@@ -5,7 +5,7 @@ import {
     setSidebarStatusAction,
 } from "../../actions";
 import { SearchGroups, Status } from 'shared';
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 import { searchUsersWorkerSaga } from "./searchUsersWorkerSaga";
 import { searchMessgesWorkerSaga } from "./searchMessagesWorkerSaga";
 
@@ -22,16 +22,10 @@ export function* sidebarSearchWorkerSaga(action: typeof sidebarSearchAction.type
         yield put(setSidebarStatusAction({ payload: Status.Success }));
     } catch (error: any) {
         yield put(setSidebarStatusAction({ payload: Status.Error }));
-        yield put(setNotification({
-            payload: {
-                status: Status.Error,
-                message: error.message,
-            },
-        }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };
 
 function* searchInChats(params: ISidebarSearchParams){
     yield fork(searchUsersWorkerSaga, params);
-    // yield fork(searchMessgesWorkerSaga, params);
 };

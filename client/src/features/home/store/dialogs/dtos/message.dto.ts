@@ -1,14 +1,14 @@
-import { IMessage, IMessageAttach, IMessageContent, IMessageResponse } from "features/home/models";
+import { IMessageStore, IMessageContent, IMessageResponse, IMessageAttachStore } from "features/home/models";
 import { UniqueId, Status } from "shared";
 
-export class MessageDto implements IMessage {
+export class MessageDto implements IMessageStore {
 
     messageId: UniqueId;
     dialogId: UniqueId;
     createdBy: UniqueId;
     createdAt: string;
     updatedAt: string;
-    content: IMessageContent<IMessageAttach>;
+    content: IMessageContent<IMessageAttachStore>;
     read: boolean;
     selected: boolean;
 
@@ -21,16 +21,16 @@ export class MessageDto implements IMessage {
             text: message.content.text,
             attach: message.content.attach && message.content.attach.map((attachItem) => ({
                 attachId: attachItem.attachId,
+                status: Status.Initial,
                 url: attachItem.url,
                 name: attachItem.name,
-                file: {
-                    status: Status.Initial,
-                },
+                file: {},
                 fileType: {
                     ext: attachItem.fileType.ext,
                     mime: attachItem.fileType.mime,
                 },
                 attachType: attachItem.attachType,
+                playable: attachItem.attachType === 'video' || attachItem.attachType === 'voice',
                 createdAt: attachItem.createdAt,
                 updatedAt: attachItem.updatedAt,
             })),

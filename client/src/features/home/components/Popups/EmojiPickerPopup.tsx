@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseEmoji } from 'emoji-mart';
 import { withStyles } from '@material-ui/styles';
-import SentimentIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
+import SentimentIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 
 import { Popover, EmojiPicker, AppTheme, ThemeContext } from 'shared';
 

@@ -143,6 +143,7 @@
         left: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.1);
+        pointer-events: none;
     }
     .audio-player__meta {
         margin-top: 4px;

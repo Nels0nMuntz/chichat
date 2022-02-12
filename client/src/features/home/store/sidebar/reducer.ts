@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { IMessage } from "../../models";
+import { IMessageStore } from "../../models";
 import { IUser, SearchGroups, Status } from "shared";
 import {
     setSidebarStatusAction,
@@ -24,7 +24,7 @@ interface ISidebarState {
         activeTab: SearchGroups,
         searchMode: boolean;
         users: Array<IUser>,
-        messages: Array<IMessage>,
+        messages: Array<IMessageStore>,
     };
 };
 

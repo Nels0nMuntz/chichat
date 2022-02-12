@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import { put } from "@redux-saga/core/effects";
 import { ResponseError, Status } from "shared";
 import { authService } from "services";
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 import { SIGNIN_PAGE_URL } from "features/auth/urls";
 import { SignUpFormErrors } from "features/auth/models";
 import { 
@@ -28,11 +28,6 @@ export function* signUpWorkerSaga(action: typeof signUpAction.typeOf.action){
             Error.metaData.forEach(({ param, msg }) => errors[param] = msg);
             yield put(setSignUpErrors({ payload: errors }));
         }
-        yield put(setNotification({
-            payload: {
-                status: Status.Error,
-                message: error.message,
-            }
-        }));       
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));      
     };
 };

@@ -1,7 +1,7 @@
 import { put, call, all, CallEffect } from "@redux-saga/core/effects";
 
 import { firebaseSorage } from "services";
-import { setNotification } from 'features/notification/store/actions';
+import { openNotification } from 'features/notification/store/actions';
 import { IMessageContent, IMessageAttachBase } from 'features/home/models';
 import { 
     createDialogMessageAction, 
@@ -55,7 +55,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
         yield put(resetMessageTextAction({ payload: null }));
     } catch (error: any) {
         console.log(error);   
-        yield put(setNotification({ payload: { status: Status.Error, message: error.message } }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };
 

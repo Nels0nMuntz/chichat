@@ -1,8 +1,9 @@
 import { UniqueId } from "shared";
-import { IMessageAttachBase, IMessageResponse } from "../../models";
+import { IMessageAttachBase } from "../../models";
+import { IMessageAttachStore } from "./messageAttach.model";
 
 
-export interface IMessage extends IMessageResponse, IMessageSelectable { };
+// export interface IMessage extends IMessageResponse, IMessageSelectable { };
 
 export interface IMessageBase <T extends IMessageAttachBase> {
     dialogId: UniqueId;
@@ -19,7 +20,7 @@ export interface IMessageContent<T extends IMessageAttachBase> {
     attach?: Array<T>;
 };
 
-export interface IMessageStore extends IMessageBase<IMessageAttachResponse> {
+export interface IMessageStore extends IMessageBase<IMessageAttachStore>, IMessageSelectable {
     messageId: UniqueId;
     read: boolean;
     createdAt: string;

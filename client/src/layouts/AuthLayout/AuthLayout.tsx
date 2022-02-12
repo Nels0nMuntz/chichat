@@ -1,5 +1,4 @@
 import React from 'react';
-import { withNotification } from 'shared';
 
 import style from "./AuthLayout.module.css";
 
@@ -25,4 +24,4 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ title, subtitle, children }) =>
     );
 };
 
-export default withNotification(AuthLayout);
+export default AuthLayout;

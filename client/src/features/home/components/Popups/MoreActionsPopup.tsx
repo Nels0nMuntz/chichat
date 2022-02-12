@@ -1,10 +1,10 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import Notifications from '@material-ui/icons/NotificationsOffOutlined';
-import CheckCircle from '@material-ui/icons/CheckCircleOutlineOutlined';
-import Delete from '@material-ui/icons/DeleteOutlineOutlined';
-import MoreVertRoundedIcon from '@material-ui/icons/MoreVertRounded';
+import Notifications from '@mui/icons-material/NotificationsOffOutlined';
+import CheckCircle from '@mui/icons-material/CheckCircleOutlineOutlined';
+import Delete from '@mui/icons-material/DeleteOutlineOutlined';
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { Popover, PopupMenu } from 'shared';

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
+import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { IMessageAttach, IMessageAttachVoiceFile } from 'features/home/models';
+import { IMessageAttachStore, IMessageAttachVoiceFile } from 'features/home/models';
 import { setMessageAttachPlayingAction } from 'features/home/store/dialogs/actions';
 import { Status, UniqueId, ThemeContext, AppTheme } from 'shared';
 
@@ -18,8 +18,8 @@ const getTimeString = (time: number | null | undefined) => {
 
 type MessageContentVoiceProps = {
     messageId: UniqueId;
-    attach: IMessageAttach<IMessageAttachVoiceFile>;
-    onFetchAttach: (attach: IMessageAttach<IMessageAttachVoiceFile>) => void;
+    attach: IMessageAttachStore<IMessageAttachVoiceFile>;
+    onFetchAttach: (attach: IMessageAttachStore<IMessageAttachVoiceFile>) => void;
 };
 
 export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) => {
@@ -47,7 +47,6 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
 
     const [playing, setPlaying] = React.useState<boolean>(false);
     const [trackProgress, setTrackProgress] = React.useState<number>(0);
-    // const [duration, setDuration] = React.useState<number>(0);
 
     const startTimer = () => {
         intervalRef.current && clearInterval(intervalRef.current);
@@ -65,7 +64,9 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         intervalRef.current && clearInterval(intervalRef.current);
         audioRef.current.currentTime = +e.target.value;
-        startTimer();
+        if(!!audioBuffer?.duration && audioBuffer?.duration > audioRef.current.currentTime) {
+            startTimer();
+        };
     };
     const startPlaying = () => {
         if (!canPlay) {
@@ -73,9 +74,9 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
         };
         setPlaying(true);
     };
-    const stopPlaying = () => setPlaying(false);   
+    const stopPlaying = () => setPlaying(false);
 
-    audioRef.current.addEventListener("ended", () => {        
+    audioRef.current.addEventListener("ended", () => {
         stopTimer();
     });
 
@@ -90,7 +91,6 @@ export const MessageContentVoice: React.FC<MessageContentVoiceProps> = (props) =
             startTimer();
         } else {
             audioRef.current.pause();
-            stopTimer();
         }
     }, [playing, audioRef, startTimer]);
     React.useEffect(() => {

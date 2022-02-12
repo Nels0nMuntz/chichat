@@ -10,14 +10,14 @@ import {
 } from "../../actions";
 import { selectActiveDialog } from './../../selectors';
 import { IDialog } from 'features/home/models';
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 import { uploadFiles, Status } from "shared";
 
 
 export function* uploadFilesWorkerSaga(action: typeof uploadFilesAction.typeOf.action) {
     const uploadResult = uploadFiles(action.payload);
     if (uploadResult instanceof Error) {
-        yield put(setNotification({ payload: { status: Status.Error, message: uploadResult.message } }));
+        yield put(openNotification({ payload: { message: uploadResult.message, variant: 'error' } }));
     } else {
         const activeDialog: IDialog | undefined = yield select(selectActiveDialog);
         if(!activeDialog) return;

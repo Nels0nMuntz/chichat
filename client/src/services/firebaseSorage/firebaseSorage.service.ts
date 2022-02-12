@@ -10,23 +10,23 @@ class FirebaseSorage {
             await uploadBytes(reference, file);
             return await getDownloadURL(reference);
         } catch (error: any) {
-            throw error;
+            throw error.response.data;
         }
     }
     getArrayBuffer = async (url: string): Promise<ArrayBuffer> => {
         try {
             const response: AxiosResponse<ArrayBuffer> = await axios.get(url, { responseType: 'arraybuffer' });
             return response.data;
-        } catch (error) {
-            throw error;
+        } catch (error: any) {
+            throw error.response.data;
         }
     }
     getBlob = async (url: string): Promise<Blob> => {
         try {
             const response: AxiosResponse<Blob> = await axios.get(url, { responseType: 'blob' });
             return response.data;
-        } catch (error) {
-            throw error;
+        } catch (error: any) {
+            throw error.response.data;
         }
     }
 };

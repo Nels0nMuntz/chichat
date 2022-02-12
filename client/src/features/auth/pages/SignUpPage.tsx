@@ -4,7 +4,7 @@ import { AuthLayout } from 'layouts';
 import SignUpContainer from '../containers/SignUpContainer';
 
 
-const SignUpPage: React.FC = () => {
+const SignUpPage: React.FC = React.memo(() => {
     return (
         <AuthLayout
             title="Регистрация"
@@ -13,6 +13,6 @@ const SignUpPage: React.FC = () => {
             <SignUpContainer />
         </AuthLayout>
     )
-}
+});
 
 export default SignUpPage;

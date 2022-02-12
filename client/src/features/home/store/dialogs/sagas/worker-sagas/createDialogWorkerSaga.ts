@@ -12,7 +12,7 @@ import {
     setActiveDialogAction,
     setSidebarSearchModeAction,
 } from "../../..";
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 
 
 export function* createDialogWorkerSaga(action: typeof createDialogAction.typeOf.action){
@@ -37,8 +37,6 @@ export function* createDialogWorkerSaga(action: typeof createDialogAction.typeOf
             dialogId: action.payload.member_1,
             status: Status.Error,
         } }));
-        yield put(setNotification({ payload: { 
-            status: Status.Error, message: error.message 
-        } }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };

@@ -1,13 +1,12 @@
 import React from 'react';
-import { withNotification } from 'shared';
 
 import HomeContainer from '../containers/HomeContainer';
 
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC = React.memo(() => {
     return (
         <HomeContainer />
     )
-};
+});
 
-export default withNotification(HomePage);
+export default HomePage;

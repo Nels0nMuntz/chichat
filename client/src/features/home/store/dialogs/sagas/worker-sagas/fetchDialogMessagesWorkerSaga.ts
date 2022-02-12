@@ -10,7 +10,7 @@ import {
 } from "features/home/store";
 import { IFetchMessagesResponse } from "features/home/models";
 import { Status } from "shared";
-import { setNotification } from "features/notification/store";
+import { openNotification } from "features/notification/store";
 
 
 export function* fetchDialogMessagesWorkerSaga(action: typeof fetchDialogMessagesAction.typeOf.action){
@@ -28,9 +28,6 @@ export function* fetchDialogMessagesWorkerSaga(action: typeof fetchDialogMessage
         };
     } catch (error: any) {
         yield put(setDialogStatusAction({ payload: { dialogId: action.payload.dialogId, status: Status.Error } }));
-        yield put(setNotification({ payload: {
-            status: Status.Error,
-            message: error.message,
-        } }))
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
     };
 };

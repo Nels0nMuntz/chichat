@@ -2,64 +2,61 @@ import { put } from "redux-saga/effects";
 
 import { firebaseSorage } from "services";
 import {
-    fetchMessageAttachAction,
-    setMessageAttachFileActio,
+    fetchMessageAttachVoiceAction,
+    setMessageAttachVoiceAction,
     setMessageAttachStatusAction
 } from "../../actions";
 import { Status } from "shared";
-import { setNotification } from 'features/notification/store';
+import { openNotification } from 'features/notification/store';
 
 
-export function* fetchMessageAttachWorkerSaga(action: typeof fetchMessageAttachAction.typeOf.action) {
-    const { messageId, attach } = action.payload;
+export function* fetchMessageAttachVoiceWorkerSaga(action: typeof fetchMessageAttachVoiceAction.typeOf.action) {
+    const { messageId, attachId, attachFileUrl } = action.payload;
     try {
         yield put(setMessageAttachStatusAction({
             payload: {
                 messageId,
-                attachId: attach.attachId,
+                attachId,
                 status: Status.Running,
             }
         }));
         
-        const buffer: ArrayBuffer = yield firebaseSorage.getArrayBuffer(attach.url);
-        const blob: Blob = yield firebaseSorage.getBlob(attach.url);
+        const buffer: ArrayBuffer = yield firebaseSorage.getArrayBuffer(attachFileUrl);
+        const blob: Blob = yield firebaseSorage.getBlob(attachFileUrl);
         
         // @ts-ignore
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
         const url = URL.createObjectURL(blob); 
 
-        yield put(setMessageAttachFileAction({
+        yield put(setMessageAttachVoiceAction({
             payload: {
                 messageId,
-                attachId: attach.attachId,
-                file: {
-                    url,
+                attachId,
+                attachFile: {
                     audioBuffer,
                     audioContext,
-                    status: Status.Success,
-                },
+                    urlFromBlob: url,
+                }
             }
         }));
-
-    } catch (error) {
         yield put(setMessageAttachStatusAction({
             payload: {
                 messageId,
-                attachId: attach.attachId,
-                status: Status.Error,
+                attachId,
+                status: Status.Success,
             }
         }));
-        yield put(setNotification({
+
+    } catch (error: any) {
+        yield put(setMessageAttachStatusAction({
             payload: {
+                messageId,
+                attachId,
                 status: Status.Error,
-                message: `Can't load file ${attach.name}`,
             }
         }));
+        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
         console.log(error);
     };
 };
-
-function* onLoad() {
-
-}

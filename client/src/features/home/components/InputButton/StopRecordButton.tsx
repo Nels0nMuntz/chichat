@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 
 import style from './InputButton.module.scss';
 
