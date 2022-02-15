@@ -103,7 +103,6 @@ const VoiceMessage: React.FC<VoiceMessageProps> = (props) => {
     React.useEffect(() => {
         if (url) {
             audioRef.current.src = url;
-            audioRef.current.load();
         };
     }, [audioRef, url]);
     React.useEffect(() => {

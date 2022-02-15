@@ -1,6 +1,7 @@
 import { put } from "redux-saga/effects";
 
 import { firebaseSorage } from "services";
+import { FullMetadata } from "firebase/storage";
 import {
     fetchMessageAttachVoiceAction,
     setMessageAttachVoiceAction,
@@ -22,12 +23,19 @@ export function* fetchMessageAttachVoiceWorkerSaga(action: typeof fetchMessageAt
         }));
         
         const buffer: ArrayBuffer = yield firebaseSorage.getArrayBuffer(attachFileUrl);
+        const metadata: FullMetadata = yield firebaseSorage.getMetadata(attachFileUrl);
         const blob: Blob = yield firebaseSorage.getBlob(attachFileUrl);
+        const url = URL.createObjectURL(blob);
         
         // @ts-ignore
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
-        const url = URL.createObjectURL(blob); 
+
+        console.log({
+            audioBuffer,
+            audioContext,
+            duration: metadata.customMetadata && +metadata.customMetadata.duration,
+        });
 
         yield put(setMessageAttachVoiceAction({
             payload: {
@@ -37,6 +45,7 @@ export function* fetchMessageAttachVoiceWorkerSaga(action: typeof fetchMessageAt
                     audioBuffer,
                     audioContext,
                     urlFromBlob: url,
+                    duration: metadata.customMetadata && +metadata.customMetadata.duration,
                 }
             }
         }));
@@ -56,7 +65,7 @@ export function* fetchMessageAttachVoiceWorkerSaga(action: typeof fetchMessageAt
                 status: Status.Error,
             }
         }));
-        yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
+        yield put(openNotification({ payload: { message: "Message attachment loading faild", variant: 'error' } }));
         console.log(error);
     };
 };

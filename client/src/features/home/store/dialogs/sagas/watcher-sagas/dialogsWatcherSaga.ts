@@ -10,7 +10,7 @@ import { createDialogWorkerSaga } from "../worker-sagas/createDialogWorkerSaga";
 import { fetchDialogMessagesWorkerSaga } from "../worker-sagas/fetchDialogMessagesWorkerSaga";
 import { uploadFilesWorkerSaga } from "../worker-sagas/uploadFilesWorkerSaga";
 import { createDialogMessageWorkerSaga } from "../worker-sagas/createDialogMessageWorkerSaga";
-import { fetchMessageAttachVoiceWorkerSaga } from "../worker-sagas/fetchMessageAttachVoiceWorkerSaga";
+import { fetchMessageAttachVoiceWorkerSaga } from "../worker-sagas/fetchMessageAttachWorkerSaga";
 
 
 export function* dialogsWatcherSaga() {

@@ -20,6 +20,7 @@ const SnackbarProvider: React.FC<ChildrenProps> = ({ children }) => {
                 horizontal: 'right',
             }}
             TransitionComponent={TransitionLeft}
+            maxSnack={Infinity}
         >
             {children}
         </Snackbar>

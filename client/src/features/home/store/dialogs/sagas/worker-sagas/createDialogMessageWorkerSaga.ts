@@ -16,7 +16,7 @@ import { Status, isEmptyString, wsManager } from 'shared';
 interface IUploadedFile {
     status: Status;
     file: File;
-    fileURL: string;
+    fileUrl: string;
     error?: Error;
 };
 
@@ -28,14 +28,14 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
     };
     try {
         if(attach?.length) {
-            const response: Array<IUploadedFile> = yield all(attach.map(({ file, metadata }) => call(storeFileInFirebaseStorage, file, metadata)));
-            response.forEach(({ file, fileURL, status }, i) => {
+            const response: Array<IUploadedFile> = yield all(attach.map(({ file, metadata }, i) => call(storeFileInFirebaseStorage, attach[i].type, file, metadata)));
+            response.forEach(({ file, fileUrl, status }, i) => {
                 if(status === Status.Error){
                     throw new Error(`Can't upload file ${file.name}`);                
                 };
                 newMessageContent.attach?.push({
                     name: file.name,
-                    url: fileURL,
+                    url: fileUrl,
                     fileType: {
                         ext: file.type.split('/')[1],
                         mime: file.type,
@@ -62,13 +62,13 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
 
 
 
-function* storeFileInFirebaseStorage(file: File, metadata?: UploadMetadata): Generator<CallEffect<string>, IUploadedFile, string>{
+function* storeFileInFirebaseStorage(folder: string, file: File, metadata?: UploadMetadata): Generator<CallEffect<string>, IUploadedFile, string>{
     try {
-        const fileURL: string = yield call(firebaseSorage.storeFile, file, metadata);
-        return { status: Status.Success, file, fileURL };
+        const fileUrl: string = yield call(firebaseSorage.storeFile, folder, file, metadata);
+        return { status: Status.Success, file, fileUrl };
     } catch (error: any) {
         console.log(error);  
-        return { status: Status.Error, file, fileURL: '', error };
+        return { status: Status.Error, file, fileUrl: '', error };
     };
 };
 
