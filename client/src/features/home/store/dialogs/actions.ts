@@ -11,6 +11,7 @@ import {
     IMessageResponse,
     MessageAttachType,
     IMessageAttachVoiceFile,
+    IDeleteMessagesRequest,
 } from "features/home/models";
 
 
@@ -52,7 +53,7 @@ export const toggleSelectMessageAction = defineAction<{ payload: IMessageStore }
 
 export const setDialogMessagesAction = defineAction<{ payload: { dialogId: UniqueId, messages: Array<IMessageResponse>, hasMore: boolean } }>("SET_DIALOG_MESSAGES");
 
-export const addNewMessageAction = defineAction<{ payload: { dialogId: UniqueId, message: IMessageResponse } }>("ADD_NEW_MESSAGE");
+export const pushDialogMessageAction = defineAction<{ payload: { message: IMessageStore } }>("PUSH_DIALOG_MESSAGE");
 
 export const createDialogMessageAction = defineAction<{
     payload: {
@@ -72,6 +73,10 @@ export const setMessageInputEditModeAction = defineAction<{ payload: boolean }>(
 export const setMessageAttachStatusAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId, status: Status } }>("SET_MESSAGE_ATTACH_STATUS");
 
 export const setMessageAttachPlayingAction = defineAction<{ payload: { messageId: UniqueId, attachId: UniqueId } }>("SET_MESSAGE_ATTACH_PLAYING");
+
+export const deleteDialogMessagesFromDBAction = defineAction<{ payload: IDeleteMessagesRequest }>("DELETE_DIALOG_MESSAGES_FROM_DB");
+
+export const deleteDialogMessagesFromLocalStateAction = defineAction<{ payload: IDeleteMessagesRequest }>("DELETE_DIALOG_MESSAGES_FROM_LOCAL_STATE");
 
 // upload modal
 export const setUploadModalSendStatusAction = defineAction<{ payload: Status }>("SET_UPLOAD_MODAL_SEND_STATUS");

@@ -8,9 +8,11 @@ import {
     IWSMessage,
     IWSMessageActionData,
     WSMessageTypes,
+    UniqueId,
+    IDeleteMessagesRequest,
 } from "../models";
 import { CreateMessageRequestDto, MessageResponseDto } from "../dtos";
-import { WSClientsMap } from '../shared';
+import { WSClientsMap,  } from '../shared';
 
 
 export class WSService {
@@ -43,6 +45,20 @@ export class WSService {
             };
             this.broadcast(parsedData.payload.dialogId, message);
         } catch (error) {
+            throw error;
+        }
+    }
+
+    deleteMessages = async (data: IWSMessageActionData<IDeleteMessagesRequest>) => {
+        const { dialogId, messageIds } = data.parsedData.payload;
+        try {
+            await this.messageService.delete(messageIds);
+            const message: IWSMessage<IDeleteMessagesRequest> = {
+                type: WSMessageTypes.DELETE_MESSAGE,
+                payload: { dialogId, messageIds },
+            };
+            this.broadcast(dialogId, message);
+        } catch (error: any) {
             throw error;
         }
     }

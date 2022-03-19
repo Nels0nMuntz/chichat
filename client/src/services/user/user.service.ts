@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 import { axiosInstance } from "core";
-import { IFetchUserDataResponse, ISidebarSearchParams } from "features/home/models";
+import { ISidebarSearchParams } from "features/home/models";
 import { IUser } from "shared";
 
 
@@ -14,9 +14,9 @@ class UserService {
         this.baseUrl = "/api/user";
     }
 
-    getUserData = async (): Promise<AxiosResponse<IFetchUserDataResponse>> => {
+    getUserData = async (): Promise<AxiosResponse<IUser>> => {
         try {
-            return await this.axios.get<IFetchUserDataResponse>(this.baseUrl);
+            return await this.axios.get<IUser>(this.baseUrl);
         } catch (error: any) {
             throw error.response.data.error;
         }

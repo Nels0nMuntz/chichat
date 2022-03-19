@@ -1,4 +1,4 @@
-export enum WSMessageTypes {
+export enum WebSocketEventTypes {
     SET_CLIENT_CONNECTION = "SET_CLIENT_CONNECTION",
     CREATE_MESSAGE = "CREATE_MESSAGE",
     DELETE_MESSAGE = "DELETE_MESSAGE",

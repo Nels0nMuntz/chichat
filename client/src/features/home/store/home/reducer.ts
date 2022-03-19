@@ -4,7 +4,6 @@ import { IUser, Status } from 'shared';
 import {
     setHomeStateAction,
     setHomeUserDataAction,
-    setWebSocketAction,
 } from './actions';
 
 
@@ -44,18 +43,6 @@ export const homeReducer = (state: IHomeState = initState, action: Action): IHom
         return {
             ...state,
             user: action.payload,
-        };
-    };
-
-    // WebSocket
-
-    if (setWebSocketAction.is(action)) {
-        return {
-            ...state,
-            webSocket: {
-                ...state.webSocket,
-                socket: action.payload,
-            }
         };
     };
 

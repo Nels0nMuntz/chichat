@@ -1,5 +1,4 @@
 import { put, call } from "@redux-saga/core/effects";
-import { Status } from "shared";
 import { AxiosResponse } from "axios";
 
 import {
@@ -9,22 +8,19 @@ import {
     setDialogsListStatusAction,
 } from "features/home/store";
 import { openNotification } from "features/notification/store";
-import { 
-    IFetchAllDialogsResponse,
-    IFetchUserDataResponse,
-} from "features/home/models";
+import { IFetchAllDialogsResponse } from "features/home/models";
 import { 
     dialogService, 
     userService 
 } from "services";
-import { wsRecieveSaga } from "../watcher-sagas";
 import { DialogDto } from "features/home/store/dialogs/dtos/dialog.dto";
+import { recieveWebSocketEventSaga } from "features/websocket/store";
+import { IUser, Status } from "shared";
 
 
 export function* initHomeWorkerSaga() {
     yield call(fetchAllDialogs);
     yield call(fetchUserData);
-    yield call(wsRecieveSaga);
 };
 
 function* fetchAllDialogs() {
@@ -50,9 +46,10 @@ function* fetchAllDialogs() {
 
 function* fetchUserData() {
     try {
-        const { status, data }: AxiosResponse<IFetchUserDataResponse> = yield userService.getUserData();
+        const { status, data }: AxiosResponse<IUser> = yield userService.getUserData();
         if(status === 200){
             yield put(setHomeUserDataAction({ payload: data }));
+            yield call(recieveWebSocketEventSaga, data);
         }
     } catch (error: any) {
         yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));

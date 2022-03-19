@@ -1,3 +1,6 @@
 import { UniqueId } from "shared";
 
-export interface IDeleteMessagesRequest extends Array<UniqueId> { };
+export interface IDeleteMessagesRequest {
+    dialogId: UniqueId;
+    messageIds: UniqueId[];
+};

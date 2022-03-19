@@ -2,7 +2,7 @@ import { IMessageDocument } from "../schemas";
 import { CreateMessageRequestDto, UpdateMessageRequestDto } from "../dtos";
 import { DialogRepository, MessageRepository, UserRepository } from "../repositories";
 import { ErrorException } from "../shared";
-import { UniqueId, IPaginationOptions, IGetMessagesResponse } from "../models";
+import { UniqueId, IPaginationOptions } from "../models";
 
 
 export class MessageService {
@@ -68,7 +68,7 @@ export class MessageService {
         };
     }
 
-    deleteMany = async (messageIds: Array<string>): Promise<void> => {
-        return await this.messageRepository.deleteMessages(messageIds);
+    delete = async (messageIds: Array<UniqueId>): Promise<void> => {
+        return await this.messageRepository.delete(messageIds);
     }
 }

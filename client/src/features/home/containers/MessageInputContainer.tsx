@@ -20,10 +20,10 @@ import {
     createDialogMessageAction,
     selectUploadModal,
     setMessageInputEditModeAction,
+    deleteDialogMessagesFromDBAction,
 } from '../store';
 import {
     isEmptyString,
-    wsManager,
     Status,
     audioRecorder,
 } from 'shared';
@@ -76,8 +76,12 @@ const MessageInputContainer: React.FC = React.memo(() => {
     }, []);
     const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
     const handleDeleteMessages = React.useCallback(() => {
-        console.log('Deleting message will go here'); // TODO   Deleting message implementation         
-    }, []);
+        if(!dialogId || !selectedMessages.length) return;
+        const messageIds = selectedMessages.map(({ messageId }) => messageId);
+        dispatch(deleteDialogMessagesFromDBAction({
+            payload: { dialogId, messageIds }
+        }));
+    }, [dialogId, selectedMessages]);
     const handleCloseModal = React.useCallback(() => {
         dispatch(setUploadModalOpenAction({ payload: false }));
     }, []);

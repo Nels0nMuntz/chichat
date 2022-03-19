@@ -31,12 +31,14 @@ export class WebSocketManager {
     onMessageHandler = (event: MessageEvent) => {
         const actionData = this.getMessageActionData(event);
         switch (actionData.parsedData.type) {
-            case WSMessageTypes.INIT_CLIENT_CONNECTION:
+            case WSMessageTypes.SET_CLIENT_CONNECTION:
                 this.WSService.initClient(actionData);
                 break;
             case WSMessageTypes.CREATE_MESSAGE:
                 this.WSService.createMessage(actionData);
                 break;
+            case WSMessageTypes.DELETE_MESSAGE:
+                this.WSService.deleteMessages(actionData);
             default:
                 break;
         }

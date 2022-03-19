@@ -13,7 +13,7 @@ import {
     resetMessageTextAction,
     changeSelectModeAction,
     toggleSelectMessageAction,
-    addNewMessageAction,
+    pushDialogMessageAction,
     setDialogMessagesAction,
     setDialogMessagesStatusAction,
     setUploadModalSendStatusAction,
@@ -27,7 +27,8 @@ import {
     setMessageAttachStatusAction,
     setMessageAttachPlayingAction,
     setMessageAttachVoiceAction,
-} from '../';
+    deleteDialogMessagesFromLocalStateAction,
+} from './actions';
 
 
 interface IDialogsState {
@@ -270,18 +271,19 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
         };
     };
 
-    if (addNewMessageAction.is(action)) {
+    if (pushDialogMessageAction.is(action)) {
+        const message = action.payload.message;
         return {
             ...state,
             list: [
                 ...state.list.map<IDialog>(dialog => {
-                    if (dialog.dialogId === action.payload.dialogId) {
+                    if (dialog.dialogId === message.dialogId) {
                         return {
                             ...dialog,
                             messages: {
                                 ...dialog.messages,
                                 list: [
-                                    new MessageDto(action.payload.message),
+                                    { ...message },
                                     ...dialog.messages.list
                                 ],
                             },
@@ -497,6 +499,25 @@ export const dialogsReducer = (state: IDialogsState = initialState, action: Acti
                 };
                 return dialog;
             }),
+        };
+    };
+
+    if(deleteDialogMessagesFromLocalStateAction.is(action)) {
+        const { dialogId, messageIds } = action.payload;
+        return {
+            ...state,
+            list: state.list.map<IDialog>(dialog => {
+                if(dialog.dialogId === dialogId) {
+                    return {
+                        ...dialog,
+                        messages: {
+                            ...dialog.messages,
+                            list: dialog.messages.list.filter(({ messageId }) => !messageIds.find(deletedMessageId => deletedMessageId === messageId)),
+                        },
+                    };
+                };
+                return dialog;
+            })
         };
     };
 

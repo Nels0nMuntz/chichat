@@ -15,6 +15,7 @@ import {
 } from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
+import { webSocketReducer, webSocketWatcherSaga } from 'features/websocket/store';
 import { history } from './history-instance';
 
 
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     dialogs: dialogsReducer,
     sidebar: sidebarReducer,
+    webSocket: webSocketReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -45,6 +47,7 @@ function* appSaga(){
         homeWatcherSaga(),
         sidebarWatcherSaga(),
         dialogsWatcherSaga(),
+        webSocketWatcherSaga(),
     ]);
 };
 

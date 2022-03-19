@@ -6,11 +6,12 @@ import { openNotification } from 'features/notification/store/actions';
 import { IMessageContent, IMessageAttachBase } from 'features/home/models';
 import { 
     createDialogMessageAction, 
-    sendWSMessageAction, 
     resetMessageTextAction,
     setMessageInputEditModeAction,
 } from "features/home/store";
-import { Status, isEmptyString, wsManager } from 'shared';
+import { Status, isEmptyString } from 'shared';
+import { WebSocketEventHandler } from "features/websocket/helpers";
+import { sendWebSocketEventAction } from "features/websocket/store";
 
 
 interface IUploadedFile {
@@ -22,7 +23,7 @@ interface IUploadedFile {
 
 export function* createDialogMessageWorkerSaga(action: typeof createDialogMessageAction.typeOf.action){
     const { text, attach, userId, dialogId } = action.payload;
-    const newMessageContent: IMessageContent<IMessageAttachBase> = {
+    const messageContent: IMessageContent<IMessageAttachBase> = {
         text,
         attach: [],
     };
@@ -33,7 +34,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
                 if(status === Status.Error){
                     throw new Error(`Can't upload file ${file.name}`);                
                 };
-                newMessageContent.attach?.push({
+                messageContent.attach?.push({
                     name: file.name,
                     url: fileUrl,
                     fileType: {
@@ -48,10 +49,14 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
             });
         };
             
-        if(isMessageEmpty(newMessageContent)) return;
+        if(isMessageEmpty(messageContent)) return;
 
-        const newMessage = wsManager.createMessage(dialogId, userId, newMessageContent);
-        yield put(sendWSMessageAction({ payload: newMessage }));
+        const event =  WebSocketEventHandler.createDialogMessageEvent({
+            dialogId,
+            createdBy: userId,
+            content: messageContent,
+        });
+        yield put(sendWebSocketEventAction({ payload: event }));
         yield put(setMessageInputEditModeAction({ payload: false }));
         yield put(resetMessageTextAction({ payload: null }));
     } catch (error: any) {

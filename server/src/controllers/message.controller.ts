@@ -6,7 +6,6 @@ import {
     IUpdateMessageRequest, 
     IRequest, 
     ISearchQueryString,
-    IDeleteMessagesRequest,
     IGetMessagesRequest,
     IGetMessagesResponse,
 } from "../models";
@@ -71,16 +70,6 @@ export class MessageController {
             });
             const messagesRes = messages.map(message => new MessageResponseDto(message));
             return res.status(200).json({ messages: messagesRes, hasMore });
-        } catch (error) {
-            next(error);
-        };
-    }
-
-    deleteMany = async (req: IRequest<IDeleteMessagesRequest>, res: Response, next: NextFunction) => {
-        try {
-            const messageIds = req.body;
-            await this.service.deleteMany(messageIds);
-            return res.status(200).end()
         } catch (error) {
             next(error);
         };

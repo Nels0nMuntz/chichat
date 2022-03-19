@@ -31,12 +31,6 @@ export function* fetchMessageAttachVoiceWorkerSaga(action: typeof fetchMessageAt
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioBuffer: AudioBuffer = yield audioContext.decodeAudioData(buffer);
 
-        console.log({
-            audioBuffer,
-            audioContext,
-            duration: metadata.customMetadata && +metadata.customMetadata.duration,
-        });
-
         yield put(setMessageAttachVoiceAction({
             payload: {
                 messageId,

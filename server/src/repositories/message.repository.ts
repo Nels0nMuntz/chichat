@@ -17,13 +17,11 @@ export class MessageRepository extends BaseRepository<IMessageDocument>{
         }
     }
 
-    deleteMessages = async (ids: Array<string>): Promise<void> => {
-        ids.forEach(async id => {
-            try {
-                await this.model.findByIdAndDelete(id)
-            } catch (error) {
-                throw ErrorException.ServerError(`Can not delete message with id ${id} in DB`);
-            }
-        });
+    delete = async (ids: Array<string>): Promise<void> => {
+        try {
+            await Promise.all(ids.map(async id => await this.model.findByIdAndDelete(id)));
+        } catch (error: any) {
+            throw ErrorException.ServerError(`Can not delete messages in DB`);
+        };
     }
 };

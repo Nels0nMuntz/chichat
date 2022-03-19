@@ -1,1 +1,6 @@
-export interface IDeleteMessagesRequest extends Array<string> { };
+import { UniqueId } from "src/models";
+
+export interface IDeleteMessagesRequest {
+    dialogId: UniqueId;
+    messageIds: UniqueId[];
+};
