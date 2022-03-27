@@ -1,6 +1,6 @@
 import { compose } from 'ts-compose';
 
-import { IDialogAttach } from "features/home/models";
+import { IDialogFormAttach } from "features/home/models";
 
 
 const imageTypes = [
@@ -42,34 +42,34 @@ const audioTypes = [
 ];
 
 
-export const uploadFiles = (files: FileList): Array<IDialogAttach> | Error => {
+export const uploadFiles = (files: FileList): Array<IDialogFormAttach> | Error => {
     try {
-        const response = Array.from(files).reduce<Array<IDialogAttach>>((acc, file): Array<IDialogAttach> => {
+        const response = Array.from(files).reduce<Array<IDialogFormAttach>>((acc, file): Array<IDialogFormAttach> => {
             const type = file.type.split('/')[0];
             
             switch (type) {
                 case 'image':
-                    const imageSrc = compose(readMediaFile, validateImageSize, validateImageType)(file);
+                    const imageLink = compose(getPreviewLink, validateImageSize, validateImageType)(file);
                     return [
                         ...acc, 
-                        { file, previewLink: imageSrc },
+                        { file, type: 'image', previewLink: imageLink },
                     ];
                 case 'video':
-                    const videoSrc = compose(readMediaFile, validateVideoSize, validateVideoType)(file);
+                    const videolink = compose(getPreviewLink, validateVideoSize, validateVideoType)(file);
                     return [
                         ...acc, 
-                        { file, previewLink: videoSrc },
+                        { file, type: 'video', previewLink: videolink },
                     ];
                 default:
                     const otherFile = validateOtherFilesSize(file);
                     if(!otherFile) return acc;
                     return [
                         ...acc,
-                        { file: otherFile },
+                        { file: otherFile, type: 'file' },
                     ];
             };
         }, []);
-        return response
+        return response;
     } catch (error: any) {
         return error as Error;
     }
@@ -113,6 +113,6 @@ const validateOtherFilesSize = (file: File): File => {
     return file;
 };
 
-const readMediaFile = (file: File) => {
+const getPreviewLink = (file: File) => {
     return URL.createObjectURL(file);
 };

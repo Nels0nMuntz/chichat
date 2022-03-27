@@ -8,6 +8,8 @@ import { IMessageAttachStore, IMessageAttachVoiceFile } from 'features/home/mode
 import { setMessageAttachPlayingAction } from 'features/home/store/dialogs/actions';
 import { Status, UniqueId, ThemeContext, AppTheme } from 'shared';
 
+import './VoiceMessage.scss';
+
 
 const getTimeString = (time: number | null | undefined) => {
     if (!time && time !== 0) return '';

@@ -1,0 +1,13 @@
+.image-message{
+    width: 100%;
+    max-width: var(--message-content-max-width);
+    display: flex;
+    flex-direction: column;
+}
+.image-message__img-item{
+    width: auto;
+    max-width: 500px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+}

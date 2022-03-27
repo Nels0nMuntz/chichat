@@ -1,6 +1,6 @@
 import { Action } from "redux";
 import { Status } from "shared";
-import { IDialog, IDialogAttach, IMessageAttachStore, IMessageStore } from "features/home/models";
+import { IDialog, IDialogFormAttach, IMessageAttachStore, IMessageStore } from "features/home/models";
 import { MessageDto } from './dtos/message.dto';
 import {
     setDialogsListAction,
@@ -39,7 +39,7 @@ interface IDialogsState {
         uploadStatus: Status;
         open: boolean;
         text: string;
-        attach?: Array<IDialogAttach>;
+        attach?: Array<IDialogFormAttach>;
     };
 };
 

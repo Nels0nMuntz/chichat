@@ -43,7 +43,7 @@
 
     .message-item__content-wrap {
         position: relative;
-        max-width: 576px;
+        max-width: var(--message-content-max-width);
         padding: 6px 8px;
         transition: transform 0.1s linear;
         background-color: var(--color-bg);
@@ -67,9 +67,20 @@
         padding: 3px;
         font-size: 12px;
         font-weight: 400;
+        line-height: 1;
         color: var(--color-text-200);
         white-space: nowrap;
         cursor: pointer;
+
+        &.message-item__meta_bg{
+            bottom: 4px;
+            right: 4px;
+            padding-left: 7px;
+            padding-right: 7px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
     }
 
     // text
@@ -87,69 +98,6 @@
             bottom: auto;
             float: right;
         }
-    }
-
-    // audio-player
-    .audio-player {
-        min-height: 50px;
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .audio-player__btn {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-right: 12px;
-        border-radius: 50%;
-        background-color: var(--color-primary-100);
-        transition: background-color 0.1s linear;
-
-        &:hover {
-            background-color: var(--color-primary-100-hover);
-        }
-
-        .MuiSvgIcon-root {
-            fill: var(--color-play-audio-button-icon);
-        }
-    }
-    .audio-player__progress {
-        display: flex;
-        flex-direction: column;
-        min-width: 200px;
-    }
-    .audio-player__loader{
-        text-align: center;
-        color: var(--color-primary-100);
-    }
-    .audio-player__visualization{
-        position: relative;
-        width: 100%;
-        display: flex;
-    }
-    .audio-player__progress-slider {
-        width: 100%;
-        height: 23px;
-        position: absolute;
-        margin: 0;
-        opacity: 0;
-        cursor: pointer;
-    }
-    .audio-player__backdrop{
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.1);
-        pointer-events: none;
-    }
-    .audio-player__meta {
-        margin-top: 4px;
-        font-size: 14px;
-        font-weight: 400;
-        color: var(--color-text-200);
     }
 }
 

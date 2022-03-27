@@ -48,7 +48,6 @@ const EmojiPickerPopup: React.FC<EmojiPickerPopupProps> = React.memo(({ open, ha
                 placement="bottom-start"
                 transformOrigin="0 100%"
                 container={сontainerRef}
-                hover
                 onOpen={handleOpen}
                 onClose={handleClose}
             >

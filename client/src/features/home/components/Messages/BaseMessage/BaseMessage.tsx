@@ -3,6 +3,7 @@ import React from 'react';
 import { IMessageStore, IMessageAttachStore } from 'features/home/models';
 import MessageLayout from '../MessageLayout';
 import VoiceMessage from '../VoiceMessage/VoiceMessage';
+import ImageMessage from '../ImageMessage/ImageMessage';
 
 
 type BaseMessageProps = {
@@ -26,22 +27,30 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
 
     const messageId = message.messageId;
     const attach = message.content.attach;
-    const isAttachExist = !!attach?.length;
-    const isVoiceMessage = isAttachExist && attach.some(({ attachType }) => attachType === 'voice');
 
     const onFetchAttach = React.useCallback((attach: IMessageAttachStore) => {
         handleFetchAttach(messageId, attach);
     }, [messageId]);
 
-    const voiceAttachments = React.useMemo(() => {
-        return attach?.map((attachItem) => (
-            <VoiceMessage
-                messageId={messageId}
-                key={attachItem.attachId}
-                attach={attachItem}
-                onFetchAttach={onFetchAttach}
-            />
-        ))
+    const attachments = React.useMemo(() => {
+        const isAttachExist = !!attach?.length;
+        const isVoiceMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'voice');
+        const isImageMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'image');
+
+        if(isVoiceMessage) return(
+            attach.map((attachItem) => (
+                <VoiceMessage
+                    messageId={messageId}
+                    key={attachItem.attachId}
+                    attach={attachItem}
+                    onFetchAttach={onFetchAttach}
+                />
+            ))
+        );
+        if(isImageMessage) return(
+            <ImageMessage attach={attach} />
+        );
+        return;
     }, [attach]);
 
     return (
@@ -52,7 +61,7 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
             enableSelectMode={enableSelectMode}
             toggleSelectMessage={toggleSelectMessage}
         >
-            {isVoiceMessage ? voiceAttachments : undefined}
+            {attachments}
         </MessageLayout>
     );
 });

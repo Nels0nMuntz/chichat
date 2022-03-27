@@ -33,6 +33,7 @@ const MessageLayout: React.FC<MessageLayoutProps> = (props) => {
             selected={message.selected}
             selectMode={selectMode}
             meta={formatTime(new Date(message.createdAt))}
+            onlyMedia={!text}
             handleSelectMessage={handleMessageClick}
         >
             <React.Fragment>

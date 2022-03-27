@@ -6,7 +6,7 @@ import { Status, UniqueId, PaginationLimit } from "shared";
 import {
     ICreateDialogRequest,
     IDialog,
-    IDialogAttach,
+    IDialogFormAttach,
     IMessageStore,
     IMessageResponse,
     MessageAttachType,
@@ -87,7 +87,7 @@ export const setUploadModalOpenAction = defineAction<{ payload: boolean }>("SET_
 
 export const setUploadModalMessageTextAction = defineAction<{ payload: string }>("SET_UPLOAD_MODAL_MESSAGE_TEXT");
 
-export const setUploadModalAttachAction = defineAction<{ payload: Array<IDialogAttach> }>("SET_UPLOAD_MODAL_ATTACH");
+export const setUploadModalAttachAction = defineAction<{ payload: Array<IDialogFormAttach> }>("SET_UPLOAD_MODAL_ATTACH");
 
 export const uploadFilesAction = defineAction<{ payload: FileList }>("UPLOAD_FILES");
 

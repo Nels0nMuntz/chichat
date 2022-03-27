@@ -38,7 +38,6 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const inputMediaRef = React.useRef<HTMLInputElement>(null);
     const inputDocumentRef = React.useRef<HTMLInputElement>(null);
 
-    // const [editMode, setEditMode] = React.useState(false);
     const [recordState, setRecordState] = React.useState<RecordState>('inactive');
     const [popups, setPopups] = React.useState({
         emoji: false,
@@ -52,7 +51,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         sendStatus,
         uploadStatus,
         text: uploadText,
-        attach,
+        attach: uploadAttach,
     } = useSelector(selectUploadModal);
     const dialogId = activeDialog?.dialogId;
     const messageText = activeDialog?.form.text || '';
@@ -76,7 +75,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
     }, []);
     const disableSelectMode = React.useCallback(() => { selectMode && dispatch(changeSelectModeAction({ payload: false })) }, [selectMode]);
     const handleDeleteMessages = React.useCallback(() => {
-        if(!dialogId || !selectedMessages.length) return;
+        if (!dialogId || !selectedMessages.length) return;
         const messageIds = selectedMessages.map(({ messageId }) => messageId);
         dispatch(deleteDialogMessagesFromDBAction({
             payload: { dialogId, messageIds }
@@ -85,7 +84,6 @@ const MessageInputContainer: React.FC = React.memo(() => {
     const handleCloseModal = React.useCallback(() => {
         dispatch(setUploadModalOpenAction({ payload: false }));
     }, []);
-    const handleSubmitModal = React.useCallback(() => { console.log('submitting modal') }, []);
     const handleClickMediaUploadButton = React.useCallback(() => {
         inputMediaRef.current?.click();
     }, [inputMediaRef]);
@@ -96,16 +94,23 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const files = event.target.files;
         if (files?.length) {
             dispatch(uploadFilesAction({ payload: files }));
+            event.target.value = '';
         };
-    }, [uploadFilesAction]);
+    }, []);
     const handleChangeUploadModalText = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
         dispatch(setUploadModalMessageTextAction({ payload: e.target.value }));
     }, [])
     const handleStartRecordAudio = React.useCallback(() => {
         setRecordState('recording');
         setEditMode(true);
-        audioRecorder.start()
-            .catch(error => dispatch(openNotification({ payload: { message: error.message, variant: 'error' } })));
+        audioRecorder
+            .start()
+            .catch(error => {
+                dispatch(openNotification({ payload: { message: error.message, variant: 'error' } }));
+                audioRecorder.cancel();
+                setRecordState('inactive');
+                setEditMode(false);
+            });
     }, [audioRecorder, setEditMode, setRecordState]);
     const handlePauseRecordAudio = React.useCallback(() => {
         setRecordState('paused');
@@ -115,7 +120,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         setRecordState('recording');
         audioRecorder.resume();
     }, [audioRecorder, setRecordState]);
-    const handleStopRecordAudio = React.useCallback((): Promise<{ file: File, metadata?: UploadMetadata}> => {
+    const handleStopRecordAudio = React.useCallback((): Promise<{ file: File, metadata?: UploadMetadata }> => {
         return new Promise(async (resolve, reject) => {
             setRecordState('inactive');
             setEditMode(false);
@@ -129,25 +134,29 @@ const MessageInputContainer: React.FC = React.memo(() => {
     }, [audioRecorder, setEditMode, setRecordState]);
     const sendMessage = React.useCallback(
         (
-            text?: string, 
-            attach?: Array<{ 
-                file: File, 
-                type: MessageAttachType,
-                metadata?: UploadMetadata,
-            }>
+            data: {
+                text?: string,
+                attach?: Array<{
+                    file: File,
+                    type: MessageAttachType,
+                    metadata?: UploadMetadata,
+                }>
+            }
         ) => {
-        if (!dialogId || isEmptyMessage(text, attach)) {
-            dispatch(resetMessageTextAction({ payload: null }));
-            setEditMode(false);
-            return;
-        }; 
-        dispatch(createDialogMessageAction({ payload: {
-            dialogId, 
-            userId: user.userId,
-            text: !isEmptyString(text) ? text : undefined,
-            attach,
-        } }));
-    }, [dialogId, user, resetMessageTextAction, createDialogMessageAction, setEditMode]);
+            if (!dialogId || isEmptyMessage(data.text, data.attach)) {
+                dispatch(resetMessageTextAction({ payload: null }));
+                setEditMode(false);
+                return;
+            };
+            dispatch(createDialogMessageAction({
+                payload: {
+                    dialogId,
+                    userId: user.userId,
+                    text: !isEmptyString(data.text) ? data.text : undefined,
+                    attach: data.attach,
+                }
+            }));
+        }, [dialogId, user, resetMessageTextAction, createDialogMessageAction, setEditMode]);
     const handleCancelRecordAudio = React.useCallback(() => {
         audioRecorder.cancel();
         setRecordState('inactive');
@@ -168,7 +177,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         const shouldSendAudioMessage = compose(isRecording, isEditMode)();
 
         if (shouldSendTextMessage) {
-            sendMessage(messageText);
+            sendMessage({ text: messageText });
         };
 
         if (shouldStartRecordAudio) {
@@ -181,11 +190,11 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 if (!dialogId) {
                     dispatch(resetMessageTextAction({ payload: null }));
                     return;
-                };        
-                sendMessage(
-                    messageText,
-                    [{ file, type: 'voice', metadata }],
-                );       
+                };
+                sendMessage({
+                    text: messageText,
+                    attach: [{ file, type: 'voice', metadata }],
+                });
             } catch (error: any) {
                 console.log(error);
                 dispatch(openNotification({ payload: { message: error.message, variant: 'error' } }));
@@ -196,6 +205,12 @@ const MessageInputContainer: React.FC = React.memo(() => {
         dialogId, editMode, recordState, messageText,
         compose, isEmptyString, handleStopRecordAudio, handleStartRecordAudio, sendMessage
     ]);
+    const handleSubmitModal = React.useCallback(() => {
+        sendMessage({
+            text: uploadText,
+            attach: uploadAttach,
+        })
+    }, [uploadText, uploadAttach, sendMessage]);
 
     if (!selectedMessages.length) disableSelectMode();
 
@@ -252,7 +267,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 uploading={uploadStatus === Status.Running}
                 sending={sendStatus === Status.Running}
                 messageValue={uploadText}
-                attach={attach}
+                attach={uploadAttach}
                 handleClose={handleCloseModal}
                 handleSubmit={handleSubmitModal}
                 handleChangeText={handleChangeUploadModalText}

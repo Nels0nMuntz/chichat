@@ -1,5 +1,6 @@
 import { IUser, Status, UniqueId } from "shared";
 import { IMessageStore } from "../";
+import { MessageAttachType } from "./messageAttach.model";
 import { IPaginationOptions } from "./paginationOptions.model";
 
 
@@ -15,12 +16,13 @@ export interface IDialogForm {
     status: Status;
     editMode: boolean;
     text?: string;   
-    media?: Array<IDialogAttach>;
-    docs?: Array<IDialogAttach>;
+    media?: Array<IDialogFormAttach>;
+    docs?: Array<IDialogFormAttach>;
 };
 
-export interface IDialogAttach {
+export interface IDialogFormAttach {
     file: File;
+    type: MessageAttachType;
     previewLink?: string;
 };
 

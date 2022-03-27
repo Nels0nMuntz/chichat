@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 
-import { IDialogAttach } from './../../models/common/dialog.model';
+import { IDialogFormAttach } from './../../models/common/dialog.model';
 import { CloseIconButton, SubmitButton, LoadingBackdrop } from 'shared';
 
 import style from './UploadFileModal.module.scss';
@@ -77,7 +77,7 @@ type UploadFileModalProps = {
     uploading: boolean;
     sending: boolean;
     messageValue: string;
-    attach?: Array<IDialogAttach>;
+    attach?: Array<IDialogFormAttach>;
     handleClose: () => void;
     handleSubmit: () => void;
     handleChangeText: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -133,6 +133,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                     text='Send'
                     isSubmitting={sending}
                     isValid={true}
+                    onClick={handleSubmit}
                 />
             </DialogActions>
             <DialogContent classes={{ root: classes.content }}>
@@ -145,7 +146,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = React.memo((props) => {
                         );
                         if (file.type.includes('video')) return (
                             <div className={`${style.contentItem} ${style.contentItemMedia}`} key={i}>
-                                <video autoPlay loop muted={!open}>
+                                <video autoPlay loop muted>
                                     <source src={previewLink} type={file.type} />
                                 </video>
                             </div>

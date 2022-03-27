@@ -11,6 +11,7 @@ type MessageItemProps = ChildrenProps & {
     selected: boolean;
     selectMode: boolean;
     meta?: string | JSX.Element;
+    onlyMedia?: boolean;
     handleSelectMessage: () => void;
 };
 
@@ -22,6 +23,7 @@ const MessageItem: React.FC<MessageItemProps> = (props) => {
         selected,
         selectMode,
         meta,
+        onlyMedia,
         handleSelectMessage
     } = props;
 
@@ -48,7 +50,10 @@ const MessageItem: React.FC<MessageItemProps> = (props) => {
                     {children}
                     {meta
                         ? <span
-                            className="message-item__meta"
+                            className={classNames(
+                                "message-item__meta",
+                                onlyMedia && "message-item__meta_bg",
+                            )}
                             onClick={handleSelectMessage}
                         >
                             {meta}

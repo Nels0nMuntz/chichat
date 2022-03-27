@@ -68,7 +68,6 @@ const AttachMenuPopup: React.FC<AttachMenuPopupProps> = React.memo((props) => {
                 placement="bottom-end"
                 transformOrigin="100% 100%"
                 container={сontainerRef}
-                hover
                 onOpen={handleOpen}
                 onClose={handleClose}
             >

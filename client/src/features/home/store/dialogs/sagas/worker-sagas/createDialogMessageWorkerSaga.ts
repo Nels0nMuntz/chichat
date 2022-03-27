@@ -8,6 +8,7 @@ import {
     createDialogMessageAction, 
     resetMessageTextAction,
     setMessageInputEditModeAction,
+    setUploadModalOpenAction,
 } from "features/home/store";
 import { Status, isEmptyString } from 'shared';
 import { WebSocketEventHandler } from "features/websocket/helpers";
@@ -59,6 +60,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
         yield put(sendWebSocketEventAction({ payload: event }));
         yield put(setMessageInputEditModeAction({ payload: false }));
         yield put(resetMessageTextAction({ payload: null }));
+        yield put(setUploadModalOpenAction({ payload: false }));
     } catch (error: any) {
         console.log(error);   
         yield put(openNotification({ payload: { message: error.message, variant: 'error' } }));
