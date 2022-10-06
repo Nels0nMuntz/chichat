@@ -6,21 +6,19 @@ import './ImageMessage.scss';
 
 
 type ImageMessageProps = {
-    attach: IMessageAttachStore[];
+    attach: IMessageAttachStore;
 };
 
 const ImageMessage: React.FC<ImageMessageProps> = React.memo(({ attach }) => {
 
     return (
         <div className="message-item__content-item image-message">
-            {attach.map(({ url, attachId }) => (
-                <img 
-                    key={attachId}
-                    src={url}
-                    className="image-message__img-item"
-                    alt="photo"
-                />
-            ))}
+            <img
+                key={attach.attachId}
+                src={attach.url}
+                className="image-message__img-item"
+                alt="photo"
+            />
         </div>
     );
 });

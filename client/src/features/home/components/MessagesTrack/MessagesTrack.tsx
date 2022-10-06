@@ -69,7 +69,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
         };
         const options = {
             root,
-            rootMargin: '100px',
+            rootMargin: '300px',
             threshold: 0,
         };
         const observer = new IntersectionObserver(handleObserver, options);

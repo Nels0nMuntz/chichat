@@ -89,4 +89,4 @@ const Home: React.FC<HomeProps> = (props) => {
     )
 };
 
-export default withLoader(Home);
+export default Home;

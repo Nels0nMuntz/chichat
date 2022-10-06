@@ -48,7 +48,9 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
             ))
         );
         if(isImageMessage) return(
-            <ImageMessage attach={attach} />
+            <React.Fragment>
+                {attach.map(item => <ImageMessage attach={item} />)}
+            </React.Fragment>            
         );
         return;
     }, [attach]);

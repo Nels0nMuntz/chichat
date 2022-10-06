@@ -10,7 +10,7 @@ import {
     setSidebarVisibilityAction,
     changeSelectModeAction,
 } from '../store';
-import { useMediaQuery } from 'shared';
+import { Status, useMediaQuery, Loader } from 'shared';
 
 
 const HomeContainer: React.FC = () => {
@@ -41,9 +41,12 @@ const HomeContainer: React.FC = () => {
         dispatch(initHomeAction({}));
     }, []);
 
+    if(homeStatus === (Status.Initial || Status.Running)) {
+        return <Loader/>;
+    };
+
     return (
         <Home
-            status={homeStatus}
             activeDialog={activeDialog}
             matches={matches}
             searchbarVisility={searchbarVisility}
