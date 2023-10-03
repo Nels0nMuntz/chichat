@@ -18,7 +18,7 @@ interface IHomeState {
 const initState: IHomeState = {
     status: Status.Initial,
     user: {
-        userId: "613f475871e72072d08b5998",
+        userId: "",
         email: "",
         firstName: "",
         phoneNumber: "",

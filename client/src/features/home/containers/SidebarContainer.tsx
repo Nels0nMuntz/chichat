@@ -19,7 +19,7 @@ import {
     setActiveDialogAction,
     setSidebarSearchModeAction,
     createDialogAction,
-    selectUserData,
+    selectUserId,
 } from '../store'
 import { useMediaQuery, SearchGroups, isEmptyString } from 'shared';
 
@@ -29,10 +29,10 @@ export const SidebarContainer: React.FC = React.memo(() => {
     const dispatch = useDispatch();
 
     const [matches] = useMediaQuery("(max-width: 900px)");
-    const [globalSearch, setGlobalSearch] = React.useState(false);
+    const [globalSearch, setGlobalSearch] = React.useState(true);
 
     const status = useSelector(selectSidebarStatus);
-    const user = useSelector(selectUserData);
+    const hostUserId = useSelector(selectUserId);
     const searchMode = useSelector(selectSearchMode);
     const visibility = useSelector(selectSidebarVisibility);
     const { value, typing } = useSelector(selectSidebarSearchField);
@@ -73,11 +73,11 @@ export const SidebarContainer: React.FC = React.memo(() => {
             disableSearchMode();
         } else {
             dispatch(createDialogAction({ payload: {
-                member_1: user.userId,
+                member_1: hostUserId,
                 member_2: userId,
             } }));
         }
-    }, [dialogs]);
+    }, [dialogs, hostUserId]);
 
     React.useEffect(() => {
         if (searchMode) {

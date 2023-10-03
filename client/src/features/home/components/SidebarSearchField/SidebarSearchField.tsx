@@ -1,29 +1,8 @@
 import React from 'react';
 
 import { SearchField } from 'shared';
+import { useDebounce } from "shared/hooks/useDebounce";
 
-
-type Fn = (args: string) => void;
-type FnOptional = (args?: any) => void;
-type DebounceArgs = { fn: Fn, delay: number, fnStart?: FnOptional, fnEnd?: FnOptional, fnEvery?: Fn };
-
-const debounce = ({ fn, delay, fnStart, fnEnd, fnEvery }: DebounceArgs) => {
-    let timeout: NodeJS.Timeout;
-    let start = false;
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!start) {
-            start = !start;
-            fnStart && fnStart();
-        }
-        fnEvery && fnEvery(e.target.value);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            fn(e.target.value);
-            fnEnd && fnEnd();
-            start = false;
-        }, delay);
-    };
-};
 
 type SidebarSearchFieldProps = {
     value: string;
@@ -41,13 +20,12 @@ const SidebarSearchField: React.FC<SidebarSearchFieldProps> = React.memo((props)
 
     const { value, typing, loading, searchMode, enableSearchMode, handleSearch, handleChange, handleTyping, resetSearch } = props;
 
-    const handleChangeDebounced = debounce({
-        fn: handleSearch,
-        delay: 400,
-        fnEvery: handleChange,
-        fnStart: () => handleTyping(true),
-        fnEnd: () => handleTyping(false),
-    });
+    const handleSearchDebounced = React.useCallback(useDebounce((value: string) => handleSearch(value), 500), []);
+    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        handleChange(value);
+        handleSearchDebounced(value);
+    };
     const handleFocus = React.useCallback(() => enableSearchMode(), [enableSearchMode]);
 
     React.useEffect(() => {
@@ -60,7 +38,7 @@ const SidebarSearchField: React.FC<SidebarSearchFieldProps> = React.memo((props)
             typing={typing}
             loading={loading}
             editMode={searchMode}
-            handleChange={handleChangeDebounced}
+            handleChange={handleChangeValue}
             handleFocus={handleFocus}
             handleSearch={handleSearch}
             resetSearch={resetSearch}

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
-    selectUserData,
+    selectUserId,
     changeSelectModeAction,
     toggleSelectMessageAction,
     fetchDialogMessagesAction,
@@ -23,7 +23,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
 
     const dispatch = useDispatch();
 
-    const user = useSelector(selectUserData);
+    const userId = useSelector(selectUserId);
     const dialogId = activeDialog.dialogId;
     const messagesStatus = activeDialog.messages.status;
     const selectMode = activeDialog.messages.selectMode;
@@ -60,7 +60,7 @@ const MessagesTrackContainer: React.FC<MessagesTrackContainerProps> = ({ activeD
     return (
         <MessagesTrack
             status={messagesStatus}
-            userId={user.userId}
+            userId={userId}
             dialogId={dialogId}
             list={messagesList}
             selectMode={selectMode}

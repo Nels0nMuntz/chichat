@@ -9,7 +9,7 @@ import UploadFileModal from '../components/UploadFileModal/UploadFileModal';
 import { RecordState, MessageAttachType } from '../models';
 import {
     selectActiveDialog,
-    selectUserData,
+    selectUserId,
     setMessageTextAction,
     resetMessageTextAction,
     changeSelectModeAction,
@@ -44,7 +44,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
         menu: false,
     });
 
-    const user = useSelector(selectUserData);
+    const userId = useSelector(selectUserId);
     const activeDialog = useSelector(selectActiveDialog);
     const {
         open,
@@ -151,12 +151,12 @@ const MessageInputContainer: React.FC = React.memo(() => {
             dispatch(createDialogMessageAction({
                 payload: {
                     dialogId,
-                    userId: user.userId,
+                    userId: userId,
                     text: !isEmptyString(data.text) ? data.text : undefined,
                     attach: data.attach,
                 }
             }));
-        }, [dialogId, user, resetMessageTextAction, createDialogMessageAction, setEditMode]);
+        }, [dialogId, userId, resetMessageTextAction, createDialogMessageAction, setEditMode]);
     const handleCancelRecordAudio = React.useCallback(() => {
         audioRecorder.cancel();
         setRecordState('inactive');
@@ -250,6 +250,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 multiple
                 ref={inputMediaRef}
                 onChange={handleChangeUploadInput}
+                title="upload media file"
             />
             <input
                 id="upload-document-file"
@@ -260,6 +261,7 @@ const MessageInputContainer: React.FC = React.memo(() => {
                 multiple
                 ref={inputDocumentRef}
                 onChange={handleChangeUploadInput}
+                title="upload document"
             />
             <UploadFileModal
                 open={open}
