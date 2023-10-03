@@ -72,7 +72,6 @@ export const SidebarContainer: React.FC = React.memo(() => {
             dispatch(setActiveDialogAction({ payload: dialog.dialogId }));
             disableSearchMode();
         } else {
-            log
             dispatch(createDialogAction({ payload: {
                 member_1: user.userId,
                 member_2: userId,

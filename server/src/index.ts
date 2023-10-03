@@ -1,4 +1,5 @@
 import http from 'http';
+import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -8,7 +9,7 @@ import { connectDB, WebSocketManager } from './core';
 import { rootRouter } from './routers/root.router';
 import { errorHandlerMW } from './middlewares';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "..", `.env.${process.env.NODE_ENV}`) });
 
 const PORT = process.env.PORT || 3000;
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   credentials: true,
-  origin: process.env.CLIENT_API,
+  origin: process.env.WEB_APP_URL,
 }));
 
 app.use('/api', rootRouter);

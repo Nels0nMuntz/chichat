@@ -6,6 +6,12 @@ const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { DefinePlugin } = require("webpack");
 const tsconfig = require("./tsconfig.json");
+const dotenv = require("dotenv");
+
+
+const mode = process.env.NODE_ENV || "development";
+const isDev = mode === "development";
+const isProd = !isDev;
 
 const alias = Object.keys(tsconfig.compilerOptions.paths).reduce((result, aliasPath) => {
     const resolvePath = tsconfig.compilerOptions.paths[aliasPath][0].replace("*", "");
@@ -13,12 +19,11 @@ const alias = Object.keys(tsconfig.compilerOptions.paths).reduce((result, aliasP
     return result;
 }, {});
 
-const appConfig = {
-    CONFIG_API: JSON.stringify(process.env.CONFIG_API),
-};
-
-const isDev = process.env.NODE_ENV === "development";
-const isProd = !isDev;
+const env = dotenv.config({ path: `.env.${mode}` }).parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+}, {});
 
 const optimizations = () => {
     const config = {
@@ -80,8 +85,8 @@ module.exports = {
                 use: [
                     styles(),
                     'css-modules-typescript-loader',
-                    { 
-                        loader: "css-loader", 
+                    {
+                        loader: "css-loader",
                         options: {
                             importLoaders: 1,
                             sourceMap: true,
@@ -89,8 +94,8 @@ module.exports = {
                                 localIdentName: "[name]__[local]--[hash:base64:8]",
                                 mode: "local",
                             },
-                        } 
-                    }, 
+                        }
+                    },
                     "postcss-loader",
                 ]
             },
@@ -99,8 +104,8 @@ module.exports = {
                 use: [
                     styles(),
                     'css-modules-typescript-loader',
-                    { 
-                        loader: "css-loader", 
+                    {
+                        loader: "css-loader",
                         options: {
                             importLoaders: 1,
                             sourceMap: true,
@@ -108,8 +113,8 @@ module.exports = {
                                 localIdentName: "[name]__[local]--[hash:base64:8]",
                                 mode: "local",
                             },
-                        } 
-                    }, 
+                        }
+                    },
                     "postcss-loader",
                     "sass-loader",
                 ]
@@ -135,7 +140,7 @@ module.exports = {
         alias,
     },
     plugins: [
-        new DefinePlugin(appConfig),
+        new DefinePlugin(envKeys),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
             minify: {
@@ -155,10 +160,8 @@ module.exports = {
         }),
     ],
     devServer: {
-        port: 9000,
-        // open: true,
+        port: process.env.PORT,
         hot: true,
-        // progress: true,
         contentBase: "./dist",
         historyApiFallback: true,
     },
