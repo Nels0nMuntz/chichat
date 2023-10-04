@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
                 console.log(error);
                 localStorageService.removeAccessToken();
                 location.href = SIGNIN_PAGE_URL.urlTemplate;
-                return Promise.reject(error);
+                return error;
             };
         };
         return Promise.reject(error);
