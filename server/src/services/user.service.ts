@@ -36,12 +36,12 @@ export class UserService {
                     { firstName: pattern },
                     { lastName: pattern },
                     { phoneNumber: pattern },
-                ]
+                ],
             }
         );
 
         if(internal === "false"){
-            response = users;
+            response = users.filter(({ id }) => id !== userId);
         }else{
             const dialogs: Array<IDialogPopulated> = await this.dialogRepository.find(
                 {
