@@ -4,6 +4,8 @@ import { IMessageStore, IMessageAttachStore } from 'features/home/models';
 import MessageLayout from '../MessageLayout';
 import VoiceMessage from '../VoiceMessage/VoiceMessage';
 import ImageMessage from '../ImageMessage/ImageMessage';
+import VideoMessage from "../VideoMessage/VideoMessage";
+import FileMessage from "../FileMessage/FileMessage";
 
 
 type BaseMessageProps = {
@@ -36,8 +38,10 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
         const isAttachExist = !!attach?.length;
         const isVoiceMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'voice');
         const isImageMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'image');
+        const isVideoMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'video');
+        const isFileMessage = isAttachExist && attach.every(({ attachType }) => attachType === 'file');
 
-        if(isVoiceMessage) return(
+        if (isVoiceMessage) return (
             attach.map((attachItem) => (
                 <VoiceMessage
                     messageId={messageId}
@@ -47,10 +51,26 @@ const BaseMessage: React.FC<BaseMessageProps> = React.memo((props) => {
                 />
             ))
         );
-        if(isImageMessage) return(
+        if (isVideoMessage) return (
+            attach.map((attachItem) => (
+                <VideoMessage
+                    key={attachItem.attachId}
+                    attach={attachItem}
+                />
+            ))
+        );
+        if (isImageMessage) return (
             <React.Fragment>
                 {attach.map(item => <ImageMessage attach={item} />)}
-            </React.Fragment>            
+            </React.Fragment>
+        );
+        if (isFileMessage) return (
+            attach.map((attachItem) => (
+                <FileMessage
+                    key={attachItem.attachId}
+                    attach={attachItem}
+                />
+            ))
         );
         return;
     }, [attach]);

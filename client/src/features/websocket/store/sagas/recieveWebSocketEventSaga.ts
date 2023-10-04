@@ -15,7 +15,8 @@ import { IUser, UniqueId } from "shared";
 
 export function* recieveWebSocketEventSaga(user: IUser) {
     const { userId } = user;
-    const socket = new WebSocket('ws://localhost:3000');
+    const url = process.env.API_URL?.replace("http", "ws")!!;
+    const socket = new WebSocket(url);
     yield put(setWebSocketAction({ payload: socket }));
     const eventChanel: EventChannel<any> = yield call(createWebSocketEventChannel, userId, socket);
     while(true) {

@@ -1,0 +1,13 @@
+.video-message{
+  width: 100%;
+  max-width: var(--message-content-max-width);
+  display: flex;
+  flex-direction: column;
+}
+.video-message__item{
+  width: auto;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 5px;
+}
