@@ -1,5 +1,7 @@
 import http from 'http';
+import https from 'https';
 import path from 'path';
+import fs from 'fs';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -10,6 +12,13 @@ import { rootRouter } from './routers/root.router';
 import { errorHandlerMW } from './middlewares';
 
 dotenv.config({ path: path.resolve(__dirname, "..", `.env.${process.env.NODE_ENV}`) });
+
+const key = fs.readFileSync("../cert/private.key");
+const cert = fs.readFileSync("../cert//certificate.crt");
+const cred = {
+  key,
+  cert,
+}
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +39,10 @@ app.use(errorHandlerMW);
 const start = async (): Promise<http.Server> => {
   try {
     await connectDB();
-    return app.listen(PORT, () => console.log('Server started on port: ' + PORT));
+    const httpServer = app.listen(PORT, () => console.log('Server started on port: ' + PORT));
+    const httpsServer = https.createServer(cred, app);
+    httpsServer.listen(8443);
+    return httpServer;
   } catch (error) {
     console.log(error);
   }
