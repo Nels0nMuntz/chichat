@@ -11,10 +11,10 @@ import { connectDB, WebSocketManager } from './core';
 import { rootRouter } from './routers/root.router';
 import { errorHandlerMW } from './middlewares';
 
-dotenv.config({ path: path.resolve(__dirname, "..", `.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: path.join(__dirname, "..", `.env.${process.env.NODE_ENV}`) });
 
-const key = fs.readFileSync("../cert/private.key");
-const cert = fs.readFileSync("../cert//certificate.crt");
+const key = fs.readFileSync(path.join(__dirname, "..", "cert/private.key"));
+const cert = fs.readFileSync(path.join(__dirname, "..", "cert/certificate.crt"));
 const cred = {
   key,
   cert,
