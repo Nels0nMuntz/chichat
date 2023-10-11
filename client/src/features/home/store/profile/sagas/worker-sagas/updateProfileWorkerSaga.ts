@@ -25,6 +25,7 @@ export function* updateProfileWorkerSaga() {
             }
             yield put(setProfilePhoto({ payload: { file, previewUrl: fileUrl } }));
         }
+        debugger
         if (isProfileFullnameDifferent(profile)) {
             yield call<typeof updateUserData>(updateUserData, {
                 firstName: profile.draft.firstname,

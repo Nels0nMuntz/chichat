@@ -17,9 +17,6 @@ export const checkAuthMW = (req: Request, res: Response, next: NextFunction) => 
             throw ErrorException.UnauthorizedError();
         };
         const payload = tokenService.validateAccessToken(accessToken);
-        // console.log('< checkAuthMW');
-        // console.log(payload);
-        // console.log('checkAuthMW >');
         
         if(!payload) {
             throw ErrorException.UnauthorizedError();

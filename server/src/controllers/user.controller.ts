@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ErrorException } from "../shared";
 import { IUserResponse, ISearchUsersResponse, IRequest, ISearchQueryString } from "../models";
 import { UserService } from "../services";
-import { UserResponseDto } from "../dtos";
+import { UpdateUserDto, UserResponseDto } from "../dtos";
 
 
 export class UserController {
@@ -22,6 +22,20 @@ export class UserController {
             const userDocument = await this.service.getUserData(userId);
             const userDto = new UserResponseDto(userDocument);
             return res.status(200).json({ ...userDto });
+        } catch (error) {
+            next(error);
+        };
+    }
+
+    update = async (req: Request, res: Response<IUserResponse>, next: NextFunction) => {
+        try {
+            const userId = req.user.id;
+            if (!userId) {
+                throw ErrorException.BadRequestError("Invalid request data. There is no user ID");
+            };
+            const userDto = new UpdateUserDto(req.body, userId);
+            await this.service.updateUserData(userDto);
+            return res.status(200).end();
         } catch (error) {
             next(error);
         };

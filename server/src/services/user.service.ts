@@ -1,3 +1,4 @@
+import { UpdateUserDto } from "src/dtos";
 import { UserRepository, DialogRepository } from "../repositories";
 import { IUserDocument, IDialogPopulated } from "../schemas";
 import { ErrorException } from "../shared";
@@ -19,6 +20,14 @@ export class UserService {
             throw ErrorException.BadRequestError("Can not find user by ID");
         };
         return await this.userRepository.findById(userId);
+    }
+
+    updateUserData = async ({ userId, firstName, lastName, avatar }: UpdateUserDto) => {
+        const isExists = await this.userRepository.exists({ id: userId });
+        if(!isExists){
+            throw ErrorException.BadRequestError("Can not find user by ID");
+        };
+        return await this.userRepository.updateOne(userId, { firstName, lastName, avatar })
     }
 
     search = async (userId: string, query: string, internal: string): Promise<Array<IUserDocument>> => {
