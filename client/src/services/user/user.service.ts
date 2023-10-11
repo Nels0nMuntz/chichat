@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from "axios";
 import { axiosInstance } from "core";
-import { ISidebarSearchParams } from "features/home/models";
+import { ISidebarSearchParams, IUpdateUserDataRequest } from "features/home/models";
 import { IUser } from "shared";
 
 
@@ -17,6 +17,14 @@ class UserService {
     getUserData = async (): Promise<AxiosResponse<IUser>> => {
         try {
             return await this.axios.get<IUser>(this.baseUrl);
+        } catch (error: any) {
+            throw error.response.data.error;
+        }
+    }
+
+    updateUserData = async (data: IUpdateUserDataRequest) => {
+        try {
+            return await this.axios.patch(this.baseUrl, data);
         } catch (error: any) {
             throw error.response.data.error;
         }

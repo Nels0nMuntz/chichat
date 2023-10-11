@@ -12,6 +12,8 @@ import {
     sidebarWatcherSaga,
     dialogsReducer,
     dialogsWatcherSaga,
+    profileReducer,
+    profileWatcherSaga,
 } from 'features/home/store';
 import { notificationReducer } from 'features/notification/store';
 import { authReducer, authWatcherSaga } from 'features/auth/store';
@@ -26,6 +28,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     dialogs: dialogsReducer,
     sidebar: sidebarReducer,
+    profile: profileReducer,
     webSocket: webSocketReducer,
 });
 
@@ -48,6 +51,7 @@ function* appSaga(){
         sidebarWatcherSaga(),
         dialogsWatcherSaga(),
         webSocketWatcherSaga(),
+        profileWatcherSaga(),
     ]);
 };
 

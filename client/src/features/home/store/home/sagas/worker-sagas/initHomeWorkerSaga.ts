@@ -6,6 +6,7 @@ import {
     setHomeUserDataAction,
     setDialogsListAction,
     setDialogsListStatusAction,
+    setProfile,
 } from "features/home/store";
 import { openNotification } from "features/notification/store";
 import { IFetchAllDialogsResponse } from "features/home/models";
@@ -49,6 +50,11 @@ function* fetchUserData() {
         const { status, data }: AxiosResponse<IUser> = yield userService.getUserData();
         if(status === 200){
             yield put(setHomeUserDataAction({ payload: data }));
+            yield put(setProfile({ payload: {
+                firstname: data.firstName,
+                lastname: data.lastName,
+                photo: "",
+            } }))
             yield call(recieveWebSocketEventSaga, data);
         }
     } catch (error: any) {

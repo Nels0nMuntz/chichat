@@ -3,7 +3,7 @@ import { UploadMetadata } from "@firebase/storage";
 
 import { firebaseSorage } from "services";
 import { openNotification } from 'features/notification/store/actions';
-import { IMessageContent, IMessageAttachBase } from 'features/home/models';
+import { IMessageContent, IMessageAttachBase, IStoreFileResult } from 'features/home/models';
 import { 
     createDialogMessageAction, 
     resetMessageTextAction,
@@ -15,13 +15,6 @@ import { WebSocketEventHandler } from "features/websocket/helpers";
 import { sendWebSocketEventAction } from "features/websocket/store";
 
 
-interface IUploadedFile {
-    status: Status;
-    file: File;
-    fileUrl: string;
-    error?: Error;
-};
-
 export function* createDialogMessageWorkerSaga(action: typeof createDialogMessageAction.typeOf.action){
     const { text, attach, userId, dialogId } = action.payload;
     const messageContent: IMessageContent<IMessageAttachBase> = {
@@ -30,7 +23,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
     };
     try {
         if(attach?.length) {
-            const response: Array<IUploadedFile> = yield all(attach.map(({ file, metadata }, i) => call(storeFileInFirebaseStorage, attach[i].type, file, metadata)));
+            const response: Array<IStoreFileResult> = yield all(attach.map(({ file, metadata }, i) => call(storeFileInFirebaseStorage, attach[i].type, file, metadata)));
             response.forEach(({ file, fileUrl, status }, i) => {
                 if(status === Status.Error){
                     throw new Error(`Can't upload file ${file.name}`);                
@@ -69,7 +62,7 @@ export function* createDialogMessageWorkerSaga(action: typeof createDialogMessag
 
 
 
-function* storeFileInFirebaseStorage(folder: string, file: File, metadata?: UploadMetadata): Generator<CallEffect<string>, IUploadedFile, string>{
+function* storeFileInFirebaseStorage(folder: string, file: File, metadata?: UploadMetadata): Generator<CallEffect<string>, IStoreFileResult, string>{
     try {
         const fileUrl: string = yield call(firebaseSorage.storeFile, folder, file, metadata);
         return { status: Status.Success, file, fileUrl };

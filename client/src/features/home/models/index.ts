@@ -6,6 +6,7 @@ export * from './common/sidebarSearchParams.model';
 export * from './common/paginationOptions.model';
 export * from './common/recordState.model';
 export * from './common/messageProps.model';
+export * from './common/storeFileResult.model';
 
 // response
 export * from './response/dialogResponse.model';
@@ -21,3 +22,4 @@ export * from './request/fetchMessagesRequest.model';
 export * from './request/fetchMessageAttachRequest.model';
 export * from './request/createDialogRequest.model';
 export * from './request/deleteMessagesRequest.model';
+export * from './request/updateUserData.model';

@@ -46,3 +46,85 @@
         transform: scale3d(0.93, 0.93, 0.93);
     }
 }
+.EditProfile {
+    .EditProfile_heading {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-left: 1.375rem;
+        margin-right: auto;
+        -webkit-user-select: none;
+        user-select: none;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: var(--color-text);
+    }
+    .EditProfile_avatar {
+        position: relative;
+        display: block;
+        width: 7.5rem;
+        height: 7.5rem;
+        border-radius: 50%;
+        overflow: hidden;
+        cursor: pointer;
+    
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        &::before {
+            background-color: rgba($color: #000000, $alpha: 0.1);
+            z-index: 1;
+        }
+    
+        &:hover {
+            .EditProfile_addAvatarIcon {
+                font-size: 2.75rem;
+                transition: all 0.15s;
+            }
+        }
+    
+        input {
+            display: none;
+        }
+    }
+    
+    .EditProfile_addAvatarIcon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        color: var(--color-bg);
+    }
+    
+    .EditProfileForm {
+        width: 100%;
+        padding: 0 1.5rem;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+    }
+    
+    .EditProfile_saveBtn {
+        position: absolute;
+        bottom: -3rem;
+        right: 1rem;
+        background-color: var(--color-primary);
+        color: var(--color-bg);
+        transition: bottom 0.2s cubic-bezier(.17,.67,.54,1.24);
+
+        &:hover {
+            background-color: var(--color-primary);
+        }
+
+        &.EditProfile_saveBtnVisible {
+            bottom: 1rem;
+        }
+    }
+}

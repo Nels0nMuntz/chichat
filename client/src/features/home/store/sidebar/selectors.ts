@@ -14,3 +14,5 @@ export const selectActiveTab = (state: AppState) => selectState(state).search.ac
 export const selectSearchUsers = (state: AppState) => selectState(state).search.users;
 
 export const selectSearchMode = (state: AppState) => selectState(state).search.searchMode;
+
+export const selectProfileEditMode = (state: AppState) => selectState(state).profile.editMode;

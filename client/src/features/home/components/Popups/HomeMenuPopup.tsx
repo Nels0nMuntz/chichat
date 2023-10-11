@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withStyles } from '@material-ui/core';
 import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
@@ -18,6 +18,8 @@ import ThemeSwitch from '../Switch/Switch';
 import { Popover, PopupMenu, ThemeContext } from 'shared';
 
 import style from './Popups.module.scss';
+import { useDispatch } from "react-redux";
+import { setProfileEditModeAction } from "features/home/store";
 
 
 const StyledIconButton = withStyles({
@@ -57,12 +59,16 @@ type HomeMenuPopupProps = {
 
 const HomeMenuPopup: React.FC<HomeMenuPopupProps> = React.memo(({ searchMode, handleDisableSearchMode }) => {
 
+    const dispatch = useDispatch();
+
     const сontainer = React.useRef<HTMLDivElement>(null);
 
     const [open, setOpen] = React.useState(false);
     const [сontainerRef, setСontainerRef] = React.useState<HTMLDivElement | null>(null);
 
     const { switchTheme } = React.useContext(ThemeContext);
+
+    const openProfileEditView = React.useCallback(() => dispatch(setProfileEditModeAction({ payload: true })), []);
 
     const handleOpen = React.useCallback(() => { 
         if(searchMode){
@@ -85,7 +91,7 @@ const HomeMenuPopup: React.FC<HomeMenuPopupProps> = React.memo(({ searchMode, ha
                             { icon: <TurnedInNotIcon />, title: 'Saved Messages' },
                             { icon: <ArchiveOutlinedIcon />, title: 'Archived Chats' },
                             { icon: <PersonOutlineOutlinedIcon />, title: 'Contacts' },
-                            { icon: <SettingsOutlinedIcon />, title: 'Settings' },
+                            { icon: <EditIcon />, title: 'Edit profile', onClick: openProfileEditView },
                             <StyledListItem button={true} onClick={switchTheme} key="Night Mode">
                                 <ListItemIcon>
                                     <NightsStayIcon />

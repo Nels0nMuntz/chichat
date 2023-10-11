@@ -20,6 +20,7 @@ import {
     setSidebarSearchModeAction,
     createDialogAction,
     selectUserId,
+    selectProfileEditMode,
 } from '../store'
 import { useMediaQuery, SearchGroups, isEmptyString } from 'shared';
 
@@ -39,6 +40,7 @@ export const SidebarContainer: React.FC = React.memo(() => {
     const activeTab = useSelector(selectActiveTab);
     const dialogs = useSelector(selectDialogsList);
     const users = useSelector(selectSearchUsers);
+    const profileEditMode = useSelector(selectProfileEditMode);
 
     const enableSearchMode = React.useCallback(() => { dispatch(setSidebarSearchModeAction({ payload: true })) }, []);
     const disableSearchMode = React.useCallback(() => { dispatch(setSidebarSearchModeAction({ payload: false })) }, []);
@@ -99,6 +101,7 @@ export const SidebarContainer: React.FC = React.memo(() => {
             activeTab={activeTab}
             globalSearch={globalSearch}
             users={users}
+            profileEditMode={profileEditMode}
             enableSearchMode={enableSearchMode}
             disableSearchMode={disableSearchMode}
             handleSearch={handleSearch}

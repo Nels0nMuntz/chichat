@@ -4,6 +4,8 @@ const selectState  = (state: AppState) => state.home;
 
 export const selectHomeStatus = (state: AppState) => selectState(state).status;
 
+export const selectUser = (state: AppState) => selectState(state).user;
+
 export const selectUserId = (state: AppState) => selectState(state).user.userId;
 
 // websocket

@@ -22,3 +22,5 @@ export const setSidebarSearchMessagesAction = defineAction<{ payload: Array<IMes
 export const resetSidebarSearchAction = defineAction<{ payload: null }>("RESET_SIDEBAR_SEARCH");
 
 export const setSidebarSearchModeAction = defineAction<{ payload: boolean }>("SET_SIDEBAR_SEARCH_MODE");
+
+export const setProfileEditModeAction = defineAction<{ payload: boolean }>("SET_PROFILE_EDIT_MODE")

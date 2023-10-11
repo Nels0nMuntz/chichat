@@ -17,3 +17,9 @@ export * from './sidebar/reducer';
 export * from './sidebar/actions';
 export * from './sidebar/selectors';
 export * from './sidebar/sagas/watcher-sagas/sidebarWatcherSaga';
+
+// profile
+export * from "./profile/reducer";
+export * from "./profile/actions";
+export * from "./profile/selectors";
+export * from "./profile/sagas/watched-sagas/profileWatcherSaga";

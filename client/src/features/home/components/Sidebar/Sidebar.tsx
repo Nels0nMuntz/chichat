@@ -8,7 +8,8 @@ import DialogsTrack from '../../containers/DialogsTrackContainer';
 import { Status, SearchGroups, IUser } from 'shared';
 
 import style from './Sidebar.module.scss';
-
+import DialogsView from "./components/DialogsView";
+import EditProfileView from './components/EditProfileView';
 
 type SidebarProps = {
     status: Status;
@@ -19,7 +20,8 @@ type SidebarProps = {
     searchFieldTyping: boolean;
     activeTab: SearchGroups;
     globalSearch: boolean;
-    users: Array<IUser>
+    users: Array<IUser>;
+    profileEditMode: boolean;
     disableSearchMode: () => void;
     enableSearchMode: () => void;
     handleSearch: (value: string) => void;
@@ -28,11 +30,10 @@ type SidebarProps = {
     handleChangeActiveTab: (tab: SearchGroups) => void;
     handleToggleGlobalSearch: () => void;
     resetSearch: () => void;
-    handleSelectUser: (userId: string) => void
+    handleSelectUser: (userId: string) => void;
 };
 
 const Sidebar: React.FC<SidebarProps> = (props) => {
-
     const {
         status,
         matches,
@@ -43,6 +44,7 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
         activeTab,
         globalSearch,
         users,
+        profileEditMode,
         disableSearchMode,
         enableSearchMode,
         handleSearch,
@@ -55,47 +57,38 @@ const Sidebar: React.FC<SidebarProps> = (props) => {
     } = props;
 
     return (
-        <aside className={classNames(
-            style.sidebar,
-            !visibility && matches && style.sidebar_close,
-        )}>
+        <aside
+            className={classNames(
+                style.sidebar,
+                !visibility && matches && style.sidebar_close
+            )}
+        >
             <div className={style.sidebar_anim}>
-                <header className={style.sidebar_header}>
-                    <HomeMenuPopup
+                {profileEditMode ? (
+                    <EditProfileView />
+                ) : (
+                    <DialogsView
+                        status={status}
                         searchMode={searchMode}
-                        handleDisableSearchMode={disableSearchMode}
+                        searchFieldValue={searchFieldValue}
+                        searchFieldTyping={searchFieldTyping}
+                        activeTab={activeTab}
+                        globalSearch={globalSearch}
+                        users={users}
+                        enableSearchMode={enableSearchMode}
+                        disableSearchMode={disableSearchMode}
+                        handleSearch={handleSearch}
+                        handleChange={handleChange}
+                        handleTyping={handleTyping}
+                        handleChangeActiveTab={handleChangeActiveTab}
+                        handleToggleGlobalSearch={handleToggleGlobalSearch}
+                        resetSearch={resetSearch}
+                        handleSelectUser={handleSelectUser}
                     />
-                    <div className={style.search_wrapper}>
-                        <SidebarSearchField
-                            value={searchFieldValue}
-                            typing={searchFieldTyping}
-                            loading={status === Status.Running}
-                            searchMode={searchMode}
-                            enableSearchMode={enableSearchMode}
-                            handleSearch={handleSearch}
-                            handleChange={handleChange}
-                            handleTyping={handleTyping}
-                            resetSearch={resetSearch}
-                        />
-                    </div>
-                </header>
-                <div className={style.sidebar_track}>
-                    {searchMode ? (
-                        <SearchTrack
-                            activeTab={activeTab}
-                            globalSearch={globalSearch}
-                            users={users}
-                            handleChangeActiveTab={handleChangeActiveTab}
-                            handleToggleGlobalSearch={handleToggleGlobalSearch}
-                            handleSelectUser={handleSelectUser}
-                        />
-                    ) : (
-                        <DialogsTrack />
-                    )}
-                </div>
+                )}
             </div>
         </aside>
-    )
+    );
 };
 
 export default Sidebar;

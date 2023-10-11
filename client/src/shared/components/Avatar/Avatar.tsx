@@ -8,7 +8,7 @@ import style from './Avatar.module.scss';
 type AvatarSize = "small" | "large";
 
 type AvatarProps = {
-    user: IUser;
+    user: Pick<IUser, "firstName" | "lastName" | "avatar">;
     size?: AvatarSize
 };
 
@@ -18,6 +18,7 @@ const Avatar: React.FC<AvatarProps> = ({ user, size = "small" }) => {
 
     const hasAvatar = !!avatar;
     const color = generateAvatar(firstName);
+    const content = firstName && (firstName[0] + (lastName ? lastName[0] : ""))
  
     return (
         <div className={style.wrapper}>
@@ -31,7 +32,7 @@ const Avatar: React.FC<AvatarProps> = ({ user, size = "small" }) => {
                     )}
                     style={{ background: `linear-gradient(#fff -125%, ${color})` }}
                 >
-                    {firstName[0] + (lastName && lastName[0])}
+                    {content}
                 </div>
             )}
         </div>

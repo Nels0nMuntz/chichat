@@ -10,6 +10,7 @@ import {
     setSidebarSearchUsersAction,
     resetSidebarSearchAction,
     setSidebarSearchModeAction,
+    setProfileEditModeAction,
 } from './actions';
 
 
@@ -26,6 +27,9 @@ interface ISidebarState {
         users: Array<IUser>,
         messages: Array<IMessageStore>,
     };
+    profile: {
+        editMode: boolean
+    }
 };
 
 const initialState: ISidebarState = {
@@ -40,6 +44,9 @@ const initialState: ISidebarState = {
         searchMode: false,
         users: [],
         messages: [],
+    },
+    profile: {
+        editMode: false,
     },
 };
 
@@ -129,6 +136,16 @@ export const sidebarReducer = (state: ISidebarState = initialState, action: Acti
             },
         };
     };
+
+    if(setProfileEditModeAction.is(action)) {
+        return {
+            ...state,
+            profile: {
+                ...state.profile,
+                editMode: action.payload,
+            }
+        }
+    }
 
     return state;
 
