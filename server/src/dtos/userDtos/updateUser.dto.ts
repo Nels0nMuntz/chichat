@@ -8,8 +8,8 @@ export class UpdateUserDto {
 
     constructor(userData: IUpdateUserRequest, userId: string) {
         this.userId = userId;
-        this.firstName = userData.firstName || "";
-        this.lastName = userData.lastName || "";
-        this.avatar = userData.photo || "";
+        this.firstName = userData.firstName;
+        this.lastName = userData.lastName;
+        this.avatar = userData.photo;
     }
 }

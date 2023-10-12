@@ -3,7 +3,7 @@ import { IUserDocument, IUserModel, IUserSchema, userModel } from "../schemas";
 import { BaseRepository } from "./base.repository";
 import { UpdateUserDto } from "src/dtos";
 
-type UpdateOneDocument = Omit<UpdateUserDto, "userId">
+export type UpdateOneDocument = Omit<UpdateUserDto, "userId">
 
 export class UserRepository extends BaseRepository<IUserDocument> {
 
@@ -30,7 +30,7 @@ export class UserRepository extends BaseRepository<IUserDocument> {
     };
 
     public updateOne = async (userId: string, doc: UpdateOneDocument) => {
-        try {
+        try {            
             return await this.model.findByIdAndUpdate(userId, doc)
         } catch (error) {
             console.log({ message: "Can not find user in DB", error });

@@ -53,7 +53,7 @@ function* fetchUserData() {
             yield put(setProfile({ payload: {
                 firstname: data.firstName,
                 lastname: data.lastName,
-                photo: "",
+                photo: data.avatar || "",
             } }))
             yield call(recieveWebSocketEventSaga, data);
         }

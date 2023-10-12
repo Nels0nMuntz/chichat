@@ -4,7 +4,6 @@
     position: relative;
     flex-shrink: 0;
     width: var(--dialogs-width);
-    min-width: 320px; 
     transform-origin: 0% 50%;   
     transition: width var(--layout-animation-duration) var(--layout-animation-timing-function),
         transform var(--layout-animation-duration) ease-in-out;
@@ -35,6 +34,7 @@
         left: 0;
         bottom: 0;
         width: var(--dialogs-width);
+        min-width: 320px; 
         display: flex;
         flex-direction: column;
         border-right: var(--layout-border-width) solid var(--color-borders);
@@ -82,7 +82,8 @@
             z-index: 1;
         }
     
-        &:hover {
+        &:hover,
+        &:focus {
             .EditProfile_addAvatarIcon {
                 font-size: 2.75rem;
                 transition: all 0.15s;

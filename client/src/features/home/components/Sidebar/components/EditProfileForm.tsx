@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { useDispatch, useSelector } from "react-redux";
 
-import { selectProfileDraft, setProfileFirstname } from "features/home/store";
+import { selectProfileDraft, setProfileFirstname, setProfileLastname } from "features/home/store";
 
 import styles from "../Sidebar.module.scss"
 
@@ -58,11 +58,11 @@ const EditProfileForm = React.memo(() => {
     const classes = useStyles();
     const dispatch = useDispatch()
     const values = useSelector(selectProfileDraft);
-    const onFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setProfileFirstname({ payload: e.target.value }))
     }
-    const onLastnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setProfileFirstname({ payload: e.target.value }))
+    const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setProfileLastname({ payload: e.target.value }))
     }
     return (
         <form className={styles.EditProfileForm}>
@@ -73,7 +73,7 @@ const EditProfileForm = React.memo(() => {
                 label="Firstname"
                 className={classes.root}
                 value={values.firstname}
-                onChange={onFirstnameChange}
+                onChange={handleFirstnameChange}
             />
             <TextField
                 id='profile-lastname'
@@ -82,7 +82,7 @@ const EditProfileForm = React.memo(() => {
                 label="Lastname"
                 className={classes.root}
                 value={values.lastname}
-                onChange={onLastnameChange}
+                onChange={handleLastnameChange}
             />
         </form>
     );

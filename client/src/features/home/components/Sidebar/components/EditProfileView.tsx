@@ -94,6 +94,7 @@ const EditProfileView = () => {
                         className={style.EditProfile_avatar}
                         role='button'
                         title='Edit your profile photo'
+                        tabIndex={0}
                     >
                         <input
                             type='file'

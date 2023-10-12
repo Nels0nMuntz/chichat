@@ -1,5 +1,5 @@
 import { UpdateUserDto } from "src/dtos";
-import { UserRepository, DialogRepository } from "../repositories";
+import { UserRepository, DialogRepository, UpdateOneDocument } from "../repositories";
 import { IUserDocument, IDialogPopulated } from "../schemas";
 import { ErrorException } from "../shared";
 
@@ -27,7 +27,11 @@ export class UserService {
         if(!isExists){
             throw ErrorException.BadRequestError("Can not find user by ID");
         };
-        return await this.userRepository.updateOne(userId, { firstName, lastName, avatar })
+        const doc: Partial<UpdateOneDocument> = {};
+        if(firstName) doc.firstName = firstName;
+        if(lastName) doc.lastName = lastName;
+        if(avatar) doc.avatar = avatar;
+        return await this.userRepository.updateOne(userId, doc);
     }
 
     search = async (userId: string, query: string, internal: string): Promise<Array<IUserDocument>> => {

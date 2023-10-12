@@ -13,6 +13,7 @@ import { openNotification } from "features/notification/store";
 
 export function* updateProfileWorkerSaga() {
     try {
+        let photoUrl = "";
         const profile: IProfileState = yield select(selectProfile);
 
         if (isProfilePhotoDifferent(profile) && profile.photoFile) {
@@ -23,18 +24,19 @@ export function* updateProfileWorkerSaga() {
             if (status === Status.Error) {
                 throw new Error(`Can't upload file ${file.name}`);
             }
-            yield put(setProfilePhoto({ payload: { file, previewUrl: fileUrl } }));
+            console.log({fileUrl});
+            
+            photoUrl = fileUrl;
         }
-        debugger
         if (isProfileFullnameDifferent(profile)) {
             yield call<typeof updateUserData>(updateUserData, {
                 firstName: profile.draft.firstname,
                 lastName: profile.draft.lastname,
-                photo: profile.draft.photo,
+                photo: photoUrl,
             });
         } else {
             yield call<typeof updateUserData>(updateUserData, {
-                photo: profile.draft.photo,
+                photo: photoUrl,
             });
         }
     } catch (error: any) {
@@ -74,7 +76,7 @@ function* updateUserData(data: IUpdateUserDataRequest) {
                     payload: {
                         firstname: data.firstName,
                         lastname: data.lastName,
-                        photo: '',
+                        photo: data.avatar || "",
                     },
                 })
             );
@@ -83,8 +85,8 @@ function* updateUserData(data: IUpdateUserDataRequest) {
 }
 
 function isProfilePhotoDifferent(values: IProfileState) {
-    return values.original.photo === values.draft.photo;
+    return values.original.photo !== values.draft.photo;
 }
 function isProfileFullnameDifferent(values: IProfileState) {
-    return values.original.firstname === values.draft.firstname || values.original.lastname === values.draft.lastname;
+    return values.original.firstname !== values.draft.firstname || values.original.lastname !== values.draft.lastname;
 }
