@@ -4,6 +4,7 @@
     position: relative;
     flex-shrink: 0;
     width: var(--dialogs-width);
+    min-width: 320px; 
     transform-origin: 0% 50%;   
     transition: width var(--layout-animation-duration) var(--layout-animation-timing-function),
         transform var(--layout-animation-duration) ease-in-out;

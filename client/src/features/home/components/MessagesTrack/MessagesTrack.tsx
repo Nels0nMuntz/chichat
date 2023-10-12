@@ -62,7 +62,7 @@ const MessagesTrack: React.FC<MessagesTrackProps> = (props) => {
         const handleObserver = (entries: IntersectionObserverEntry[]) => {            
             const entry = entries[0];
             if (entry.isIntersecting) {
-                setHasScrollToBottom(false);
+                setHasScrollToBottom(true);
                 handleFetchMessages();
             };
 
