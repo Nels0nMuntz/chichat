@@ -17,10 +17,6 @@ const DialogsTrack: React.FC<DialogsTrackProps> = React.memo(({ list, handleSele
         <CustomScroll>
             <div className={style.dialogs}>
                 {list
-                    .sort((a, b) => {
-                        if(!a.messages.lastMessage || !b.messages.lastMessage) return -1;
-                        return +new Date(b.messages.lastMessage.updatedAt) - (+new Date(a.messages.lastMessage.updatedAt))
-                    })
                     .map(dialog => (
                         <Dialog
                             key={dialog.dialogId}
