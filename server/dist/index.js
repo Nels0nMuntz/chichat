@@ -39,9 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var https_1 = __importDefault(require("https"));
 var path_1 = __importDefault(require("path"));
-var fs_1 = __importDefault(require("fs"));
 var express_1 = __importDefault(require("express"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var cors_1 = __importDefault(require("cors"));
@@ -50,12 +48,6 @@ var core_1 = require("./core");
 var root_router_1 = require("./routers/root.router");
 var middlewares_1 = require("./middlewares");
 dotenv_1.default.config({ path: path_1.default.join(__dirname, "..", ".env.".concat(process.env.NODE_ENV)) });
-var key = fs_1.default.readFileSync(path_1.default.join(__dirname, "..", "cert/private.key"));
-var cert = fs_1.default.readFileSync(path_1.default.join(__dirname, "..", "cert/certificate.crt"));
-var cred = {
-    key: key,
-    cert: cert,
-};
 var PORT = process.env.PORT || 3000;
 var app = (0, express_1.default)();
 app.set('port', PORT);
@@ -68,7 +60,7 @@ app.use((0, cors_1.default)({
 app.use('/api', root_router_1.rootRouter);
 app.use(middlewares_1.errorHandlerMW);
 var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var httpServer, httpsServer, error_1;
+    var httpServer, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -77,8 +69,6 @@ var start = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 1:
                 _a.sent();
                 httpServer = app.listen(PORT, function () { return console.log('Server started on port: ' + PORT); });
-                httpsServer = https_1.default.createServer(cred, app);
-                httpsServer.listen(8443);
                 return [2, httpServer];
             case 2:
                 error_1 = _a.sent();
